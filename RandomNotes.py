@@ -18,7 +18,6 @@ def main():
 	while True:
 		try:
 			Tonic = str(input("What's the tonic of the desired key?\nEx(C, Gb, A#)\n\n>")).capitalize()
-			print (Tonic)
 			if Tonic in AllNotes:
 				if "#" in Tonic:
 					FS = "Sharp"
