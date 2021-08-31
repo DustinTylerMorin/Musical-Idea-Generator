@@ -1,4 +1,4 @@
-## Program created for generating random melodies/riffs
+## Program created for generating random chords
 ## Program created by Dustin Morin
 import random
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
@@ -29,7 +29,7 @@ Scale = {
 "Super Locrian bb7": [0,1,2,1,2,2,1]
 }
 def main():
-	print ("\nProgram created by Dustin Morin for the purposes of generating notes in a desired key.\n")
+	print ("\nProgram created by Dustin Morin for the purposes of generating chords in a desired key.\n")
 	while True:
 		try:
 			Tonic = str(input("What's the tonic of the desired key?\nEx(C, Gb, A#)\n\n>")).capitalize()
@@ -65,19 +65,31 @@ def main():
 			pass
 	while True:
 		try:
-			Number = int(input("How many notes would you like to generate?\n\n>"))
+			Number = int(input("How many chords would you like to generate?\n\n>"))
 			break
 		except:
 			print("\nTry again!\n")
 			pass
-	Gen(Tonic, Mode, Number, FS)
+	while True:
+		try:
+			ChordTones = int(input("How many chord tones per chord? would you like to generate? (2,3,4)\n\n>"))
+			if ChordTones in range (2,5):
+				break
+			else:
+				raise ValueError
+		except:
+			print("\nTry again!\n")
+			pass
+	ScaleGen(Tonic, Mode, Number, FS, ChordTones)
 
-def Gen(Tonic, Mode, Number, FS):
+
+def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
 	RandomNumbers = []
 	ScaleNotes = []
 	UsedScale = []
-	GeneratedNotes = []
-
+	GeneratedChords = []
+	GeneratedRoots = []
+	Overflow = False
 	if FS == "Sharp":
 		Notes = NotesSharp
 	else:
@@ -102,12 +114,30 @@ def Gen(Tonic, Mode, Number, FS):
 					Index = len(Notes) - Index
 				pass
 	for y in range (len(RandomNumbers)):
-		GeneratedNotes.append(UsedScale[RandomNumbers[y]])
+		GeneratedRoots.append(UsedScale[RandomNumbers[y]])
+	while len(GeneratedChords) != len(GeneratedRoots):
+		for i in range(len(GeneratedRoots)):
+			Temp = UsedScale.index(GeneratedRoots[i])
+			GeneratedChords.insert(i,[GeneratedRoots[i]])
+			ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones)
+
 	print ("Scale Used:\n\n",UsedScale,"\n")
-	print ("Notes produced:\n\n",GeneratedNotes)
-
-
-
-
+	print ("Chords produced:\n\n",GeneratedChords)
+	print ("Roots produced:\n\n",GeneratedRoots)
+	
+def ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones):
+	while len(GeneratedChords[i]) != ChordTones:
+		try:
+			Temp = Temp + 2
+			print ("Orig", Temp)
+			if Temp >= len(UsedScale):
+				Temp = Temp - len(UsedScale)
+				print ("^:",Temp)
+				GeneratedChords[i].append(UsedScale[Temp])
+			else:
+				GeneratedChords[i].append(UsedScale[Temp])
+				print ("edit", Temp)
+		except:
+			raise ValueError("Something has gone wrong.")
 if (__name__ == "__main__"):
 	main()
