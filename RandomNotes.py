@@ -93,14 +93,15 @@ def Gen(Tonic, Mode, Number, FS):
 
 	for x in range (0,7):
 		while True:
+			Index = Index + ScaleNotes[x]
 			try:
-				Index = Index + ScaleNotes[x]
 				UsedScale.append(Notes[Index])
 				break
 			except:
-				if Index > len(Notes):
-					Index = len(Notes) - Index
-				pass
+				if Index >= len(Notes)-1:
+					Index = Index - len(Notes)
+					UsedScale.append(Notes[Index])
+					break
 	for y in range (len(RandomNumbers)):
 		GeneratedNotes.append(UsedScale[RandomNumbers[y]])
 	print ("Scale Used:\n\n",UsedScale,"\n")

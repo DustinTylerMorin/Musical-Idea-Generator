@@ -105,14 +105,15 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
 
 	for x in range (0,7):
 		while True:
+			Index = Index + ScaleNotes[x]
 			try:
-				Index = Index + ScaleNotes[x]
 				UsedScale.append(Notes[Index])
 				break
 			except:
-				if Index > len(Notes):
-					Index = len(Notes) - Index
-				pass
+				if Index >= len(Notes)-1:
+					Index = Index - len(Notes)
+					UsedScale.append(Notes[Index])
+					break
 	for y in range (len(RandomNumbers)):
 		GeneratedRoots.append(UsedScale[RandomNumbers[y]])
 	while len(GeneratedChords) != len(GeneratedRoots):
@@ -120,24 +121,27 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
 			Temp = UsedScale.index(GeneratedRoots[i])
 			GeneratedChords.insert(i,[GeneratedRoots[i]])
 			ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones)
+	ChordName(GeneratedChords, UsedScale, Notes)
 
 	print ("Scale Used:\n\n",UsedScale,"\n")
 	print ("Chords produced:\n\n",GeneratedChords)
-	print ("Roots produced:\n\n",GeneratedRoots)
-	
+
 def ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones):
 	while len(GeneratedChords[i]) != ChordTones:
 		try:
 			Temp = Temp + 2
-			print ("Orig", Temp)
 			if Temp >= len(UsedScale):
 				Temp = Temp - len(UsedScale)
-				print ("^:",Temp)
 				GeneratedChords[i].append(UsedScale[Temp])
 			else:
 				GeneratedChords[i].append(UsedScale[Temp])
-				print ("edit", Temp)
 		except:
 			raise ValueError("Something has gone wrong.")
+
+def ChordName(GeneratedChords, UsedScale, Notes):
+	Chords = []
+
+	for i in range(len(GeneratedChords)):
+		pass
 if (__name__ == "__main__"):
 	main()
