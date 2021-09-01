@@ -211,6 +211,7 @@ def ChordName(GeneratedChords, Notes):
 			name = name.replace("m5bb7","dim7")
 		Chords.append(name)
 	print ("\nChords\n")
-	pass
+	return(Chords)
+
 if (__name__ == "__main__"):
 	main()
