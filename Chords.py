@@ -124,7 +124,8 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
 	Chords = ChordName(GeneratedChords, Notes)
 
 	print ("Scale Used:\n\n",UsedScale,"\n")
-	print ("Chords produced:\n\n",Chords)
+	print ("Chord Notes\n",GeneratedChords)
+	print ("\nChords produced:\n\n",Chords)
 
 def ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones):
 	while len(GeneratedChords[i]) != ChordTones:
@@ -198,19 +199,21 @@ def ChordName(GeneratedChords, Notes):
 		name = str(name[0])
 		if "m7" in name:
 			name = name.replace("m7","mMaj7")
+		if "mb5bb7" in name:
+			name = name.replace("mb5bb7","dim7")
 		if "Maj+57" in name:
 			name = name.replace("Maj+57","Maj7#5")
+		if "mb5b7" in name:
+			name = name.replace("mb5b7","m7b5")
+		if "mb5" in name:
+			name = name.replace("mb5","dim")
 		if "mb" in name:
 			name = name.replace("mb","m")
-
 		if "Majb7" in name:
 			name = name.replace("Majb7","7")
-		if "m5b7" in name:
-			name = name.replace("m5b7","m7b5")
-		if "m5bb7" in name:
-			name = name.replace("m5bb7","dim7")
+		if "dimb7" in name:
+			name = name.replace("dimb7","dim7")
 		Chords.append(name)
-	print ("\nChords\n")
 	return(Chords)
 
 if (__name__ == "__main__"):
