@@ -4,6 +4,7 @@ import random
 import platform
 import os
 from datetime import datetime
+from midiutil.MidiFile import MIDIFile
 
 
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
@@ -33,6 +34,25 @@ Scale = {
 "Lydian #2": [0,3,1,2,1,2,2],
 "Super Locrian bb7": [0,1,2,1,2,2,1]
 }
+Tones = {
+"Ab": [56],
+"A" : [57],
+"A#": [58],
+"Bb": [58],
+"B" : [59],
+"C" : [60],
+"C#": [61],
+"Db": [61],
+"D" : [62],
+"D#": [63],
+"Eb": [63],
+"E" : [64],
+"F" : [65],
+"F#": [66],
+"Gb": [66],
+"G" : [67],
+"G#": [68]
+}
 def main():
 	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
 	while True:
@@ -61,6 +81,7 @@ def main():
 			Mode = int(input(">"))
 			if Mode in range(1,22):
 				Mode = Modes[Mode-1]
+				print ("\n")
 				break
 			else:
 				print("\nTry again!\n")
@@ -71,6 +92,7 @@ def main():
 	while True:
 		try:
 			Number = int(input("How many chord(s) would you like to generate?\n\n>"))
+			print ("\n")
 			break
 		except:
 			print("\nTry again!\n")
@@ -79,6 +101,7 @@ def main():
 		try:
 			ChordTones = int(input("How many chord tones per chord? would you like to generate? (1,2,3,4)\n\n>"))
 			if ChordTones in range (1,5):
+				print ("\n")
 				break
 			else:
 				raise ValueError
@@ -132,7 +155,8 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
 	print ("Chord Notes\n\n",GeneratedChords)
 	print ("\nChord(s) produced:\n\n",Chords)
 
-	Export(UsedScale,GeneratedChords,Chords,Tonic,Mode)
+	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode)
+	ExportMidi(GeneratedChords)
 
 def ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones):
 	while len(GeneratedChords[i]) != ChordTones:
@@ -143,8 +167,10 @@ def ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones):
 				GeneratedChords[i].append(UsedScale[Temp])
 			else:
 				GeneratedChords[i].append(UsedScale[Temp])
-		except:
-			raise ValueError("Something has gone wrong.")
+		except Exception as e:
+			print(e)
+			print("\nSomething has went wrong\n")
+
 
 def ChordName(GeneratedChords, Notes):
 	Chords = []
@@ -223,10 +249,10 @@ def ChordName(GeneratedChords, Notes):
 		Chords.append(name)
 	return(Chords)
 
-def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode):
+def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode):
 	while True:
 		try:
-			export = str(input("\nWould you like to output these chords to a file? (y/n)\n>")).lower()
+			export = str(input("\nWould you like to output these chords to a .txt file? (y/n)\n\n>")).lower()
 			if export == "y":
 				now = 'chords_'+datetime.now().strftime("%H:%M:%S")+'.txt'
 				with open(now, 'w') as file:
@@ -249,8 +275,57 @@ def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode):
 				break
 			else:
 				print("\nTry again!\n")
-		except:
+		except Exception as e:
+			print(e)
 			print("\nSomething has went wrong\n")
+
+def ExportMidi(GeneratedChords):
+	while True:
+		try:
+			export = str(input("\nWould you like to output these chords to a .mid file? (y/n)\n\n>")).lower()
+			if export == "y":
+				now = 'chords_'+datetime.now().strftime("%H:%M:%S")+'.mid'
+				midi = MIDIFile(1)
+				track = 0
+				time = 0
+				name = str("ChordGen"+str(now))
+				midi.addTrackName(track, time, "MidiOut")
+				midi.addTempo(track, time, 60)
+				channel = 0
+				volume = 100
+				for i in range(len(GeneratedChords)):
+					pitch = Tones[GeneratedChords[i][0]][0]
+					time = i
+					duration = 4
+					midi.addNote(track, channel, pitch, time, duration, volume)
+					for x in range(1,len(GeneratedChords[i])):
+						if Tones[GeneratedChords[i][x][0]][0] < pitch:
+							pitch = (Tones[GeneratedChords[i][x][0]][0]) + 12
+						elif Tones[GeneratedChords[i][x][0]][0] > pitch:
+							pitch =	Tones[GeneratedChords[i][x][0]][0]
+						else:
+							print ("Something went terribly wrong")
+						time = i
+						duration = 4
+						midi.addNote(track, channel, pitch, time, duration, volume)
+					# write it to disk
+				with open(now, 'wb') as file:
+					midi.writeFile(file)
+					file.close()
+				if platform.system() == "Linux" or "MacOS" :
+					print ("\nFile output to:"+os.getcwd()+"/"+now)
+				else:
+					print ("\nFile output to:"+os.getcwd()+'\\'+now)
+				break
+			elif export == "n":
+				break
+			else:
+				print("\nTry again!\n")
+		except Exception as e:
+			print(e)
+			print("\nSomething has went wrong\n")
+
+
 
 if (__name__ == "__main__"):
 	main()
