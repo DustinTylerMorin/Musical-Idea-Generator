@@ -1,6 +1,9 @@
 ## Program created for generating random chords
 ## Program created by Dustin Morin
 import random
+from datetime import datetime
+
+
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
 NotesSharp = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 NotesFlat = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"]
@@ -29,7 +32,7 @@ Scale = {
 "Super Locrian bb7": [0,1,2,1,2,2,1]
 }
 def main():
-	print ("\nProgram created by Dustin Morin for the purposes of generating chords in a desired key.\n")
+	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
 	while True:
 		try:
 			Tonic = str(input("What's the tonic of the desired key?\nEx(C, Gb, A#)\n\n>")).capitalize()
@@ -65,7 +68,7 @@ def main():
 			pass
 	while True:
 		try:
-			Number = int(input("How many chords would you like to generate?\n\n>"))
+			Number = int(input("How many chord(s) would you like to generate?\n\n>"))
 			break
 		except:
 			print("\nTry again!\n")
@@ -123,9 +126,11 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
 			ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones)
 	Chords = ChordName(GeneratedChords, Notes)
 
-	print ("Scale Used:\n\n",UsedScale,"\n")
-	print ("Chord Notes\n",GeneratedChords)
-	print ("\nChords produced:\n\n",Chords)
+	print ("Scale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
+	print ("Chord Notes\n\n",GeneratedChords)
+	print ("\nChord(s) produced:\n\n",Chords)
+
+	Export(UsedScale,GeneratedChords,Chords,Tonic,Mode)
 
 def ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones):
 	while len(GeneratedChords[i]) != ChordTones:
@@ -215,6 +220,30 @@ def ChordName(GeneratedChords, Notes):
 			name = name.replace("dimb7","dim7")
 		Chords.append(name)
 	return(Chords)
+
+def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode):
+	while True:
+		try:
+			export = str(input("\nWould you like to output these chords to a file? (y/n)\n>")).lower()
+			if export == "y":
+				now = 'chords_'+datetime.now().strftime("%H:%M:%S")+'.txt'
+				with open(now, 'w') as file:
+					file.write("Scale Used:\n\n")
+					file.write("%s %s" % (Tonic,Mode) +"\n\n")
+					file.write("%s" % UsedScale)
+					file.write('\n\nChord(s) produced:\n\n')
+					for i in range(len(Chords)):
+						file.write(str(i+1)+") ")
+						file.write("%s %s" % (Chords[i],GeneratedChords[i]) + "\n")
+					file.write('\n')
+					file.close()
+				break
+			elif export == "n":
+				break
+			else:
+				print("\nTry again!\n")
+		except:
+			print("\nSomething has went wrong\n")
 
 if (__name__ == "__main__"):
 	main()
