@@ -1,6 +1,8 @@
 ## Program created for generating random chords
 ## Program created by Dustin Morin
 import random
+import platform
+import os
 from datetime import datetime
 
 
@@ -237,6 +239,11 @@ def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode):
 						file.write("%s %s" % (Chords[i],GeneratedChords[i]) + "\n")
 					file.write('\n')
 					file.close()
+					if platform.system() == "Linux" or "MacOS" :
+						print ("\nFile output to:"+os.getcwd()+"/"+now)
+					else:
+						print ("\nFile output to:"+os.getcwd()+'\\'+now)
+
 				break
 			elif export == "n":
 				break
