@@ -75,13 +75,12 @@ def main():
 
 	while True:
 		try:
-			print ("Choose a scale/mode.\nType the number which corresponds to the desired key.")
+			print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
 			for i in range(len(Modes)):
 				print (str(i+1)+")",Modes[i])
-			Mode = int(input(">"))
+			Mode = int(input("\n>"))
 			if Mode in range(1,22):
 				Mode = Modes[Mode-1]
-				print ("\n")
 				break
 			else:
 				print("\nTry again!\n")
@@ -91,17 +90,15 @@ def main():
 			pass
 	while True:
 		try:
-			Number = int(input("How many chord(s) would you like to generate?\n\n>"))
-			print ("\n")
+			Number = int(input("\nHow many chord(s) would you like to generate?\n\n>"))
 			break
 		except:
 			print("\nTry again!\n")
 			pass
 	while True:
 		try:
-			ChordTones = int(input("How many chord tones per chord? would you like to generate? (1,2,3,4)\n\n>"))
+			ChordTones = int(input("\nHow many chord tones per chord? would you like to generate? (1,2,3,4)\n\n>"))
 			if ChordTones in range (1,5):
-				print ("\n")
 				break
 			else:
 				raise ValueError
@@ -284,30 +281,40 @@ def ExportMidi(GeneratedChords):
 		try:
 			export = str(input("\nWould you like to output these chords to a .mid file? (y/n)\n\n>")).lower()
 			if export == "y":
+				while True:
+					try:
+						bpm = int(input("\nWhat BPM would you like for your .mid file?\n\n>"))
+					except:
+						print("\nTry again!\n")
+						pass
+					break
+				while True:
+					try:
+						Dur = int(input("\nHow many beats would you like each chord to last?\n\n>"))
+					except:
+						print("\nTry again!\n")
+						pass
+					break
 				now = 'chords_'+datetime.now().strftime("%H:%M:%S")+'.mid'
 				midi = MIDIFile(1)
 				track = 0
 				time = 0
 				name = str("ChordGen"+str(now))
 				midi.addTrackName(track, time, "MidiOut")
-				midi.addTempo(track, time, 60)
+				midi.addTempo(track, time, bpm)
 				channel = 0
 				volume = 100
 				for i in range(len(GeneratedChords)):
 					pitch = Tones[GeneratedChords[i][0]][0]
-					time = i
-					duration = 4
-					midi.addNote(track, channel, pitch, time, duration, volume)
-					for x in range(1,len(GeneratedChords[i])):
+					for x in range(0,len(GeneratedChords[i])):
 						if Tones[GeneratedChords[i][x][0]][0] < pitch:
 							pitch = (Tones[GeneratedChords[i][x][0]][0]) + 12
-						elif Tones[GeneratedChords[i][x][0]][0] > pitch:
+						elif Tones[GeneratedChords[i][x][0]][0] >= pitch:
 							pitch =	Tones[GeneratedChords[i][x][0]][0]
 						else:
 							print ("Something went terribly wrong")
-						time = i
-						duration = 4
-						midi.addNote(track, channel, pitch, time, duration, volume)
+						midi.addNote(track, channel, pitch, time, Dur, volume)
+					time = time + Dur
 					# write it to disk
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
