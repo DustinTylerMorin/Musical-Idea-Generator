@@ -295,12 +295,13 @@ def ExportMidi(GeneratedChords):
 						print("\nTry again!\n")
 						pass
 					break
-				now = 'chords_'+datetime.now().strftime("%H:%M:%S")+'.mid'
+				now = 'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
 				midi = MIDIFile(1)
 				track = 0
 				time = 0
+				trackname = "Guitar"
 				name = str("ChordGen"+str(now))
-				midi.addTrackName(track, time, "MidiOut")
+				midi.addTrackName(track, time, trackname)
 				midi.addTempo(track, time, bpm)
 				channel = 0
 				volume = 100
