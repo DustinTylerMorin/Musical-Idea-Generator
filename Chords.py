@@ -284,17 +284,39 @@ def ExportMidi(GeneratedChords):
 				while True:
 					try:
 						bpm = int(input("\nWhat BPM would you like for your .mid file?\n\n>"))
+						break
 					except:
 						print("\nTry again!\n")
 						pass
-					break
 				while True:
 					try:
-						Dur = int(input("\nHow many beats would you like each chord to last?\n\n>"))
+						RanDur = str(input("\nWould you like beats to be random or fixed?(r/f)\n\n>")).lower()
+						if RanDur == "f" or RanDur == "r":
+							Dur = []
+							break
+						else:
+							raise ValueError
 					except:
 						print("\nTry again!\n")
 						pass
-					break
+				while True:
+					if RanDur == "f":
+						try:
+							inputDur = int(input("\nHow many beats would you like each chord to last?\n\n>"))
+							for i in range(len(GeneratedChords)):
+								Dur.append(inputDur)
+							break
+						except:
+							print("\nTry again!\n")
+							pass
+					elif RanDur == "r":
+						Durations = [1,2,4,6,8]
+						for i in range(len(GeneratedChords)):
+							Dur.append(Durations[random.randint(0,4)])
+						break
+					else:
+						print("\nSomething has went wrongPISS\n")
+
 				now = 'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
 				midi = MIDIFile(1)
 				track = 0
@@ -314,8 +336,8 @@ def ExportMidi(GeneratedChords):
 							pitch =	Tones[GeneratedChords[i][x][0]][0]
 						else:
 							print ("Something went terribly wrong")
-						midi.addNote(track, channel, pitch, time, Dur, volume)
-					time = time + Dur
+						midi.addNote(track, channel, pitch, time, Dur[i], volume)
+					time = time + Dur[i]
 					# write it to disk
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
