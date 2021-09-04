@@ -105,10 +105,20 @@ def main():
 		except:
 			print("\nTry again!\n")
 			pass
-	ScaleGen(Tonic, Mode, Number, FS, ChordTones)
+	while True:
+		try:
+			StartTonic = str(input("\nWould you like the progression to start on the tonic? (y,n)\n\n>")).lower()
+			if StartTonic == "y" or StartTonic == "n":
+				break
+			else:
+				raise ValueError
+		except:
+			print("\nTry again!\n")
+			pass
+	ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic)
 
 
-def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
+def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 	RandomNumbers = []
 	ScaleNotes = []
 	UsedScale = []
@@ -124,6 +134,11 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones):
 
 	for i in range(Number):
 		RandomNumbers.append(random.randint(0,6))
+	if StartTonic == 'y':
+		RandomNumbers[0] = 0
+	if StartTonic == 'n':
+		RandomNumbers[0] = random.randint(1,6)
+
 
 	for z in range(0,7):
 		ScaleNotes.append((Scale[Mode])[z])
@@ -200,7 +215,7 @@ def ChordName(GeneratedChords, Notes):
 				elif Notes.index(Fifth) - Notes.index(Root) == 6:
 					name[0]=(name[0]+"b5")
 				elif Notes.index(Fifth) - Notes.index(Root) == 8:
-					name[0]=(name[0]+"+5")
+					name[0]=(name[0]+"#5")
 
 			else:
 				if Notes.index(Fifth) + 12 - Notes.index(Root) == 7:
@@ -208,7 +223,7 @@ def ChordName(GeneratedChords, Notes):
 				elif Notes.index(Fifth) +12  - Notes.index(Root) == 6:
 					name[0]=(name[0]+"b5")
 				elif Notes.index(Fifth) +12  - Notes.index(Root) == 8:
-					name[0]=(name[0]+"+5")
+					name[0]=(name[0]+"#5")
 
 		if len(GeneratedChords[i]) == 4:
 			Seventh=GeneratedChords[i][3]
@@ -231,8 +246,8 @@ def ChordName(GeneratedChords, Notes):
 			name = name.replace("m7","mMaj7")
 		if "mb5bb7" in name:
 			name = name.replace("mb5bb7","dim7")
-		if "Maj+57" in name:
-			name = name.replace("Maj+57","Maj7#5")
+		if "Maj#57" in name:
+			name = name.replace("Maj#57","Maj7#5")
 		if "mb5b7" in name:
 			name = name.replace("mb5b7","m7b5")
 		if "mb5" in name:
@@ -310,9 +325,9 @@ def ExportMidi(GeneratedChords):
 							print("\nTry again!\n")
 							pass
 					elif RanDur == "r":
-						Durations = [1,2,4,6,8]
+						Durations = [1,2,4]
 						for i in range(len(GeneratedChords)):
-							Dur.append(Durations[random.randint(0,4)])
+							Dur.append(Durations[random.randint(0,2)])
 						break
 					else:
 						print("\nSomething has went wrongPISS\n")
