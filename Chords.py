@@ -330,10 +330,10 @@ def ExportMidi(GeneratedChords):
 				for i in range(len(GeneratedChords)):
 					pitch = Tones[GeneratedChords[i][0]][0]
 					for x in range(0,len(GeneratedChords[i])):
-						if Tones[GeneratedChords[i][x][0]][0] < pitch:
-							pitch = (Tones[GeneratedChords[i][x][0]][0]) + 12
-						elif Tones[GeneratedChords[i][x][0]][0] >= pitch:
-							pitch =	Tones[GeneratedChords[i][x][0]][0]
+						if Tones[GeneratedChords[i][x]][0] < pitch:
+							pitch = (Tones[GeneratedChords[i][x]][0]) + 12
+						elif Tones[GeneratedChords[i][x]][0] >= pitch:
+							pitch =	Tones[GeneratedChords[i][x]][0]
 						else:
 							print ("Something went terribly wrong")
 						midi.addNote(track, channel, pitch, time, Dur[i], volume)
