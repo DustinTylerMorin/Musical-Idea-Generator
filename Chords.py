@@ -266,7 +266,7 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode):
 		try:
 			export = str(input("\nWould you like to output these chords to a .txt file? (y/n)\n\n>")).lower()
 			if export == "y":
-				now = 'chords_'+datetime.now().strftime("%H:%M:%S")+'.txt'
+				now = 'chords_'+datetime.now().strftime("%H-%M-%S")+'.txt'
 				with open(now, 'w') as file:
 					file.write("Scale Used:\n\n")
 					file.write("%s %s" % (Tonic,Mode) +"\n\n")
