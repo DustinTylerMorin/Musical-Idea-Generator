@@ -57,7 +57,7 @@ def main():
 	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
 	while True:
 		try:
-			Tonic = str(input("What's the tonic of the desired key?\nEx(C, Gb, A#)\n\n>")).capitalize()
+			Tonic = str(input("What's the tonic of the desired key?\n\nEx(C, Gb, A#)\n\n>")).capitalize()
 			if Tonic in AllNotes:
 				if "#" in Tonic:
 					FS = "Sharp"
@@ -107,7 +107,7 @@ def main():
 			pass
 	while True:
 		try:
-			StartTonic = str(input("\nWould you like the progression to start on the tonic? (y,n)\n\n>")).lower()
+			StartTonic = str(input("\nWould you like the progression to start on the tonic? (y/n)\n\n>")).lower()
 			if StartTonic == "y" or StartTonic == "n":
 				break
 			else:
@@ -124,6 +124,7 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 	UsedScale = []
 	GeneratedChords = []
 	GeneratedRoots = []
+	ScaleChordsGen = []
 	Overflow = False
 	if FS == "Sharp":
 		Notes = NotesSharp
@@ -138,8 +139,6 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 		RandomNumbers[0] = 0
 	if StartTonic == 'n':
 		RandomNumbers[0] = random.randint(1,6)
-
-
 	for z in range(0,7):
 		ScaleNotes.append((Scale[Mode])[z])
 
@@ -160,29 +159,34 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 		for i in range(len(GeneratedRoots)):
 			Temp = UsedScale.index(GeneratedRoots[i])
 			GeneratedChords.insert(i,[GeneratedRoots[i]])
-			ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones)
+			ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones)
+	for z in range(7):
+		Temp = z
+		ScaleChordsGen.insert(z,[UsedScale[z]])
+		ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones)
+
 	Chords = ChordName(GeneratedChords, Notes)
+	ScaleChords = ChordName(ScaleChordsGen, Notes)
+	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
+	print ("Scale Chords:\n\n",ScaleChords,"\n\n")
+	#print ("Chord Notes\n\n",GeneratedChords)
+	print ("Chord(s) produced:\n\n",Chords)
 
-	print ("Scale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
-	print ("Chord Notes\n\n",GeneratedChords)
-	print ("\nChord(s) produced:\n\n",Chords)
-
-	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode)
+	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 	ExportMidi(GeneratedChords)
 
-def ChordGen(i, Temp, GeneratedChords, GeneratedRoots, UsedScale, ChordTones):
-	while len(GeneratedChords[i]) != ChordTones:
+def ChordGen(i, Temp, GenChords, UsedScale, ChordTones):
+	while len(GenChords[i]) != ChordTones:
 		try:
 			Temp = Temp + 2
 			if Temp >= len(UsedScale):
 				Temp = Temp - len(UsedScale)
-				GeneratedChords[i].append(UsedScale[Temp])
+				GenChords[i].append(UsedScale[Temp])
 			else:
-				GeneratedChords[i].append(UsedScale[Temp])
+				GenChords[i].append(UsedScale[Temp])
 		except Exception as e:
 			print(e)
 			print("\nSomething has went wrong\n")
-
 
 def ChordName(GeneratedChords, Notes):
 	Chords = []
@@ -261,7 +265,7 @@ def ChordName(GeneratedChords, Notes):
 		Chords.append(name)
 	return(Chords)
 
-def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode):
+def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 	while True:
 		try:
 			export = str(input("\nWould you like to output these chords to a .txt file? (y/n)\n\n>")).lower()
@@ -271,6 +275,8 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode):
 					file.write("Scale Used:\n\n")
 					file.write("%s %s" % (Tonic,Mode) +"\n\n")
 					file.write("%s" % UsedScale)
+					file.write("\n\nScale Chords:\n\n")
+					file.write("%s" % ScaleChords)
 					file.write('\n\nChord(s) produced:\n\n')
 					for i in range(len(Chords)):
 						file.write(str(i+1)+") ")
