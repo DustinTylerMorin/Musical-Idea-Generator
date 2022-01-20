@@ -5,8 +5,14 @@ import platform
 import os
 from datetime import datetime
 from midiutil.MidiFile import MIDIFile
+import traceback
+#Configuration
 Debug = False
-
+Piano = True
+Guitar = True
+Bass = True
+Drums = True
+#Configuration
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
 NotesSharp = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 NotesFlat = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"]
@@ -360,27 +366,47 @@ def ExportMidi(GeneratedChords):
 					now = str(cwd)+'/Music'+'/'+'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
 				else:
 					now = str(cwd)+'\\Music'+"\\"+"chords_"+datetime.now().strftime("%H-%M-%S")+'.mid'
-				#now = 'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
-				midi = MIDIFile(1)
+				numtracks = 0
+				if Piano == True:
+					numtracks += 1
+				if Guitar == True:
+					numtracks += 1
+				if Bass == True:
+					numtracks += 1
+				if Drums == True:
+					numtracks += 1
+				midi = MIDIFile(numtracks)
 				track = 0
-				time = 0
-				trackname = "Acoustic Grand Piano"
-				midi.addTrackName(track, time, trackname)
-				midi.addTempo(track, time, bpm)
-				channel = 0
-				volume = 100
-				for i in range(len(GeneratedChords)):
-					pitch = Tones[GeneratedChords[i][0]][0]
-					for x in range(0,len(GeneratedChords[i])):
-						if Tones[GeneratedChords[i][x]][0] < pitch:
-							pitch = (Tones[GeneratedChords[i][x]][0]) + 12
-						elif Tones[GeneratedChords[i][x]][0] >= pitch:
-							pitch =	Tones[GeneratedChords[i][x]][0]
-						else:
-							print ("Something went terribly wrong")
-						midi.addNote(track, channel, pitch, time, Dur[i], volume)
-					time = time + Dur[i]
-					# write it to disk
+				# time = 0
+				# trackname = "Electric Guitar"
+				# midi.addTrackName(track, time, trackname)
+				# midi.addTempo(track, time, bpm)
+				# channel = 0
+				# volume = 100
+				# for i in range(len(GeneratedChords)):
+				# 	pitch = Tones[GeneratedChords[i][0]][0]
+				# 	for x in range(0,len(GeneratedChords[i])):
+				# 		if Tones[GeneratedChords[i][x]][0] < pitch:
+				# 			pitch = (Tones[GeneratedChords[i][x]][0]) + 12
+				# 		elif Tones[GeneratedChords[i][x]][0] >= pitch:
+				# 			pitch =	Tones[GeneratedChords[i][x]][0]
+				# 		else:
+				# 			print ("Something went terribly wrong")
+				# 		midi.addNote(track, channel, pitch, time, Dur[i], volume)
+				# 	time = time + Dur[i]
+				# 	# write it to disk
+				if Piano == True:
+					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords)
+					track += 1
+				if Guitar == True:
+					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords)
+					track += 1
+				if Bass == True:
+					midi = BassGen(midi, track, bpm, Dur, GeneratedChords)
+					track += 1
+				# if Drums == True:
+				# 	midi = DrumsGen(midi, track, bpm, Dur, GeneratedChords)
+				#	track += 1
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
 					file.close()
@@ -396,6 +422,68 @@ def ExportMidi(GeneratedChords):
 		except Exception as e:
 			print(e)
 			print("\nSomething has went wrong\n")
+			traceback.print_exc()
+def PianoGen(midi, track, bpm, Dur, GeneratedChords):
+	trackname = "Piano"
+	time = 0
+	midi.addTrackName(track, time, trackname)
+	midi.addTempo(track, time, bpm)
+	channel = 0
+	volume = 100
+	for i in range(len(GeneratedChords)):
+		pitch = Tones[GeneratedChords[i][0]][0]
+		for x in range(0,len(GeneratedChords[i])):
+			if Tones[GeneratedChords[i][x]][0] < pitch:
+				pitch = (Tones[GeneratedChords[i][x]][0]) + 12
+			elif Tones[GeneratedChords[i][x]][0] >= pitch:
+				pitch =	Tones[GeneratedChords[i][x]][0]
+			else:
+				print ("Something went terribly wrong")
+			midi.addNote(track, channel, pitch, time, Dur[i], volume)
+		time = time + Dur[i]
+	return midi
+		# write it to disk
+def GuitarGen(midi, track, bpm, Dur, GeneratedChords):
+	trackname = "Guitar"
+	time = 0
+	midi.addTrackName(track, time, trackname)
+	midi.addTempo(track, time, bpm)
+	channel = 1
+	volume = 100
+	for i in range(len(GeneratedChords)):
+		pitch = Tones[GeneratedChords[i][0]][0]
+		for x in range(0,len(GeneratedChords[i])):
+			if Tones[GeneratedChords[i][x]][0] < pitch:
+				pitch = (Tones[GeneratedChords[i][x]][0]) + 12
+			elif Tones[GeneratedChords[i][x]][0] >= pitch:
+				pitch =	Tones[GeneratedChords[i][x]][0]
+			else:
+				print ("Something went terribly wrong")
+			midi.addNote(track, channel, pitch, time, Dur[i], volume)
+		time = time + Dur[i]
+	return midi
+		# write it to disk
+def BassGen(midi, track, bpm, Dur, GeneratedChords):
+	trackname = "Bass"
+	time = 0
+	midi.addTrackName(track, time, trackname)
+	midi.addTempo(track, time, bpm)
+	channel = 2
+	volume = 100
+	for i in range(len(GeneratedChords)):
+		pitch = Tones[GeneratedChords[i][0]][0]
+		for x in range(0,len(GeneratedChords[i])):
+			if Tones[GeneratedChords[i][x]][0] < pitch:
+				pitch = (Tones[GeneratedChords[i][x]][0]) + 12
+			elif Tones[GeneratedChords[i][x]][0] >= pitch:
+				pitch =	Tones[GeneratedChords[i][x]][0]
+			else:
+				print ("Something went terribly wrong")
+			midi.addNote(track, channel, pitch, time, Dur[i], volume)
+		time = time + Dur[i]
+	return midi
+def DrumsGen(midi, track, bpm, Dur, GeneratedChords):
+	trackname = "Drums"
 
 
 
