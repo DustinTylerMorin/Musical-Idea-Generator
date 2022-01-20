@@ -504,7 +504,7 @@ def DrumsGen(midi, track, bpm, Dur, GeneratedChords):
 			midi.addNote(track, channel, 38, x, 1, volume)
 		if x%4 == 0:
 			midi.addNote(track, channel, 36, x, 1, volume)
-		if x%8 == 0:
+		if x%16 == 0:
 			midi.addNote(track, channel, 49, x, 1, volume-25)
 		midi.addNote(track, channel, 42, x, 1, volume-25)
 	return midi
