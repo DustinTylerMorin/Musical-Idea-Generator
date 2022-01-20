@@ -404,9 +404,9 @@ def ExportMidi(GeneratedChords):
 				if Bass == True:
 					midi = BassGen(midi, track, bpm, Dur, GeneratedChords)
 					track += 1
-				# if Drums == True:
-				# 	midi = DrumsGen(midi, track, bpm, Dur, GeneratedChords)
-				#	track += 1
+				if Drums == True:
+					midi = DrumsGen(midi, track, bpm, Dur, GeneratedChords)
+					track += 1
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
 					file.close()
@@ -472,20 +472,41 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords):
 	volume = 100
 	for i in range(len(GeneratedChords)):
 		pitch = Tones[GeneratedChords[i][0]][0]
-		for x in range(0,len(GeneratedChords[i])):
-			if Tones[GeneratedChords[i][x]][0] < pitch:
-				pitch = (Tones[GeneratedChords[i][x]][0]) + 12
-			elif Tones[GeneratedChords[i][x]][0] >= pitch:
-				pitch =	Tones[GeneratedChords[i][x]][0]
-			else:
-				print ("Something went terribly wrong")
-			midi.addNote(track, channel, pitch, time, Dur[i], volume)
+		if Tones[GeneratedChords[i][0]][0] < pitch:
+			pitch = (Tones[GeneratedChords[i][0]][0]) - 12
+		elif Tones[GeneratedChords[i][0]][0] >= pitch:
+			pitch =	Tones[GeneratedChords[i][0]][0]
+		else:
+			print ("Something went terribly wrong")
+		midi.addNote(track, channel, pitch, time, Dur[i], volume)
 		time = time + Dur[i]
 	return midi
 def DrumsGen(midi, track, bpm, Dur, GeneratedChords):
 	trackname = "Drums"
-
-
-
+	channel = 3
+	time = 0
+	volume = 100
+	DrumTones = {
+	"Kick": [36],
+	"Snare": [38],
+	"Hat": [42],
+	"Crash": [49],
+	"Ride": [51],
+	"Floor": [43],
+	"Rack": [48],
+	"Crash2": [57]
+	}
+	TotalDur = 0
+	for i in range (len(Dur)):
+		TotalDur += Dur[i]
+	for x in range (TotalDur):
+		if x%4 == 2:
+			midi.addNote(track, channel, 38, x, 1, volume)
+		if x%4 == 0:
+			midi.addNote(track, channel, 36, x, 1, volume)
+		if x%8 == 0:
+			midi.addNote(track, channel, 49, x, 1, volume-25)
+		midi.addNote(track, channel, 42, x, 1, volume-25)
+	return midi
 if (__name__ == "__main__"):
 	main()
