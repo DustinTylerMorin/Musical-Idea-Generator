@@ -5,7 +5,7 @@ import platform
 import os
 from datetime import datetime
 from midiutil.MidiFile import MIDIFile
-
+Debug = False
 
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
 NotesSharp = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
@@ -270,7 +270,18 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 		try:
 			export = str(input("\nWould you like to output these chords to a .txt file? (y/n)\n\n>")).lower()
 			if export == "y":
-				now = 'chords_'+datetime.now().strftime("%H-%M-%S")+'.txt'
+				cwd = os.getcwd()
+				try:
+					os.mkdir("Music")
+				except OSError as error:
+					if Debug == True:
+						print(error)
+					else:
+						pass
+				if platform.system() == ("Linux" or "MacOS") :
+					now = str(cwd)+'/Music'+'/'+'chords_'+datetime.now().strftime("%H-%M-%S")+'.txt'
+				else:
+					now = str(cwd)+'\\Music'+"\\"+"chords_"+datetime.now().strftime("%H-%M-%S")+'.txt'
 				with open(now, 'w') as file:
 					file.write("Scale Used:\n\n")
 					file.write("%s %s" % (Tonic,Mode) +"\n\n")
@@ -283,10 +294,10 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 						file.write("%s %s" % (Chords[i],GeneratedChords[i]) + "\n")
 					file.write('\n')
 					file.close()
-					if platform.system() == "Linux" or "MacOS" :
-						print ("\nFile output to:"+os.getcwd()+"/"+now)
+					if platform.system() == ("Linux" or "MacOS") :
+						print ("\nFile output to:"+now)
 					else:
-						print ("\nFile output to:"+os.getcwd()+'\\'+now)
+						print ("\nFile output to:"+now)
 
 				break
 			elif export == "n":
@@ -337,13 +348,23 @@ def ExportMidi(GeneratedChords):
 						break
 					else:
 						print("\nSomething has went wrongPISS\n")
-
-				now = 'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
+				cwd = os.getcwd()
+				try:
+					os.mkdir("Music")
+				except OSError as error:
+					if Debug == True:
+						print(error)
+					else:
+						pass
+				if platform.system() == ("Linux" or "MacOS") :
+					now = str(cwd)+'/Music'+'/'+'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
+				else:
+					now = str(cwd)+'\\Music'+"\\"+"chords_"+datetime.now().strftime("%H-%M-%S")+'.mid'
+				#now = 'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
 				midi = MIDIFile(1)
 				track = 0
 				time = 0
-				trackname = "Guitar"
-				name = str("ChordGen"+str(now))
+				trackname = "Acoustic Grand Piano"
 				midi.addTrackName(track, time, trackname)
 				midi.addTempo(track, time, bpm)
 				channel = 0
@@ -363,10 +384,10 @@ def ExportMidi(GeneratedChords):
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
 					file.close()
-				if platform.system() == "Linux" or "MacOS" :
-					print ("\nFile output to:"+os.getcwd()+"/"+now)
+				if platform.system() == ("Linux" or "MacOS") :
+					print ("\nFile output to:"+now)
 				else:
-					print ("\nFile output to:"+os.getcwd()+'\\'+now)
+					print ("\nFile output to:"+now)
 				break
 			elif export == "n":
 				break
