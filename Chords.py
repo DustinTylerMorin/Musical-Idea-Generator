@@ -63,7 +63,10 @@ def main():
 	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
 	while True:
 		try:
-			Tonic = str(input("What's the tonic of the desired key?\n\nEx(C, Gb, A#)\n\n>")).capitalize()
+			Tonic = str(input("What's the tonic of the desired key?\n\nEx(C, Gb, A#, Random)\n\n>")).capitalize()
+			if Tonic == "Random":
+				Rand = random.randint(0,20)
+				Tonic = str(AllNotes[Rand])
 			if Tonic in AllNotes:
 				if "#" in Tonic:
 					FS = "Sharp"
@@ -84,9 +87,14 @@ def main():
 			print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
 			for i in range(len(Modes)):
 				print (str(i+1)+")",Modes[i])
+			print(str(len(Modes)+1)+")","Random")
 			Mode = int(input("\n>"))
 			if Mode in range(1,22):
 				Mode = Modes[Mode-1]
+				break
+			elif Mode == int(len(Modes)+1):
+				Mode = Modes[random.randint(0,21)]
+				print (Mode)
 				break
 			else:
 				print("\nTry again!\n")
