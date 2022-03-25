@@ -16,7 +16,7 @@ Drums = True
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
 NotesSharp = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 NotesFlat = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"]
-Modes = ["Major", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Minor", "Locrian", "Harmonic Major", "Dorian b5", "Phrygian b4", "Lydian b3", "Mixolydian b2", "Lydian Augmented #2", "Locrian bb7", "Harmonic Minor", "Locrian 6", "Ionian #5", "Dorian #4", "Phrygian Dominant", "Lydian #2", "Super Locrian bb7"]
+NotesAlt = ["A", "A#", "B", "B#", "C#", "D", "D#", "E", "E#", "F#", "G", "G#"]
 Scale = {
 "Major": [0,2,2,1,2,2,2],
 "Dorian": [0,2,1,2,2,2,1],
@@ -38,8 +38,18 @@ Scale = {
 "Dorian #4": [0,2,1,3,1,2,1],
 "Phrygian Dominant": [0,1,3,1,2,1,2],
 "Lydian #2": [0,3,1,2,1,2,2],
-"Super Locrian bb7": [0,1,2,1,2,2,1]
+"Super Locrian bb7": [0,1,2,1,2,2,1],
+"Melodic Minor": [0,2,1,2,2,2,2],
+"Dorian b2": [0,1,2,2,2,2,1],
+"Lydian Augmented": [0,2,2,2,2,1,2],
+"Lydian Dominant": [0,2,2,2,1,2,1],
+"Mixolydian b6": [0,2,2,1,2,1,2],
+"Locrian #2": [0,2,1,2,1,2,2],
+"Super Locrian": [0,1,2,1,2,2,2]
 }
+
+Modes = list(Scale.keys())
+
 Tones = {
 "Ab": [56],
 "A" : [57],
@@ -67,13 +77,14 @@ def main():
 			if Tonic == "Random":
 				Rand = random.randint(0,20)
 				Tonic = str(AllNotes[Rand])
+				print ("/n", Tonic)
 			if Tonic in AllNotes:
-				if "#" in Tonic:
+				if ("#" in Tonic) and (("B" or "E") not in Tonic):
 					FS = "Sharp"
 				elif "b" in Tonic:
 					FS = "Flat"
 				else:
-					FS = "Sharp"
+					FS = "Alt"
 				break
 			else:
 				print("\nTry again!\n")
@@ -85,16 +96,18 @@ def main():
 	while True:
 		try:
 			print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
+			curlinelen=0
+			curline=("")
 			for i in range(len(Modes)):
 				print (str(i+1)+")",Modes[i])
 			print(str(len(Modes)+1)+")","Random")
 			Mode = int(input("\n>"))
-			if Mode in range(1,22):
+			if Mode in range(1,len(Modes)+1):
 				Mode = Modes[Mode-1]
 				break
 			elif Mode == int(len(Modes)+1):
-				Mode = Modes[random.randint(0,21)]
-				print (Mode)
+				Mode = Modes[random.randint(0,len(Modes))]
+				print ("\n",Mode)
 				break
 			else:
 				print("\nTry again!\n")
@@ -142,8 +155,10 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 	Overflow = False
 	if FS == "Sharp":
 		Notes = NotesSharp
-	else:
+	elif FS == "Flat":
 		Notes = NotesFlat
+	else:
+		Notes = NotesAlt
 
 	Index = Notes.index(Tonic)
 
