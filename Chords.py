@@ -1,11 +1,13 @@
 ## Program created for generating random chords
 ## Program created by Dustin Morin
+
 import random
 import platform
 import os
 from datetime import datetime
 from midiutil.MidiFile import MIDIFile
 import traceback
+
 #Configuration
 Debug = False
 Piano = True
@@ -13,10 +15,12 @@ Guitar = True
 Bass = True
 Drums = True
 #Configuration
+
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
 NotesSharp = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 NotesFlat = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"]
 NotesAlt = ["A", "A#", "B", "B#", "C#", "D", "D#", "E", "E#", "F#", "G", "G#"]
+
 Scale = {
 "Major": [0,2,2,1,2,2,2],
 "Dorian": [0,2,1,2,2,2,1],
@@ -77,7 +81,7 @@ def main():
 			if Tonic == "Random":
 				Rand = random.randint(0,20)
 				Tonic = str(AllNotes[Rand])
-				print ("/n", Tonic)
+				print ("\n", Tonic)
 			if Tonic in AllNotes:
 				if ("#" in Tonic) and (("B" or "E") not in Tonic):
 					FS = "Sharp"
@@ -97,9 +101,27 @@ def main():
 		try:
 			print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
 			curlinelen=0
-			curline=("")
+			curline=""
 			for i in range(len(Modes)):
-				print (str(i+1)+")",Modes[i])
+				if curlinelen < 25:
+					curline = ((str(i+1)+") " + str(Modes[i])))
+					curlinelen = len(curline)
+					#buff to 25
+					while curlinelen < 25:
+						curline = curline+(" ")
+						curlinelen += 1
+
+				elif curlinelen == 25:
+					curline = curline + ((str(i+1)+") " + str(Modes[i])))
+					curlinelen = len(curline)
+					#buff to 50
+					while curlinelen < 50:
+						curline = curline+(" ")
+						curlinelen += 1
+					print(curline)
+					curline=("")
+					curlinelen = 0
+
 			print(str(len(Modes)+1)+")","Random")
 			Mode = int(input("\n>"))
 			if Mode in range(1,len(Modes)+1):
@@ -114,6 +136,7 @@ def main():
 				pass
 		except:
 			print("\nTry again!\n")
+			main()
 			pass
 	while True:
 		try:
@@ -376,7 +399,7 @@ def ExportMidi(GeneratedChords):
 							Dur.append(Durations[random.randint(0,2)])
 						break
 					else:
-						print("\nSomething has went wrongPISS\n")
+						print("\nSomething has went wrong\n")
 				cwd = os.getcwd()
 				try:
 					os.mkdir("Music")
@@ -400,24 +423,6 @@ def ExportMidi(GeneratedChords):
 					numtracks += 1
 				midi = MIDIFile(numtracks)
 				track = 0
-				# time = 0
-				# trackname = "Electric Guitar"
-				# midi.addTrackName(track, time, trackname)
-				# midi.addTempo(track, time, bpm)
-				# channel = 0
-				# volume = 100
-				# for i in range(len(GeneratedChords)):
-				# 	pitch = Tones[GeneratedChords[i][0]][0]
-				# 	for x in range(0,len(GeneratedChords[i])):
-				# 		if Tones[GeneratedChords[i][x]][0] < pitch:
-				# 			pitch = (Tones[GeneratedChords[i][x]][0]) + 12
-				# 		elif Tones[GeneratedChords[i][x]][0] >= pitch:
-				# 			pitch =	Tones[GeneratedChords[i][x]][0]
-				# 		else:
-				# 			print ("Something went terribly wrong")
-				# 		midi.addNote(track, channel, pitch, time, Dur[i], volume)
-				# 	time = time + Dur[i]
-				# 	# write it to disk
 				if Piano == True:
 					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords)
 					track += 1
