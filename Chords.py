@@ -96,10 +96,12 @@ def main():
 				break
 			else:
 				print("\nTry again!\n")
+				raise ValueError
 				pass
-		except:
+		except ValueError as error:
 			print("\nTry again!\n")
-			pass
+			if Debug == True:
+				traceback.print_exc()
 
 	curlinelen=0
 	curline=""
@@ -140,9 +142,10 @@ def main():
 				break
 			else:
 				raise ValueError
-		except:
+		except ValueError as error:
 			print("\nTry again!\n")
-			pass
+			if Debug == True:
+				traceback.print_exc()
 	print("\nHow many chord(s) would you like to generate?\n")
 	while True:
 		try:
@@ -151,9 +154,10 @@ def main():
 				break
 			else:
 				raise ValueError
-		except:
+		except ValueError as error:
 			print("\nTry again!\n")
-			pass
+			if Debug == True:
+				traceback.print_exc()
 	print("\nHow many chord tones per chord? would you like to generate? (1,2,3,4)\n")
 	while True:
 		try:
@@ -162,9 +166,10 @@ def main():
 				break
 			else:
 				raise ValueError
-		except:
+		except ValueError as error:
 			print("\nTry again!\n")
-			pass
+			if Debug == True:
+				traceback.print_exc()
 	print("\nWould you like the progression to start on the tonic? (y/n)\n")
 	while True:
 		try:
@@ -173,9 +178,10 @@ def main():
 				break
 			else:
 				raise ValueError
-		except:
+		except ValueError as error:
 			print("\nTry again!\n")
-			pass
+			if Debug == True:
+				traceback.print_exc()
 	ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic)
 
 
@@ -246,9 +252,10 @@ def ChordGen(i, Temp, GenChords, UsedScale, ChordTones):
 				GenChords[i].append(UsedScale[Temp])
 			else:
 				GenChords[i].append(UsedScale[Temp])
-		except Exception as e:
-			print(e)
+		except ValueError as error:
 			print("\nSomething has went wrong\n")
+			if Debug == True:
+				traceback.print_exc()
 
 def ChordName(GeneratedChords, Notes):
 	Chords = []
@@ -338,7 +345,7 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 					os.mkdir("Music")
 				except OSError as error:
 					if Debug == True:
-						print(error)
+						traceback.print_exc()
 					else:
 						pass
 				if platform.system() == ("Linux" or "MacOS") :
@@ -367,9 +374,10 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 				break
 			else:
 				print("\nTry again!\n")
-		except Exception as e:
-			print(e)
+		except ValueError as error:
 			print("\nSomething has went wrong\n")
+			if Debug == True:
+				traceback.print_exc()
 
 def ExportMidi(GeneratedChords):
 	print("\nWould you like to output these chords to a .mid file? (y/n)\n")
@@ -382,9 +390,10 @@ def ExportMidi(GeneratedChords):
 					try:
 						bpm = int(input(">"))
 						break
-					except:
+					except ValueError as error:
 						print("\nTry again!\n")
-						pass
+						if Debug == True:
+							traceback.print_exc()
 				print("\nWould you like beats to be random or fixed?(r/f)\n")
 				while True:
 					try:
@@ -394,9 +403,10 @@ def ExportMidi(GeneratedChords):
 							break
 						else:
 							raise ValueError
-					except:
+					except ValueError as error:
 						print("\nTry again!\n")
-						pass
+						if Debug == True:
+							traceback.print_exc()
 				print ("\nHow many beats would you like each chord to last?\n")
 				while True:
 					if RanDur == "f":
@@ -405,9 +415,10 @@ def ExportMidi(GeneratedChords):
 							for i in range(len(GeneratedChords)):
 								Dur.append(inputDur)
 							break
-						except:
+						except ValueError as error:
 							print("\nTry again!\n")
-							pass
+							if Debug == True:
+								traceback.print_exc()
 					elif RanDur == "r":
 						Durations = [1,2,4]
 						for i in range(len(GeneratedChords)):
