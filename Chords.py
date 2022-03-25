@@ -85,11 +85,11 @@ def main():
 				Tonic = str(AllNotes[Rand])
 				print ("\n", Tonic)
 			if Tonic in AllNotes:
-				if ("#" in Tonic) and (("B" or "E") not in Tonic):
+				if ("#" in Tonic) and (("B" not in Tonic) or ("E" not in Tonic)):
 					FS = "Sharp"
 				elif "b" in Tonic:
 					FS = "Flat"
-				elif("#" in Tonic) and (("B" or "E") in Tonic):
+				elif("#" in Tonic) and (("B" in Tonic) or ("E" in Tonic)):
 					FS = "Alt"
 				else:
 					FS = "Sharp"
@@ -131,10 +131,10 @@ def main():
 	while True:
 		try:
 			Mode = int(input(">"))
-			if Mode in range(1,len(Modes)+1):
+			if Mode in range(1,len(Modes)):
 				Mode = Modes[Mode-1]
 				break
-			elif Mode == int(len(Modes)+1):
+			elif Mode == int(len(Modes)):
 				Mode = Modes[random.randint(0,len(Modes))]
 				print ("\n",Mode)
 				break
@@ -186,7 +186,6 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 	GeneratedChords = []
 	GeneratedRoots = []
 	ScaleChordsGen = []
-	Overflow = False
 	if FS == "Sharp":
 		Notes = NotesSharp
 	elif FS == "Flat":
