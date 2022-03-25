@@ -123,9 +123,10 @@ def main():
 			print(curline)
 			curline=("")
 			curlinelen = 0
-		if i == (len(Modes) - 1) and (curlinelen != 50):
+		if i == (len(Modes) - 1) and (curlinelen != 0):
 			print(curline)
 	print()
+
 	##print(str(len(Modes)+1)+")","Random")
 	while True:
 		try:
