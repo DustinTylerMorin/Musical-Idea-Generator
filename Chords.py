@@ -49,7 +49,8 @@ Scale = {
 "Lydian Dominant": [0,2,2,2,1,2,1],
 "Mixolydian b6": [0,2,2,1,2,1,2],
 "Locrian #2": [0,2,1,2,1,2,2],
-"Super Locrian": [0,1,2,1,2,2,2]
+"Super Locrian": [0,1,2,1,2,2,2],
+"Random": []
 }
 
 Modes = list(Scale.keys())
@@ -75,9 +76,10 @@ Tones = {
 }
 def main():
 	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
+	print ("What's the tonic of the desired key?\n\nEx(C, Gb, A#, Random)\n")
 	while True:
 		try:
-			Tonic = str(input("What's the tonic of the desired key?\n\nEx(C, Gb, A#, Random)\n\n>")).capitalize()
+			Tonic = str(input(">")).capitalize()
 			if Tonic == "Random":
 				Rand = random.randint(0,20)
 				Tonic = str(AllNotes[Rand])
@@ -87,8 +89,10 @@ def main():
 					FS = "Sharp"
 				elif "b" in Tonic:
 					FS = "Flat"
-				else:
+				elif("#" in Tonic) and (("B" or "E") in Tonic):
 					FS = "Alt"
+				else:
+					FS = "Sharp"
 				break
 			else:
 				print("\nTry again!\n")
@@ -97,33 +101,35 @@ def main():
 			print("\nTry again!\n")
 			pass
 
+	curlinelen=0
+	curline=""
+	print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
+	for i in range(len(Modes)):
+		if curlinelen < 25:
+			curline = ((str(i+1)+") " + str(Modes[i])))
+			curlinelen = len(curline)
+			#buff to 25
+			while curlinelen < 25:
+				curline = curline+(" ")
+				curlinelen += 1
+
+		elif curlinelen == 25:
+			curline = curline + ((str(i+1)+") " + str(Modes[i])))
+			curlinelen = len(curline)
+			#buff to 50
+			while curlinelen < 50:
+				curline = curline+(" ")
+				curlinelen += 1
+			print(curline)
+			curline=("")
+			curlinelen = 0
+		if i == (len(Modes) - 1) and (curlinelen != 50):
+			print(curline)
+	print()
+	##print(str(len(Modes)+1)+")","Random")
 	while True:
 		try:
-			print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
-			curlinelen=0
-			curline=""
-			for i in range(len(Modes)):
-				if curlinelen < 25:
-					curline = ((str(i+1)+") " + str(Modes[i])))
-					curlinelen = len(curline)
-					#buff to 25
-					while curlinelen < 25:
-						curline = curline+(" ")
-						curlinelen += 1
-
-				elif curlinelen == 25:
-					curline = curline + ((str(i+1)+") " + str(Modes[i])))
-					curlinelen = len(curline)
-					#buff to 50
-					while curlinelen < 50:
-						curline = curline+(" ")
-						curlinelen += 1
-					print(curline)
-					curline=("")
-					curlinelen = 0
-
-			print(str(len(Modes)+1)+")","Random")
-			Mode = int(input("\n>"))
+			Mode = int(input(">"))
 			if Mode in range(1,len(Modes)+1):
 				Mode = Modes[Mode-1]
 				break
@@ -132,22 +138,25 @@ def main():
 				print ("\n",Mode)
 				break
 			else:
-				print("\nTry again!\n")
-				pass
-		except:
-			print("\nTry again!\n")
-			main()
-			pass
-	while True:
-		try:
-			Number = int(input("\nHow many chord(s) would you like to generate?\n\n>"))
-			break
+				raise ValueError
 		except:
 			print("\nTry again!\n")
 			pass
+	print("\nHow many chord(s) would you like to generate?\n")
 	while True:
 		try:
-			ChordTones = int(input("\nHow many chord tones per chord? would you like to generate? (1,2,3,4)\n\n>"))
+			Number = int(input(">"))
+			if Number > 0:
+				break
+			else:
+				raise ValueError
+		except:
+			print("\nTry again!\n")
+			pass
+	print("\nHow many chord tones per chord? would you like to generate? (1,2,3,4)\n")
+	while True:
+		try:
+			ChordTones = int(input(">"))
 			if ChordTones in range (1,5):
 				break
 			else:
@@ -155,9 +164,10 @@ def main():
 		except:
 			print("\nTry again!\n")
 			pass
+	print("\nWould you like the progression to start on the tonic? (y/n)\n")
 	while True:
 		try:
-			StartTonic = str(input("\nWould you like the progression to start on the tonic? (y/n)\n\n>")).lower()
+			StartTonic = str(input(">")).lower()
 			if StartTonic == "y" or StartTonic == "n":
 				break
 			else:
@@ -318,9 +328,10 @@ def ChordName(GeneratedChords, Notes):
 	return(Chords)
 
 def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
+	print("\nWould you like to output these chords to a .txt file? (y/n)\n")
 	while True:
 		try:
-			export = str(input("\nWould you like to output these chords to a .txt file? (y/n)\n\n>")).lower()
+			export = str(input(">")).lower()
 			if export == "y":
 				cwd = os.getcwd()
 				try:
@@ -361,20 +372,23 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 			print("\nSomething has went wrong\n")
 
 def ExportMidi(GeneratedChords):
+	print("\nWould you like to output these chords to a .mid file? (y/n)\n")
 	while True:
 		try:
-			export = str(input("\nWould you like to output these chords to a .mid file? (y/n)\n\n>")).lower()
+			export = str(input(">")).lower()
 			if export == "y":
+				print("\nWhat BPM would you like for your .mid file?\n")
 				while True:
 					try:
-						bpm = int(input("\nWhat BPM would you like for your .mid file?\n\n>"))
+						bpm = int(input(">"))
 						break
 					except:
 						print("\nTry again!\n")
 						pass
+				print("\nWould you like beats to be random or fixed?(r/f)\n")
 				while True:
 					try:
-						RanDur = str(input("\nWould you like beats to be random or fixed?(r/f)\n\n>")).lower()
+						RanDur = str(input(">")).lower()
 						if RanDur == "f" or RanDur == "r":
 							Dur = []
 							break
@@ -383,10 +397,11 @@ def ExportMidi(GeneratedChords):
 					except:
 						print("\nTry again!\n")
 						pass
+				print ("\nHow many beats would you like each chord to last?\n")
 				while True:
 					if RanDur == "f":
 						try:
-							inputDur = int(input("\nHow many beats would you like each chord to last?\n\n>"))
+							inputDur = int(input(">"))
 							for i in range(len(GeneratedChords)):
 								Dur.append(inputDur)
 							break
@@ -444,6 +459,7 @@ def ExportMidi(GeneratedChords):
 					print ("\nFile output to:"+now)
 				break
 			elif export == "n":
+				print()
 				break
 			else:
 				print("\nTry again!\n")
