@@ -543,14 +543,14 @@ def DrumsGen(midi, track, bpm, Dur, GeneratedChords):
 	TotalDur = 0
 	for i in range (len(Dur)):
 		TotalDur += Dur[i]
-	for x in range (TotalDur):
+	for x in range (TotalDur * 2 - 1):
 		if x%4 == 2:
-			midi.addNote(track, channel, 38, x, 1, volume)
+			midi.addNote(track, channel, 38, x/2, .5, volume)
 		if x%4 == 0:
-			midi.addNote(track, channel, 36, x, 1, volume)
+			midi.addNote(track, channel, 36, x/2, .5, volume)
 		if x%16 == 0:
-			midi.addNote(track, channel, 49, x, 1, volume-25)
-		midi.addNote(track, channel, 42, x, 1, volume-25)
+			midi.addNote(track, channel, 49, x/2, 1, volume-25)
+		midi.addNote(track, channel, 42, x/2, 1, volume-25)
 	return midi
 if (__name__ == "__main__"):
 	main()
