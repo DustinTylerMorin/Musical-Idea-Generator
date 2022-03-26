@@ -52,6 +52,8 @@ Scale = {
 "Mixolydian b6": [0,2,2,1,2,1,2],
 "Locrian #2": [0,2,1,2,1,2,2],
 "Super Locrian": [0,1,2,1,2,2,2],
+"Whole Tone": [0,2,2,2,2,2],
+"Chromatic": [0,1,1,1,1,1,1,1,1,1,1,1],
 "Random": []
 }
 
@@ -112,7 +114,6 @@ def main():
 		if curlinelen < 25:
 			curline = ((str(i+1)+") " + str(Modes[i])))
 			curlinelen = len(curline)
-			#buff to 25
 			while curlinelen < 25:
 				curline = curline+(" ")
 				curlinelen += 1
@@ -120,7 +121,6 @@ def main():
 		elif curlinelen == 25:
 			curline = curline + ((str(i+1)+") " + str(Modes[i])))
 			curlinelen = len(curline)
-			#buff to 50
 			while curlinelen < 50:
 				curline = curline+(" ")
 				curlinelen += 1
@@ -131,7 +131,6 @@ def main():
 			print(curline)
 	print()
 
-	##print(str(len(Modes)+1)+")","Random")
 	while True:
 		try:
 			Mode = int(input(">"))
@@ -139,7 +138,7 @@ def main():
 				Mode = Modes[Mode-1]
 				break
 			elif Mode == int(len(Modes)):
-				Mode = Modes[random.randint(0,len(Modes))]
+				Mode = Modes[random.randint(0,len(Modes)-1)]
 				print ("\n",Mode)
 				break
 			else:
@@ -240,7 +239,6 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 	ScaleChords = ChordName(ScaleChordsGen, Notes)
 	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
 	print ("Scale Chords:\n\n",ScaleChords,"\n\n")
-	#print ("Chord Notes\n\n",GeneratedChords)
 	print ("Chord(s) produced:\n\n",Chords)
 
 	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
