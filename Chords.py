@@ -19,7 +19,8 @@ Drums = True
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
 NotesSharp = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 NotesFlat = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"]
-NotesAlt = ["A", "A#", "B", "B#", "C#", "D", "D#", "E", "E#", "F#", "G", "G#"]
+NotesAltSharp = ["A", "A#", "B", "B#", "C#", "D", "D#", "E", "E#", "F#", "G", "G#"]
+NotesAltFlat = ["A", "Bb", "Cb", "C", "Db", "D", "Eb", "Fb", "F", "Gb", "G", "Ab"]
 
 Scale = {
 "Major": [0,2,2,1,2,2,2],
@@ -89,14 +90,21 @@ def main():
 				Tonic = str(AllNotes[Rand])
 				print ("\n", Tonic)
 			if Tonic in AllNotes:
-				if ("#" in Tonic) and (("B" not in Tonic) or ("E" not in Tonic)):
+				if("#" in Tonic) and (("B" in Tonic) or ("E" in Tonic)):
+					FS = "AltSharp"
+				elif("b" in Tonic) and (("C" in Tonic) or ("F" in Tonic)):
+					FS = "AltFlat"
+				elif (("#" in Tonic) and ("B" not in Tonic)):
 					FS = "Sharp"
-				elif "b" in Tonic:
+				elif (("#" in Tonic) and ("E" not in Tonic)):
+					FS = Sharp
+				elif (("b" in Tonic) and ("C" not in Tonic)):
 					FS = "Flat"
-				elif("#" in Tonic) and (("B" in Tonic) or ("E" in Tonic)):
-					FS = "Alt"
+				elif (("b" in Tonic) and ("F" not in Tonic)):
+					FS = "Flat"
 				else:
-					FS = "Sharp"
+					FS = 'Flat'
+				print(FS)
 				break
 			else:
 				print("\nTry again!\n")
@@ -197,8 +205,12 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 		Notes = NotesSharp
 	elif FS == "Flat":
 		Notes = NotesFlat
+	elif FS == "AltFlat":
+		Notes = NotesAltFlat
+	elif FS == "AltSharp":
+		Notes = NotesAltSharp
 	else:
-		Notes = NotesAlt
+		raise ValueError
 
 	Index = Notes.index(Tonic)
 	randlimit = len(Scale.get(Mode))
@@ -268,21 +280,30 @@ def ChordName(GeneratedChords, Notes):
 			name.append(Root)
 
 		if len(GeneratedChords[i]) >= 2:
+			Second=GeneratedChords[i][1]
 			Third=GeneratedChords[i][1]
 			if (Notes.index(Root) < Notes.index(Third)):
 				if Notes.index(Third) - Notes.index(Root) == 4:
 					name[0]=(name[0]+"Maj")
 				elif Notes.index(Third) - Notes.index(Root) == 3:
 					name[0]=(name[0]+"m")
+				elif Notes.index(Second) - Notes.index(Root) == 2:
+					name[0]=(name[0]+"sus2")
+
 			else:
 				if Notes.index(Third) + 12 - Notes.index(Root) == 4:
 					name[0]=(name[0]+"Maj")
-				elif Notes.index(Third) +12  - Notes.index(Root) == 3:
+				elif Notes.index(Third) + 12 - Notes.index(Root) == 3:
 					name[0]=(name[0]+"m")
+				elif Notes.index(Second)+ 12 - Notes.index(Root) == 2:
+						name[0]=(name[0]+"sus2")
+
 
 
 		if len(GeneratedChords[i]) >= 3:
+			Fourth=GeneratedChords[i][2]
 			Fifth=GeneratedChords[i][2]
+			Sixth=GeneratedChords[i][2]
 			if (Notes.index(Root) < Notes.index(Fifth)):
 				if Notes.index(Fifth) - Notes.index(Root) == 7:
 					pass
@@ -290,14 +311,24 @@ def ChordName(GeneratedChords, Notes):
 					name[0]=(name[0]+"b5")
 				elif Notes.index(Fifth) - Notes.index(Root) == 8:
 					name[0]=(name[0]+"#5")
+				elif Notes.index(Fourth) - Notes.index(Root) == 5:
+					name[0]=(name[0]+"sus4")
+				elif Notes.index(Sixth) - Notes.index(Root) == 9:
+					name[0]=(name[0]+"6")
 
 			else:
 				if Notes.index(Fifth) + 12 - Notes.index(Root) == 7:
 					pass
-				elif Notes.index(Fifth) +12  - Notes.index(Root) == 6:
+				elif Notes.index(Fifth) +12 - Notes.index(Root) == 6:
 					name[0]=(name[0]+"b5")
-				elif Notes.index(Fifth) +12  - Notes.index(Root) == 8:
+				elif Notes.index(Fifth) + 12 - Notes.index(Root) == 8:
 					name[0]=(name[0]+"#5")
+				elif Notes.index(Fourth) + 12 - Notes.index(Root) == 5:
+					name[0]=(name[0]+"sus4")
+				elif Notes.index(Sixth) + 12 - Notes.index(Root) == 9:
+						name[0]=(name[0]+"6")
+
+
 
 		if len(GeneratedChords[i]) == 4:
 			Seventh=GeneratedChords[i][3]
@@ -332,6 +363,8 @@ def ChordName(GeneratedChords, Notes):
 			name = name.replace("Majb7","7")
 		if "dimb7" in name:
 			name = name.replace("dimb7","dim7")
+		if "sus2sus4" in name:
+			name = name.replace("sus2sus4","")
 		Chords.append(name)
 	return(Chords)
 
