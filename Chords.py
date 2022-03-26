@@ -66,6 +66,8 @@ Tones = {
 "A#": [58],
 "Bb": [58],
 "B" : [59],
+"Cb": [59],
+"B#": [60],
 "C" : [60],
 "C#": [61],
 "Db": [61],
@@ -73,12 +75,15 @@ Tones = {
 "D#": [63],
 "Eb": [63],
 "E" : [64],
+"Fb": [64],
+"E#": [65],
 "F" : [65],
 "F#": [66],
 "Gb": [66],
 "G" : [67],
 "G#": [68]
 }
+
 def main():
 	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
 	print ("What's the tonic of the desired key?\n\nEx(C, Gb, A#, Random)\n")
