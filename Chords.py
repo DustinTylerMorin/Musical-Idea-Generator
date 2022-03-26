@@ -29,6 +29,8 @@ Scale = {
 "Mixolydian": [0,2,2,1,2,2,1],
 "Minor": [0,2,1,2,2,1,2],
 "Locrian": [0,1,2,2,1,2,2,2],
+"Major Pentatonic": [0,2,2,3,2],
+"Minor Pentatonic": [0,3,2,2,3],
 "Harmonic Major": [0,2,2,1,2,1,3],
 "Dorian b5": [0,2,1,2,1,3,1],
 "Phrygian b4": [0,1,2,1,3,1,2],
@@ -200,17 +202,18 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 		Notes = NotesAlt
 
 	Index = Notes.index(Tonic)
-
+	randlimit = len(Scale.get(Mode))
+	print(randlimit)
 	for i in range(Number):
-		RandomNumbers.append(random.randint(0,6))
+		RandomNumbers.append(random.randint(0,randlimit-1))
 	if StartTonic == 'y':
 		RandomNumbers[0] = 0
 	if StartTonic == 'n':
-		RandomNumbers[0] = random.randint(1,6)
-	for z in range(0,7):
+		RandomNumbers[0] = random.randint(1,randlimit-1)
+	for z in range(0,randlimit):
 		ScaleNotes.append((Scale[Mode])[z])
 
-	for x in range (0,7):
+	for x in range (0,randlimit):
 		while True:
 			Index = Index + ScaleNotes[x]
 			try:
@@ -228,7 +231,7 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 			Temp = UsedScale.index(GeneratedRoots[i])
 			GeneratedChords.insert(i,[GeneratedRoots[i]])
 			ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones)
-	for z in range(7):
+	for z in range(randlimit):
 		Temp = z
 		ScaleChordsGen.insert(z,[UsedScale[z]])
 		ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones)
