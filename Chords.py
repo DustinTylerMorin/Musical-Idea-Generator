@@ -104,7 +104,6 @@ def main():
 					FS = "Flat"
 				else:
 					FS = 'Flat'
-				print(FS)
 				break
 			else:
 				print("\nTry again!\n")
