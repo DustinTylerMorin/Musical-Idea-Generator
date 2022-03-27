@@ -217,13 +217,11 @@ def	RandomConfig(Tonic,FS):
 			Mode = int(input(">"))
 			if Mode in range(1,len(Modes)):
 				Mode = Modes[Mode-1]
-				#NumChords(Tonic,FS,Mode)
-				return (Tonic,FS,Mode)
+				break
 			elif Mode == int(len(Modes)):
 				Mode = Modes[random.randint(0,len(Modes)-1)]
 				print ("\n",Mode)
-				#NumChords(Tonic,FS,Mode)
-				return (Tonic,FS,Mode)
+				break
 			else:
 				raise ValueError
 			NumChords(Tonic,Mode,FS)
@@ -231,6 +229,7 @@ def	RandomConfig(Tonic,FS):
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
+	return (Tonic,FS,Mode)
 
 def Genre(Tonic,FS):
 	TempGenre = list(GenreList.keys())
@@ -254,13 +253,13 @@ def Genre(Tonic,FS):
 				Progression = Progression[1:]
 				for i in range (len(Progression)):
 					Progression[i] = int(Progression[i]-1)
-				return (Mode,Number,StartTonic,Progression)
+				break
 
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-
+	return (Mode,Number,StartTonic,Progression)
 def Manual():
 	pass
 def NumChords(Tonic,Mode,FS):
@@ -269,47 +268,43 @@ def NumChords(Tonic,Mode,FS):
 		try:
 			Number = int(input(">"))
 			if Number > 0:
-				#ChordTones(Tonic,Mode,Number,FS)
-				return(Number)
+				break
 			else:
 				raise ValueError
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-
+	return(Number)
 def NumChordTones(Tonic,Mode,Number,FS):
 	print("\nHow many chord tones per chord? would you like to generate? (1,2,3,4)\n")
 	while True:
 		try:
 			ChordTones = int(input(">"))
 			if ChordTones in range (1,5):
-				#ProgressionStart(Tonic,Mode,Number,FS,ChordTones)
-				return(ChordTones)
+				break
 			else:
 				raise ValueError
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-
+	return(ChordTones)
 def ProgressionStart(Tonic, Mode, Number, FS, ChordTones):
 	print("\nWould you like the progression to start on the tonic? (y/n)\n")
 	while True:
 		try:
 			StartTonic = str(input(">")).lower()
 			if StartTonic == "y" or StartTonic == "n":
-				#ConfigDone(Tonic, Mode, Number, FS, ChordTones, StartTonic)
-				return(StartTonic)
+				break
 			else:
-				print (StartTonic)
 				raise ValueError
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
 		print (StartTonic)
-
+	return(StartTonic)
 
 #random to tell mode
 def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic, Random, Progression=None):
