@@ -10,7 +10,7 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = False
+Debug = True
 Piano = True
 Guitar = True
 Bass = True
@@ -30,7 +30,7 @@ Scale = {
 "Lydian": [0,2,2,2,1,2,2],
 "Mixolydian": [0,2,2,1,2,2,1],
 "Minor": [0,2,1,2,2,1,2],
-"Locrian": [0,1,2,2,1,2,2,2],
+"Locrian": [0,1,2,2,1,2,2],
 "Major Pentatonic": [0,2,2,3,2],
 "Minor Pentatonic": [0,3,2,2,3],
 "Harmonic Major": [0,2,2,1,2,1,3],
@@ -164,9 +164,12 @@ def main():
 			OpMode = int(input(">"))
 			if OpMode == 3:
 				Random = False
-				Mode = ModeConfig(Tonic,FS)
-				Manual(Tonic,FS,Mode)
+				(Mode) = ModeConfig(Tonic,FS)
+				(UsedScale, Progression, Notes, Limit)=ScaleGen(Tonic, Mode, 7, FS, 4, "y", True)
+				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
+				(Chords, ScaleChords, GeneratedChords)=Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
+				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 				break
 			elif OpMode == 2:
 				Random = False
@@ -179,7 +182,7 @@ def main():
 				break
 			elif OpMode ==1:
 				Random = True
-				(Tonic,FS,Mode) = ModeConfig(Tonic,FS)
+				(Mode) = ModeConfig(Tonic,FS)
 				(Number) = NumChords(Tonic,Mode,FS)
 				(ChordTones) = NumChordTones(Tonic,Mode,Number,FS)
 				(StartTonic) = ProgressionStart(Tonic,Mode,Number,FS,ChordTones)
@@ -238,7 +241,7 @@ def	ModeConfig(Tonic,FS):
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-	return (Tonic,FS,Mode)
+	return (Mode)
 
 def Genre(Tonic,FS):
 	TempGenre = list(GenreList.keys())
@@ -269,8 +272,67 @@ def Genre(Tonic,FS):
 			if Debug == True:
 				traceback.print_exc()
 	return (Mode,Number,StartTonic,Progression)
-def Manual(Tonic,FS,Mode):
-	pass
+
+def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
+	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
+	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
+	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length,Modifier(s)\n\nEx)>"+Tonic+",3,4,sus2\n\n"+Tonic+"sus2\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
+	Modifiers = ["sus2","sus4","6","add9","add11", "m6", "11", "13", "none"]
+	ChordInputList = []
+	while True:
+		ChordInput = (str(input(">")))
+		try:
+			if ChordInput.lower() == "q":
+				break
+			elif ChordInput.lower() == "r":
+				del ChordInputList[-1]
+
+			else:
+				TempInput = ChordInput.split(",")
+				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),str(TempInput[3].lower())]))
+				if (ChordInput[0].capitalize() in AllNotes) == False:
+					raise ValueError
+				if (ChordInput[1] in range(1,5)) == False:
+					raise ValueError
+				if (ChordInput[3] in Modifiers) == False:
+					raise ValueError
+				ChordInputList.append(ChordInput)
+			print(ChordInputList)
+		except:
+			print("\nTry again!\n")
+			if Debug == True:
+				traceback.print_exc()
+	try:
+		ChordsList = []
+		ScaleChordsList = []
+		GeneratedChordsList = []
+		Progression = []
+		Progression.append(UsedScale.index((ChordInputList[0])[0]))
+		ChordTones = ChordInputList[0][1]
+		StartTonic = None
+		(UsedScale, Progression, Notes, Limit) = ScaleGen(Tonic,Mode,7,FS,4,"y","n",Progression)
+
+		for i in range(len(ChordInputList)):
+			Progression = []
+			Progression.append(UsedScale.index((ChordInputList[i])[0]))
+			ChordTones = ChordInputList[i][1]
+			Limit = 7
+			print(Notes)
+			if i  == 0:
+				(unused ,ScaleChords, unused)=ChordGenPrep(1, UsedScale, 4, Progression, Notes, Limit)
+				ScaleChordsList.append(ScaleChords)
+			(Chords, unused, GeneratedChords)=ChordGenPrep(1, UsedScale, ChordTones, Progression, Notes, Limit)
+			ChordsList.append(Chords)
+			GeneratedChordsList.append(GeneratedChords)
+			if i == (len(ChordInputList)-1):
+				break
+	except:
+		print("\nTry again!\n")
+		if Debug == True:
+			traceback.print_exc()
+		Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
+	return(ChordsList, ScaleChordsList, GeneratedChordsList)
+
 def NumChords(Tonic,Mode,FS):
 	print("\nHow many chord(s) would you like to generate?\n")
 	while True:
@@ -312,7 +374,6 @@ def ProgressionStart(Tonic, Mode, Number, FS, ChordTones):
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-		print (StartTonic)
 	return(StartTonic)
 
 def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic, Random, Progression=None):
@@ -437,10 +498,10 @@ def ChordName(GeneratedChords, Notes):
 					name[0]=(name[0]+"b5")
 				elif Notes.index(Fifth) - Notes.index(Root) == 8:
 					name[0]=(name[0]+"#5")
-				elif Notes.index(Fourth) - Notes.index(Root) == 5:
-					name[0]=(name[0]+"sus4")
-				elif Notes.index(Sixth) - Notes.index(Root) == 9:
-					name[0]=(name[0]+"6")
+				#elif Notes.index(Fourth) - Notes.index(Root) == 5:
+				#name[0]=(name[0]+"sus4")
+			#	elif Notes.index(Sixth) - Notes.index(Root) == 9:
+				#	name[0]=(name[0]+"6")
 
 			else:
 				if Notes.index(Fifth) + 12 - Notes.index(Root) == 7:
@@ -449,10 +510,10 @@ def ChordName(GeneratedChords, Notes):
 					name[0]=(name[0]+"b5")
 				elif Notes.index(Fifth) + 12 - Notes.index(Root) == 8:
 					name[0]=(name[0]+"#5")
-				elif Notes.index(Fourth) + 12 - Notes.index(Root) == 5:
-					name[0]=(name[0]+"sus4")
-				elif Notes.index(Sixth) + 12 - Notes.index(Root) == 9:
-						name[0]=(name[0]+"6")
+				#elif Notes.index(Fourth) + 12 - Notes.index(Root) == 5:
+				#	name[0]=(name[0]+"sus4")
+				#elif Notes.index(Sixth) + 12 - Notes.index(Root) == 9:
+						#name[0]=(name[0]+"6")
 
 
 
