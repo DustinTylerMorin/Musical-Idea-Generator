@@ -164,21 +164,29 @@ def main():
 			OpMode = int(input(">"))
 			if OpMode == 3:
 				Random = False
-				Manual(Tonic,FS)
+				Mode = ModeConfig(Tonic,FS)
+				Manual(Tonic,FS,Mode)
+				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
 				break
 			elif OpMode == 2:
 				Random = False
 				(Mode,Number,StartTonic,Progression) = Genre(Tonic,FS)
 				(ChordTones) = NumChordTones(Tonic,Mode,Number,FS)
-				ScaleGen(Tonic,Mode,Number,FS,ChordTones,StartTonic,Random,Progression)
+				(UsedScale, Progression, Notes, Limit) = ScaleGen(Tonic,Mode,Number,FS,ChordTones,StartTonic,Random,Progression)
+				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
+				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
+				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 				break
 			elif OpMode ==1:
 				Random = True
-				(Tonic,FS,Mode) = RandomConfig(Tonic,FS)
+				(Tonic,FS,Mode) = ModeConfig(Tonic,FS)
 				(Number) = NumChords(Tonic,Mode,FS)
 				(ChordTones) = NumChordTones(Tonic,Mode,Number,FS)
 				(StartTonic) = ProgressionStart(Tonic,Mode,Number,FS,ChordTones)
-				ScaleGen(Tonic,Mode,Number,FS,ChordTones,StartTonic,Random)
+				(UsedScale, Progression, Notes, Limit) =ScaleGen(Tonic,Mode,Number,FS,ChordTones,StartTonic,Random)
+				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
+				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
+				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 				break
 			else:
 				raise ValueError
@@ -188,7 +196,7 @@ def main():
 			if Debug == True:
 				traceback.print_exc()
 
-def	RandomConfig(Tonic,FS):
+def	ModeConfig(Tonic,FS):
 	print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
 	curlinelen=0
 	curline=""
@@ -261,7 +269,7 @@ def Genre(Tonic,FS):
 			if Debug == True:
 				traceback.print_exc()
 	return (Mode,Number,StartTonic,Progression)
-def Manual():
+def Manual(Tonic,FS,Mode):
 	pass
 def NumChords(Tonic,Mode,FS):
 	print("\nHow many chord(s) would you like to generate?\n")
@@ -307,14 +315,10 @@ def ProgressionStart(Tonic, Mode, Number, FS, ChordTones):
 		print (StartTonic)
 	return(StartTonic)
 
-#random to tell mode
 def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic, Random, Progression=None):
 	RandomNumbers = []
 	ScaleNotes = []
 	UsedScale = []
-	GeneratedChords = []
-	GeneratedRoots = []
-	ScaleChordsGen = []
 	if FS == "Sharp":
 		Notes = NotesSharp
 	elif FS == "Flat":
@@ -327,21 +331,21 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic, Random, Progressio
 		raise ValueError
 
 	Index = Notes.index(Tonic)
-	randlimit = len(Scale.get(Mode))
+	Limit = len(Scale.get(Mode))
 	if Random == True:
 		for i in range(Number):
-			RandomNumbers.append(random.randint(0,randlimit-1))
+			RandomNumbers.append(random.randint(0,Limit-1))
 		if StartTonic == 'y':
 			RandomNumbers[0] = 0
 		if StartTonic == 'n':
-			RandomNumbers[0] = random.randint(1,randlimit-1)
-		for z in range(0,randlimit):
+			RandomNumbers[0] = random.randint(1,Limit-1)
+		for z in range(0,Limit):
 			ScaleNotes.append((Scale[Mode])[z])
 		Progression = RandomNumbers
 	else:
-		for z in range(0,randlimit):
+		for z in range(0,Limit):
 			ScaleNotes.append((Scale[Mode])[z])
-	for x in range (0,randlimit):
+	for x in range (0,Limit):
 		while True:
 			Index = Index + ScaleNotes[x]
 			try:
@@ -352,40 +356,46 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic, Random, Progressio
 					Index = Index - len(Notes)
 					UsedScale.append(Notes[Index])
 					break
+	return(UsedScale, Progression, Notes, Limit)
+
+def export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
+	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
+	ExportMidi(GeneratedChords)
+
+def ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit):
+	ScaleChordsGen = []
+	GeneratedChords = []
+	GeneratedRoots = []
 	for y in range (Number):
 		GeneratedRoots.append(UsedScale[Progression[y]])
 	while len(GeneratedChords) != len(GeneratedRoots):
 		for i in range(len(GeneratedRoots)):
 			Temp = UsedScale.index(GeneratedRoots[i])
 			GeneratedChords.insert(i,[GeneratedRoots[i]])
-			ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones)
-	for z in range(randlimit):
+			(GeneratedChords)=ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones)
+	for z in range(Limit):
 		Temp = z
 		ScaleChordsGen.insert(z,[UsedScale[z]])
-		ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones)
+		(ScaleChords)=ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones)
 	Chords = ChordName(GeneratedChords, Notes)
 	ScaleChords = ChordName(ScaleChordsGen, Notes)
-	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
-	print ("Scale Chords:\n\n",ScaleChords,"\n\n")
-	print ("Chord(s) produced:\n\n",Chords)
+	return (Chords, ScaleChords, GeneratedChords)
 
-	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
-	ExportMidi(GeneratedChords)
 
-def ChordGen(i, Temp, GenChords, UsedScale, ChordTones):
-	while len(GenChords[i]) != ChordTones:
+def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones):
+	while len(GeneratedChords[i]) != ChordTones:
 		try:
 			Temp = Temp + 2
 			if Temp >= len(UsedScale):
 				Temp = Temp - len(UsedScale)
-				GenChords[i].append(UsedScale[Temp])
+				GeneratedChords[i].append(UsedScale[Temp])
 			else:
-				GenChords[i].append(UsedScale[Temp])
+				GeneratedChords[i].append(UsedScale[Temp])
 		except ValueError as error:
 			print("\nSomething has went wrong\n")
 			if Debug == True:
 				traceback.print_exc()
-
+	return(GeneratedChords)
 def ChordName(GeneratedChords, Notes):
 	Chords = []
 	for i in range(len(GeneratedChords)):
@@ -483,6 +493,11 @@ def ChordName(GeneratedChords, Notes):
 			name = name.replace("sus2sus4","")
 		Chords.append(name)
 	return(Chords)
+
+def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
+	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
+	print ("Scale Chords:\n\n",ScaleChords,"\n\n")
+	print ("Chord(s) produced:\n\n",Chords)
 
 def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 	print("\nWould you like to output these chords to a .txt file? (y/n)\n")
