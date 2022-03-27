@@ -1,5 +1,6 @@
 ## Program created for generating random chords
 ## Program created by Dustin Morin
+##GPL-3.0-or-later
 
 import random
 import platform
