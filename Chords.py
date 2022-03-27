@@ -83,6 +83,47 @@ Tones = {
 "G" : [67],
 "G#": [68]
 }
+GenreList = {
+	"Pop" : {
+	"1" : ["Major",1,5,6,4],
+	"2" : ["Major",5,6,4,1],
+	"3" : ["Major",1,4,5],
+	"4" : ["Major",1,6,4,5],
+	"5" : ["Major",6,4,1,5],
+	"6" : ["Major",1,4,6,5],
+	"7" : ["Major",1,6,3,7],
+	"8" : ["Major",2,5,1],
+	"9" : ["Major",1,5,4]
+	},
+
+	"Rock" : {
+	"1" : ["Major",1,5,6,4],
+	"2" : ["Major",1,4,5],
+	"3" : ["Major",4,6,1,5],
+	"4" : ["Minor",1,4,7],
+	"5" : ["Major",1,5,6,3,4,1,4,5],
+	"6" : ["Major",2,4,5],
+	"7" : ["Major",5,4,1],
+	"8" : ["Major",2,1,5,7],
+	"9" : ["Mixolydian",1,7],
+	"10": ["Mixolydian",1,7,4,1],
+	"11": ["Mixolydian",1,7,4,5,1],
+	"12": ["Major",2,1,4,5],
+	"13": ["Phrygian",1,3,5,4,6],
+	"14": ["Lydian",1,6,2,3,6,2,1],
+	"15": ["Harmonic Major",1,4,5],
+	"16": ["Harmonic Major",1,2,4,5],
+	"17": ["Harmonic Major",1,3,5,4]
+	},
+
+	"Blues" : {
+	"1" : ["Major",1,1,1,1,4,4,1,1,5,4,1,5],
+	"2" : ["Major",1,1,1,1,4,4,1,1,5,5,1,1],
+	"3"	: ["Major",1,4,1,1,4,4,1,1,5,4,1,5],
+	"4" : ["Major",1,1,1,1,4,4,1,1,5,4,1,4,1,5],
+	"5" : ["Major",1,1,1,1,4,4,1,1,5,6,1,5]
+	}
+}
 
 def main():
 	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
@@ -108,20 +149,48 @@ def main():
 				elif (("b" in Tonic) and ("F" not in Tonic)):
 					FS = "Flat"
 				else:
-					FS = 'Flat'
+					FS = 'Sharp'
 				break
 			else:
-				print("\nTry again!\n")
 				raise ValueError
-				pass
+		except ValueError as error:
+			print("\nTry again!\n")
+			if Debug == True:
+				traceback.print_exc()
+	print("\nWould you like the chords to be:\n \n1)Random Based On Scale \n2)Genre Based \n3)Manual Entry (Broken)\n")
+	while True:
+		try:
+			OpMode = int(input(">"))
+			if OpMode == 3:
+				Random = False
+				Manual(Tonic,FS)
+				break
+			elif OpMode == 2:
+				Random = False
+				(Mode,Number,StartTonic,Progression) = Genre(Tonic,FS)
+				(ChordTones) = NumChordTones(Tonic,Mode,Number,FS)
+				ScaleGen(Tonic,Mode,Number,FS,ChordTones,StartTonic,Random,Progression)
+				break
+			elif OpMode ==1:
+				Random = True
+				(Tonic,FS,Mode) = RandomConfig(Tonic,FS)
+				(Number) = NumChords(Tonic,Mode,FS)
+				(ChordTones) = NumChordTones(Tonic,Mode,Number,FS)
+				(StartTonic) = ProgressionStart(Tonic,Mode,Number,FS,ChordTones)
+				ScaleGen(Tonic,Mode,Number,FS,ChordTones,StartTonic,Random)
+				break
+			else:
+				raise ValueError
+
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
 
+def	RandomConfig(Tonic,FS):
+	print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
 	curlinelen=0
 	curline=""
-	print ("\nChoose a scale/mode.\n\nType the number which corresponds to the desired key.\n")
 	for i in range(len(Modes)):
 		if curlinelen < 25:
 			curline = ((str(i+1)+") " + str(Modes[i])))
@@ -148,57 +217,102 @@ def main():
 			Mode = int(input(">"))
 			if Mode in range(1,len(Modes)):
 				Mode = Modes[Mode-1]
-				break
+				#NumChords(Tonic,FS,Mode)
+				return (Tonic,FS,Mode)
 			elif Mode == int(len(Modes)):
 				Mode = Modes[random.randint(0,len(Modes)-1)]
 				print ("\n",Mode)
-				break
+				#NumChords(Tonic,FS,Mode)
+				return (Tonic,FS,Mode)
 			else:
 				raise ValueError
+			NumChords(Tonic,Mode,FS)
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
+
+def Genre(Tonic,FS):
+	TempGenre = list(GenreList.keys())
+	print ("\nChoose a Genre:\n")
+	for i in range(len(TempGenre)):
+		print((str(i+1)+") " + str(TempGenre[i])))
+	print()
+	while True:
+		try:
+			Genre=int(input(">"))
+			if Genre in range(1,len(TempGenre)+1):
+				Genre = Genre - 1
+				TempGenreList = list(GenreList.keys())
+				GenreValues = GenreList[TempGenreList[Genre]]
+				TempInt = str(random.randint(1,len(GenreValues)))
+				Progression = GenreValues[TempInt]
+				Number = 0
+				Mode = Progression[0]
+				Number = (len(Progression)-1)
+				StartTonic = Progression[1]
+				Progression = Progression[1:]
+				for i in range (len(Progression)):
+					Progression[i] = int(Progression[i]-1)
+				return (Mode,Number,StartTonic,Progression)
+
+		except ValueError as error:
+			print("\nTry again!\n")
+			if Debug == True:
+				traceback.print_exc()
+
+def Manual():
+	pass
+def NumChords(Tonic,Mode,FS):
 	print("\nHow many chord(s) would you like to generate?\n")
 	while True:
 		try:
 			Number = int(input(">"))
 			if Number > 0:
-				break
+				#ChordTones(Tonic,Mode,Number,FS)
+				return(Number)
 			else:
 				raise ValueError
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
+
+def NumChordTones(Tonic,Mode,Number,FS):
 	print("\nHow many chord tones per chord? would you like to generate? (1,2,3,4)\n")
 	while True:
 		try:
 			ChordTones = int(input(">"))
 			if ChordTones in range (1,5):
-				break
+				#ProgressionStart(Tonic,Mode,Number,FS,ChordTones)
+				return(ChordTones)
 			else:
 				raise ValueError
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
+
+def ProgressionStart(Tonic, Mode, Number, FS, ChordTones):
 	print("\nWould you like the progression to start on the tonic? (y/n)\n")
 	while True:
 		try:
 			StartTonic = str(input(">")).lower()
 			if StartTonic == "y" or StartTonic == "n":
-				break
+				#ConfigDone(Tonic, Mode, Number, FS, ChordTones, StartTonic)
+				return(StartTonic)
 			else:
+				print (StartTonic)
 				raise ValueError
 		except ValueError as error:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-	ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic)
+		print (StartTonic)
 
 
-def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
+#random to tell mode
+def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic, Random, Progression=None):
 	RandomNumbers = []
 	ScaleNotes = []
 	UsedScale = []
@@ -218,16 +332,19 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 
 	Index = Notes.index(Tonic)
 	randlimit = len(Scale.get(Mode))
-	print(randlimit)
-	for i in range(Number):
-		RandomNumbers.append(random.randint(0,randlimit-1))
-	if StartTonic == 'y':
-		RandomNumbers[0] = 0
-	if StartTonic == 'n':
-		RandomNumbers[0] = random.randint(1,randlimit-1)
-	for z in range(0,randlimit):
-		ScaleNotes.append((Scale[Mode])[z])
-
+	if Random == True:
+		for i in range(Number):
+			RandomNumbers.append(random.randint(0,randlimit-1))
+		if StartTonic == 'y':
+			RandomNumbers[0] = 0
+		if StartTonic == 'n':
+			RandomNumbers[0] = random.randint(1,randlimit-1)
+		for z in range(0,randlimit):
+			ScaleNotes.append((Scale[Mode])[z])
+		Progression = RandomNumbers
+	else:
+		for z in range(0,randlimit):
+			ScaleNotes.append((Scale[Mode])[z])
 	for x in range (0,randlimit):
 		while True:
 			Index = Index + ScaleNotes[x]
@@ -239,8 +356,8 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 					Index = Index - len(Notes)
 					UsedScale.append(Notes[Index])
 					break
-	for y in range (len(RandomNumbers)):
-		GeneratedRoots.append(UsedScale[RandomNumbers[y]])
+	for y in range (Number):
+		GeneratedRoots.append(UsedScale[Progression[y]])
 	while len(GeneratedChords) != len(GeneratedRoots):
 		for i in range(len(GeneratedRoots)):
 			Temp = UsedScale.index(GeneratedRoots[i])
@@ -250,7 +367,6 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic):
 		Temp = z
 		ScaleChordsGen.insert(z,[UsedScale[z]])
 		ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones)
-
 	Chords = ChordName(GeneratedChords, Notes)
 	ScaleChords = ChordName(ScaleChordsGen, Notes)
 	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
