@@ -293,7 +293,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),str(TempInput[3].lower())]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
 					raise ValueError
-				if (ChordInput[1] in range(1,8)) == False:
+				if (ChordInput[1] in range(1,6)) == False:
 					raise ValueError
 				if (ChordInput[2] <= 0) == True:
 					raise ValueError
@@ -472,8 +472,14 @@ def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier):
 				GeneratedChords[i][6] = (UsedScale[Temp])
 			if (Modifier == "add9") and (len(GeneratedChords[i]) == 5):
 				GeneratedChords[i][4] = (UsedScale[Temp])
+			if (Modifier == "add11") and (len(GeneratedChords[i]) == 5):
+				GeneratedChords[i][4] = (UsedScale[Temp+2])
 			if (Modifier == "add11") and (len(GeneratedChords[i]) == 6):
 				GeneratedChords[i][5] = (UsedScale[Temp])
+			if (Modifier == "add13") and (len(GeneratedChords[i]) == 5):
+				GeneratedChords[i][4] = (UsedScale[Temp+4])
+			if (Modifier == "add13") and (len(GeneratedChords[i]) == 6):
+				GeneratedChords[i][5] = (UsedScale[Temp+2])
 			if (Modifier == "add13") and (len(GeneratedChords[i]) == 7):
 				GeneratedChords[i][6] = (UsedScale[Temp])
 			#Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "none"]
@@ -559,7 +565,7 @@ def ChordName(GeneratedChords, Notes):
 					name[0]=(name[0]+"6")
 
 		if len(GeneratedChords[i]) >= 5:
-			Ninth=GeneratedChords[i][4]
+			Ninth=GeneratedChords[i][-1]
 			print("9")
 			if (Notes.index(Root) < Notes.index(Ninth)):
 				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Ninth) - Notes.index(Root) == 2)):
@@ -572,8 +578,8 @@ def ChordName(GeneratedChords, Notes):
 				elif Notes.index(Ninth)+12 - Notes.index(Root) == 2:
 					name[0]=(name[0]+"add9")
 
-		if len(GeneratedChords[i]) >= 6:
-			Eleventh=GeneratedChords[i][5]
+		if len(GeneratedChords[i]) >= 5 :
+			Eleventh=GeneratedChords[i][-1]
 			print ("11")
 			if (Notes.index(Root) < Notes.index(Eleventh)):
 				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Eleventh) - Notes.index(Root) == 5)):
@@ -586,9 +592,9 @@ def ChordName(GeneratedChords, Notes):
 				elif Notes.index(Eleventh) + 12 - Notes.index(Root) == 5:
 					name[0]=(name[0]+"add11")
 
-		if len(GeneratedChords[i]) == 7:
+		if len(GeneratedChords[i]) >=5 :
 			print("13")
-			Thirteenth=GeneratedChords[i][6]
+			Thirteenth=GeneratedChords[i][-1]
 			if (Notes.index(Root) < Notes.index(Thirteenth)):
 				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Thirteenth) - Notes.index(Root) == 9)):
 					name[0]=(name[0]+"13")
