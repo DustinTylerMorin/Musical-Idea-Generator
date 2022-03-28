@@ -10,7 +10,7 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = False
+Debug = True
 Piano = True
 Guitar = True
 Bass = True
@@ -293,7 +293,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),str(TempInput[3].lower())]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
 					raise ValueError
-				if (ChordInput[1] in range(1,6)) == False:
+				if (ChordInput[1] in range(1,8)) == False:
 					raise ValueError
 				if (ChordInput[2] <= 0) == True:
 					raise ValueError
@@ -308,7 +308,6 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 	while True:
 		try:
 			ChordsList = []
-			GeneratedChordsList = []
 			Progression = []
 			Progression.append(UsedScale.index((ChordInputList[0])[0]))
 			ChordTones = ChordInputList[0][1]
@@ -320,12 +319,11 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 				Progression.append(UsedScale.index((ChordInputList[i])[0]))
 				Modifier = ChordInputList[i][3]
 				ChordTones = ChordInputList[i][1]
-				Limit = 7
+				Limit = 1
 				if i  == 0:
-					(unused ,ScaleChords, unused)=ChordGenPrep(1, UsedScale, 4, Progression, Notes, Limit, Modifier)
+					(unused ,ScaleChords, unused)=ChordGenPrep(1, UsedScale, 4, Progression, Notes, 7, Modifier)
 				(Chords, unused, GeneratedChords)=ChordGenPrep(1, UsedScale, ChordTones, Progression, Notes, Limit, Modifier)
 				ChordsList.append(str(Chords[0]))
-				GeneratedChordsList.append(GeneratedChords[0])
 				if i == (len(ChordInputList)-1):
 					break
 			break
@@ -335,7 +333,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 				traceback.print_exc()
 			Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
 	#ChordsList = ChordsList[0]
-	return(ChordsList, ScaleChords, GeneratedChordsList)
+	return(ChordsList, ScaleChords, GeneratedChords)
 
 def NumChords(Tonic,Mode,FS):
 	print("\nHow many chord(s) would you like to generate?\n")
@@ -442,202 +440,243 @@ def ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit, Modif
 		Temp = z
 		ScaleChordsGen.insert(z,[UsedScale[z]])
 		(ScaleChords)=ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones, "none")
-	Chords = ChordName(GeneratedChords, Notes)
-	ScaleChords = ChordName(ScaleChordsGen, Notes)
+	Chords = ChordName(GeneratedChords, Notes, Modifier)
+	ScaleChords = ChordName(ScaleChordsGen, Notes, Modifier)
 	return (Chords, ScaleChords, GeneratedChords)
 
 
 def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier):
 	while len(GeneratedChords[i]) != ChordTones:
 		try:
+			ScaleLen = len(UsedScale)
 			Temp = Temp + 2
-			if Temp >= len(UsedScale):
-				Temp = Temp - len(UsedScale)
+			if Temp >= ScaleLen:
+				Temp = Temp - ScaleLen
 				GeneratedChords[i].append(UsedScale[Temp])
 			else:
 				GeneratedChords[i].append(UsedScale[Temp])
-			if (Modifier == "sus2") and (len(GeneratedChords[i]) == 2):
-				GeneratedChords[i][1] = (UsedScale[Temp - 1])
-			if (Modifier == "sus4") and (len(GeneratedChords[i]) == 2):
-				GeneratedChords[i][1] = (UsedScale[Temp + 1])
-			if (Modifier == "6") and (len(GeneratedChords[i]) == 4):
-				GeneratedChords[i][3] = (UsedScale[Temp - 1])
-			if (Modifier == "m6") and (len(GeneratedChords[i]) == 4):
-				GeneratedChords[i][3] = (UsedScale[Temp - 1])
-			if (Modifier == "9") and (len(GeneratedChords[i]) == 5):
-				GeneratedChords[i][4] = (UsedScale[Temp])
-			if (Modifier == "11") and (len(GeneratedChords[i]) == 6):
-				GeneratedChords[i][5] = (UsedScale[Temp])
-			if (Modifier == "13") and (len(GeneratedChords[i]) == 7):
-				GeneratedChords[i][6] = (UsedScale[Temp])
-			if (Modifier == "add9") and (len(GeneratedChords[i]) == 5):
-				GeneratedChords[i][4] = (UsedScale[Temp])
-			if (Modifier == "add11") and (len(GeneratedChords[i]) == 5):
-				GeneratedChords[i][4] = (UsedScale[Temp+2])
-			if (Modifier == "add11") and (len(GeneratedChords[i]) == 6):
-				GeneratedChords[i][5] = (UsedScale[Temp])
-			if (Modifier == "add13") and (len(GeneratedChords[i]) == 5):
-				GeneratedChords[i][4] = (UsedScale[Temp+4])
-			if (Modifier == "add13") and (len(GeneratedChords[i]) == 6):
-				GeneratedChords[i][5] = (UsedScale[Temp+2])
-			if (Modifier == "add13") and (len(GeneratedChords[i]) == 7):
-				GeneratedChords[i][6] = (UsedScale[Temp])
-			#Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "none"]
+
 		except ValueError as error:
 			print("\nSomething has went wrong\n")
 			if Debug == True:
 				traceback.print_exc()
+	if (Modifier == "sus2") and (len(GeneratedChords[i]) == 2):
+		GeneratedChords[i][1] = (UsedScale[(Temp - 1)%ScaleLen])
+	if (Modifier == "sus4") and (len(GeneratedChords[i]) == 2):
+		GeneratedChords[i][1] = (UsedScale[(Temp + 1)%ScaleLen])
+	if (Modifier == "6") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp - 1)%ScaleLen])
+	if (Modifier == "m6") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp - 1)%ScaleLen])
+	if (Modifier == "9") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp+2)%ScaleLen])
+	if (Modifier == "11") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp+4)%ScaleLen])
+	if (Modifier == "13") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp+6)%ScaleLen])
+	if (Modifier == "9") and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[Temp%ScaleLen])
+	if (Modifier == "11") and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[(Temp+2)%ScaleLen])
+	if (Modifier == "13") and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[(Temp+4)%ScaleLen])
+	if (Modifier == "11") and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[Temp%ScaleLen])
+	if (Modifier == "13") and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[(Temp+2)%ScaleLen])
+	if (Modifier == "13") and (len(GeneratedChords[i]) == 7):
+		GeneratedChords[i][6] = (UsedScale[Temp%ScaleLen])
+	if (Modifier == "add9") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp+2)%ScaleLen])
+	if (Modifier == "add11") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp+4)%ScaleLen])
+	if (Modifier == "add13") and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[(Temp+6)%ScaleLen])
+	if (Modifier == "add9") and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[Temp%ScaleLen])
+	if (Modifier == "add11") and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[(Temp+2)%ScaleLen])
+	if (Modifier == "add13") and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[(Temp+4)%ScaleLen])
+	if (Modifier == "add11") and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[Temp%ScaleLen])
+	if (Modifier == "add13") and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[(Temp+2)%ScaleLen])
+	if (Modifier == "add13") and (len(GeneratedChords[i]) == 7):
+		GeneratedChords[i][6] = (UsedScale[Temp%ScaleLen])
 	return(GeneratedChords)
-def ChordName(GeneratedChords, Notes):
+
+def ChordName(GeneratedChords, Notes, Modifier):
 	Chords = []
-	for i in range(len(GeneratedChords)):
-		name = []
-		Index = GeneratedChords[i]
-		if len(GeneratedChords[i]) >= 1:
-			Root=GeneratedChords[i][0]
-			name.append(Root)
+	try:
+		for i in range(len(GeneratedChords)):
+			name = []
+			Index = GeneratedChords[i]
+			if len(GeneratedChords[i]) >= 1:
+				Root=GeneratedChords[i][0]
+				name.append(Root)
 
-		if len(GeneratedChords[i]) >= 2:
-			Second=GeneratedChords[i][1]
-			Third=GeneratedChords[i][1]
-			Fourth=GeneratedChords[i][1]
-			if (Notes.index(Root) < Notes.index(Third)):
-				if Notes.index(Third) - Notes.index(Root) == 4:
-					name[0]=(name[0]+"Maj")
-				elif Notes.index(Third) - Notes.index(Root) == 3:
-					name[0]=(name[0]+"m")
-				elif Notes.index(Second) - Notes.index(Root) == 2:
-					name[0]=(name[0]+"sus2")
-				elif Notes.index(Fourth) - Notes.index(Root) == 5:
-					name[0]=(name[0]+"sus4")
-
-			else:
-				if Notes.index(Third) + 12 - Notes.index(Root) == 4:
-					name[0]=(name[0]+"Maj")
-				elif Notes.index(Third) + 12 - Notes.index(Root) == 3:
-					name[0]=(name[0]+"m")
-				elif Notes.index(Second)+ 12 - Notes.index(Root) == 2:
+			if len(GeneratedChords[i]) >= 2:
+				Second=GeneratedChords[i][1]
+				Third=GeneratedChords[i][1]
+				Fourth=GeneratedChords[i][1]
+				if (Notes.index(Root) < Notes.index(Third)):
+					if Notes.index(Third) - Notes.index(Root) == 4:
+						name[0]=(name[0]+"Maj")
+					elif Notes.index(Third) - Notes.index(Root) == 3:
+						name[0]=(name[0]+"m")
+					elif Notes.index(Second) - Notes.index(Root) == 2:
 						name[0]=(name[0]+"sus2")
-				elif Notes.index(Fourth)+ 12 - Notes.index(Root) == 5:
-					name[0]=(name[0]+"sus4")
+					elif Notes.index(Fourth) - Notes.index(Root) == 5:
+						name[0]=(name[0]+"sus4")
+
+				else:
+					if Notes.index(Third) + 12 - Notes.index(Root) == 4:
+						name[0]=(name[0]+"Maj")
+					elif Notes.index(Third) + 12 - Notes.index(Root) == 3:
+						name[0]=(name[0]+"m")
+					elif Notes.index(Second)+ 12 - Notes.index(Root) == 2:
+							name[0]=(name[0]+"sus2")
+					elif Notes.index(Fourth)+ 12 - Notes.index(Root) == 5:
+						name[0]=(name[0]+"sus4")
 
 
 
-		if len(GeneratedChords[i]) >= 3:
-			Fifth=GeneratedChords[i][2]
-			if (Notes.index(Root) < Notes.index(Fifth)):
-				if Notes.index(Fifth) - Notes.index(Root) == 7:
-					pass
-				elif Notes.index(Fifth) - Notes.index(Root) == 6:
-					name[0]=(name[0]+"b5")
-				elif Notes.index(Fifth) - Notes.index(Root) == 8:
-					name[0]=(name[0]+"#5")
+			if len(GeneratedChords[i]) >= 3:
+				Fifth=GeneratedChords[i][2]
+				if (Notes.index(Root) < Notes.index(Fifth)):
+					if Notes.index(Fifth) - Notes.index(Root) == 7:
+						pass
+					elif Notes.index(Fifth) - Notes.index(Root) == 6:
+						name[0]=(name[0]+"b5")
+					elif Notes.index(Fifth) - Notes.index(Root) == 8:
+						name[0]=(name[0]+"#5")
 
-			else:
-				if Notes.index(Fifth) + 12 - Notes.index(Root) == 7:
-					pass
-				elif Notes.index(Fifth) +12 - Notes.index(Root) == 6:
-					name[0]=(name[0]+"b5")
-				elif Notes.index(Fifth) + 12 - Notes.index(Root) == 8:
-					name[0]=(name[0]+"#5")
+				else:
+					if Notes.index(Fifth) + 12 - Notes.index(Root) == 7:
+						pass
+					elif Notes.index(Fifth) +12 - Notes.index(Root) == 6:
+						name[0]=(name[0]+"b5")
+					elif Notes.index(Fifth) + 12 - Notes.index(Root) == 8:
+						name[0]=(name[0]+"#5")
 
-		if len(GeneratedChords[i]) >= 4:
-			Sixth=GeneratedChords[i][3]
-			Seventh=GeneratedChords[i][3]
-			if (Notes.index(Root) < Notes.index(Seventh)):
-				if Notes.index(Seventh) - Notes.index(Root) == 11:
-					name[0]=(name[0]+"7")
-				elif Notes.index(Seventh) - Notes.index(Root) == 10:
-					name[0]=(name[0]+"b7")
-				elif Notes.index(Sixth) - Notes.index(Root) == 9:
-					name[0]=(name[0]+"6")
-				elif Notes.index(Sixth) - Notes.index(Root) == 8:
-					name[0]=(name[0]+"6")
+			if len(GeneratedChords[i]) >= 4:
+				Sixth=GeneratedChords[i][3]
+				Seventh=GeneratedChords[i][3]
+				if (Notes.index(Root) < Notes.index(Seventh)):
+					if Notes.index(Seventh) - Notes.index(Root) == 11:
+						name[0]=(name[0]+"7")
+					elif Notes.index(Seventh) - Notes.index(Root) == 10:
+						name[0]=(name[0]+"b7")
+					elif Notes.index(Sixth) - Notes.index(Root) == 9:
+						name[0]=(name[0]+"6")
+					elif Notes.index(Sixth) - Notes.index(Root) == 8:
+						name[0]=(name[0]+"6")
 
-			else:
-				if Notes.index(Seventh) + 12 - Notes.index(Root) == 11:
-					name[0]=(name[0]+"7")
-				elif Notes.index(Seventh) +12  - Notes.index(Root) == 10:
-					name[0]=(name[0]+"b7")
-				elif Notes.index(Sixth) +12  - Notes.index(Root) == 9:
-					name[0]=(name[0]+"6")
-				elif Notes.index(Sixth)+12 - Notes.index(Root) == 8:
-					name[0]=(name[0]+"6")
+				else:
+					if Notes.index(Seventh) + 12 - Notes.index(Root) == 11:
+						name[0]=(name[0]+"7")
+					elif Notes.index(Seventh) +12  - Notes.index(Root) == 10:
+						name[0]=(name[0]+"b7")
+					elif Notes.index(Sixth) +12  - Notes.index(Root) == 9:
+						name[0]=(name[0]+"6")
+					elif Notes.index(Sixth)+12 - Notes.index(Root) == 8:
+						name[0]=(name[0]+"6")
 
-		if len(GeneratedChords[i]) >= 5:
-			Ninth=GeneratedChords[i][-1]
-			print("9")
-			if (Notes.index(Root) < Notes.index(Ninth)):
-				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Ninth) - Notes.index(Root) == 2)):
-					name[0]=(name[0]+"9")
-				elif Notes.index(Ninth) - Notes.index(Root) == 2:
-					name[0]=(name[0]+"add9")
-			else:
-				if ((Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Ninth)+12 - Notes.index(Root) == 2)):
-					name[0]=(name[0]+"9")
-				elif Notes.index(Ninth)+12 - Notes.index(Root) == 2:
-					name[0]=(name[0]+"add9")
+			if len(GeneratedChords[i]) >= 4:
+				for x in range(3,len(GeneratedChords[i])):
+					Ninth=GeneratedChords[i][x]
+					if (Notes.index(Ninth)+12 - Notes.index(Root) == 2) or (Notes.index(Ninth) - Notes.index(Root) == 2):
+						break
+				if (Notes.index(Root) < Notes.index(Ninth)):
+					if (("Majb7" in name[0]) and (Notes.index(Ninth) - Notes.index(Root) == 2)):
+						name[0]=(name[0]+"9")
+					elif Notes.index(Ninth) - Notes.index(Root) == 2:
+						name[0]=(name[0]+"add9")
+				else:
+					if (("Majb7" in name[0]) and (Notes.index(Ninth)+12 - Notes.index(Root) == 2)):
+						name[0]=(name[0]+"9")
+					elif Notes.index(Ninth)+12 - Notes.index(Root) == 2:
+						name[0]=(name[0]+"add9")
 
-		if len(GeneratedChords[i]) >= 5 :
-			Eleventh=GeneratedChords[i][-1]
-			print ("11")
-			if (Notes.index(Root) < Notes.index(Eleventh)):
-				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Eleventh) - Notes.index(Root) == 5)):
-					name[0]=(name[0]+"11")
-				elif Notes.index(Eleventh) - Notes.index(Root) == 5:
-					name[0]=(name[0]+"add11")
-			else:
-				if ((Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Eleventh)+12 - Notes.index(Root) == 5)):
-					name[0]=(name[0]+"11")
-				elif Notes.index(Eleventh) + 12 - Notes.index(Root) == 5:
-					name[0]=(name[0]+"add11")
+			if len(GeneratedChords[i]) >= 4 :
+				for x in range(3,len(GeneratedChords[i])):
+					Eleventh=GeneratedChords[i][x]
+					if (Notes.index(Eleventh)+12 - Notes.index(Root) == 5) or (Notes.index(Eleventh) - Notes.index(Root) == 5):
+						break
+				if (Notes.index(Root) < Notes.index(Eleventh)):
+					if (("Majb7" in name[0]) and (Notes.index(Eleventh) - Notes.index(Root) == 5)):
+						name[0]=(name[0]+"11")
+					elif Notes.index(Eleventh) - Notes.index(Root) == 5:
+						name[0]=(name[0]+"add11")
+				else:
+					if (("Majb7" in name[0]) and (Notes.index(Eleventh)+12 - Notes.index(Root) == 5)):
+						name[0]=(name[0]+"11")
+					elif Notes.index(Eleventh) + 12 - Notes.index(Root) == 5:
+						name[0]=(name[0]+"add11")
 
-		if len(GeneratedChords[i]) >=5 :
-			print("13")
-			Thirteenth=GeneratedChords[i][-1]
-			if (Notes.index(Root) < Notes.index(Thirteenth)):
-				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Thirteenth) - Notes.index(Root) == 9)):
-					name[0]=(name[0]+"13")
-				elif Notes.index(Thirteenth) - Notes.index(Root) == 9:
-					name[0]=(name[0]+"add13")
-			else:
-				if ((Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Thirteenth)+12 - Notes.index(Root) == 9)):
-					name[0]=(name[0]+"13")
-				elif Notes.index(Thirteenth)+12 - Notes.index(Root) == 9:
-					name[0]=(name[0]+"add13")
+			if len(GeneratedChords[i]) >=4 :
+				for x in range(3,len(GeneratedChords[i])):
+					Thirteenth=GeneratedChords[i][x]
+					if (Notes.index(Thirteenth)+12 - Notes.index(Root) == 9) or (Notes.index(Thirteenth) - Notes.index(Root) == 9):
+						break
+				if (Notes.index(Root) < Notes.index(Thirteenth)):
+					if (("Majb7" in name[0]) and Notes.index(Thirteenth) - Notes.index(Root) == 9):
+						name[0]=(name[0]+"13")
+					elif Notes.index(Thirteenth) - Notes.index(Root) == 9:
+						name[0]=(name[0]+"add13")
+				else:
+					if (("Majb7" in name[0]) and Notes.index(Thirteenth)+12 - Notes.index(Root) == 9):
+						name[0]=(name[0]+"13")
+					elif Notes.index(Thirteenth)+12 - Notes.index(Root) == 9:
+						name[0]=(name[0]+"add13")
 
-		name = str(name[0])
-		if "m7" in name:
-			name = name.replace("m7","mMaj7")
-		if "mb5bb7" in name:
-			name = name.replace("mb5bb7","dim7")
-		if "Maj#57" in name:
-			name = name.replace("Maj#57","Maj7#5")
-		if "mb5b7" in name:
-			name = name.replace("mb5b7","m7b5")
-		if "mb5" in name:
-			name = name.replace("mb5","dim")
-		if "mb" in name:
-			name = name.replace("mb","m")
-		if "Majb7" in name:
-			name = name.replace("Majb7","7")
-		if "dimb7" in name:
-			name = name.replace("dimb7","dim7")
-		if "sus2sus4" in name:
-			name = name.replace("sus2sus4","")
-		if "Maj6" in name:
-			name = name.replace("Maj6","6")
-		if "add9add11add13" in name:
-			name = name.replace("add9add11add13","add13")
-		if "add9add11" in name:
-			name = name.replace("add9add11","add11")
-		if "791113" in name:
-			name = name.replace("791113","13")
-		if "7911" in name:
-			name = name.replace("7911","11")
-		if "79" in name:
-			name = name.replace("79","9")
-		Chords.append(name)
+			name = str(name[0])
+			print (name)
+			if "m7" in name:
+				name = name.replace("m7","mMaj7")
+			if "mb5bb7" in name:
+				name = name.replace("mb5bb7","dim7")
+			if "Maj#57" in name:
+				name = name.replace("Maj#57","Maj7#5")
+			if "b56add13" in name and Modifier != "add13":
+				name = name.replace("b56add13","dim7")
+			if "b56add13" in name and Modifier == "6":
+				name = name.replace("b56add13","dim6")
+			if "mb5b7" in name:
+				name = name.replace("mb5b7","m7b5")
+			if "mb5" in name:
+				name = name.replace("mb5","dim")
+			if "mb" in name:
+				name = name.replace("mb","m")
+			if "Majb7" in name:
+				name = name.replace("Majb7","7")
+			if "dimb7" in name:
+				name = name.replace("dimb7","dim7")
+			if "sus2sus4" in name:
+				name = name.replace("sus2sus4","")
+			if "Maj6" in name:
+				name = name.replace("Maj6","6")
+			if "add9add11add13" in name:
+				name = name.replace("add9add11add13","add13")
+			if "add9add11" in name:
+				name = name.replace("add9add11","add11")
+			if "791113" in name:
+				name = name.replace("791113","13")
+			if "7911" in name:
+				name = name.replace("7911","11")
+			if "79" in name:
+				name = name.replace("79","9")
+			if "6add13" in name:
+				name = name.replace("6add13","add13")
+			if "913" in name:
+				name = name.replace("913","9/13")
+			if "713" in name:
+				name = name.replace("713","7/13")
+			Chords.append(name)
+	except:
+		if Debug == True:
+			traceback.print_exc()
 	return(Chords)
 
 def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
