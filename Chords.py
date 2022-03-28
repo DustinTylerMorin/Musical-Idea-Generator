@@ -625,6 +625,12 @@ def ChordName(GeneratedChords, Notes):
 			name = name.replace("add9add11add13","add13")
 		if "add9add11" in name:
 			name = name.replace("add9add11","add11")
+		if "791113" in name:
+			name = name.replace("791113","13")
+		if "7911" in name:
+			name = name.replace("7911","11")
+		if "79" in name:
+			name = name.replace("79","9")
 		Chords.append(name)
 	return(Chords)
 
