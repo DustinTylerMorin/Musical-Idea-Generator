@@ -545,6 +545,8 @@ def ChordName(GeneratedChords, Notes):
 					name[0]=(name[0]+"b7")
 				elif Notes.index(Sixth) - Notes.index(Root) == 9:
 					name[0]=(name[0]+"6")
+				elif Notes.index(Sixth) - Notes.index(Root) == 8:
+					name[0]=(name[0]+"6")
 
 			else:
 				if Notes.index(Seventh) + 12 - Notes.index(Root) == 11:
@@ -553,17 +555,19 @@ def ChordName(GeneratedChords, Notes):
 					name[0]=(name[0]+"b7")
 				elif Notes.index(Sixth) +12  - Notes.index(Root) == 9:
 					name[0]=(name[0]+"6")
+				elif Notes.index(Sixth)+12 - Notes.index(Root) == 8:
+					name[0]=(name[0]+"6")
 
 		if len(GeneratedChords[i]) >= 5:
 			Ninth=GeneratedChords[i][4]
 			print("9")
 			if (Notes.index(Root) < Notes.index(Ninth)):
-				if (Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Ninth) - Notes.index(Root) == 2):
+				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Ninth) - Notes.index(Root) == 2)):
 					name[0]=(name[0]+"9")
 				elif Notes.index(Ninth) - Notes.index(Root) == 2:
 					name[0]=(name[0]+"add9")
 			else:
-				if (Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Ninth)+12 - Notes.index(Root) == 2):
+				if ((Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Ninth)+12 - Notes.index(Root) == 2)):
 					name[0]=(name[0]+"9")
 				elif Notes.index(Ninth)+12 - Notes.index(Root) == 2:
 					name[0]=(name[0]+"add9")
@@ -572,12 +576,12 @@ def ChordName(GeneratedChords, Notes):
 			Eleventh=GeneratedChords[i][5]
 			print ("11")
 			if (Notes.index(Root) < Notes.index(Eleventh)):
-				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Eleventh) - Notes.index(Root) == 4)):
+				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Eleventh) - Notes.index(Root) == 5)):
 					name[0]=(name[0]+"11")
 				elif Notes.index(Eleventh) - Notes.index(Root) == 5:
 					name[0]=(name[0]+"add11")
 			else:
-				if ((Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Eleventh)+12 - Notes.index(Root) == 4)):
+				if ((Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Eleventh)+12 - Notes.index(Root) == 5)):
 					name[0]=(name[0]+"11")
 				elif Notes.index(Eleventh) + 12 - Notes.index(Root) == 5:
 					name[0]=(name[0]+"add11")
@@ -586,12 +590,12 @@ def ChordName(GeneratedChords, Notes):
 			print("13")
 			Thirteenth=GeneratedChords[i][6]
 			if (Notes.index(Root) < Notes.index(Thirteenth)):
-				if (Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Thirteenth) - Notes.index(Root) == 5):
+				if ((Notes.index(Third) - Notes.index(Root) == 4) and (Notes.index(Seventh) - Notes.index(Root) == 10) and (Notes.index(Thirteenth) - Notes.index(Root) == 9)):
 					name[0]=(name[0]+"13")
 				elif Notes.index(Thirteenth) - Notes.index(Root) == 9:
 					name[0]=(name[0]+"add13")
 			else:
-				if (Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Thirteenth)+12 - Notes.index(Root) == 5):
+				if ((Notes.index(Third)+12 - Notes.index(Root) == 4) and (Notes.index(Seventh)+12 - Notes.index(Root) == 10) and (Notes.index(Thirteenth)+12 - Notes.index(Root) == 9)):
 					name[0]=(name[0]+"13")
 				elif Notes.index(Thirteenth)+12 - Notes.index(Root) == 9:
 					name[0]=(name[0]+"add13")
