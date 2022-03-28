@@ -277,7 +277,7 @@ def Genre(Tonic,FS):
 def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
 	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
-	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length,Modifier(s)\n\nEx)>"+Tonic+",3,4,sus2\n\n"+Tonic+"sus2\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
+	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length(Currently Broken, Use any positive int),Modifier(s)\n\nEx)>"+Tonic+",3,4,sus2\n\n"+Tonic+"sus2\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
 	Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "none"]
 	ChordInputList = []
 	while True:
