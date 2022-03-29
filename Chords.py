@@ -10,7 +10,7 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = True
+Debug = False
 Piano = True
 Guitar = True
 Bass = True
