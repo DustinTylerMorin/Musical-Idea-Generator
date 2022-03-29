@@ -494,7 +494,7 @@ def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier,ScaleLen):
 		if (len(GeneratedChords[i]) == 4):
 			GeneratedChords[i][3] = (UsedScale[1])
 		if (len(GeneratedChords[i]) == 5):
-			GeneratedChords[i][3] = (UsedScale[1])
+			GeneratedChords[i][4] = (UsedScale[1])
 
 	if ("11" in Modifier):
 		if (len(GeneratedChords[i]) == 4):
@@ -508,7 +508,7 @@ def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier,ScaleLen):
 		if (len(GeneratedChords[i]) == 4):
 			GeneratedChords[i][3] = (UsedScale[5])
 		if (len(GeneratedChords[i]) == 5):
-			GeneratedChords[i][5] = (UsedScale[5])
+			GeneratedChords[i][4] = (UsedScale[5])
 		if (len(GeneratedChords[i]) == 6):
 			GeneratedChords[i][5] = (UsedScale[5])
 		if (len(GeneratedChords[i]) == 7):
