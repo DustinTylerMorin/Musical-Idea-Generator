@@ -10,7 +10,7 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = True
+Debug = False
 Piano = True
 Guitar = True
 Bass = True
@@ -167,9 +167,9 @@ def main():
 				(Mode) = ModeConfig(Tonic,FS)
 				(UsedScale, Progression, Notes, Limit)=ScaleGen(Tonic, Mode, 7, FS, 4, "y", True)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
-				(Chords, unused, GeneratedChords)=Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
+				(Chords, unused, GeneratedChords,MidiLengths)=Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
-				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
+				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths)
 				break
 			elif OpMode == 2:
 				Random = False
@@ -188,7 +188,6 @@ def main():
 				(StartTonic) = ProgressionStart(Tonic,Mode,Number,FS,ChordTones)
 				(UsedScale, Progression, Notes, Limit) =ScaleGen(Tonic,Mode,Number,FS,ChordTones,StartTonic,Random)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
-				print(GeneratedChords)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
 				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 				break
@@ -313,6 +312,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 			ChordsList = []
 			Progression = []
 			GenChordsList = []
+			MidiLengths = []
 			Progression.append(UsedScale.index((ChordInputList[0])[0]))
 			ChordTones = ChordInputList[0][1]
 			StartTonic = None
@@ -324,6 +324,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 				Modifier = list(ChordInputList[i][3])
 				ChordTones = ChordInputList[i][1]
 				Limit = 1
+				MidiLengths.append(ChordInputList[i][2])
 				(Chords,unused,GeneratedChords)=ChordGenPrep(1, UsedScale, ChordTones, Progression, Notes, Limit, Modifier)
 				ChordsList.append(str(Chords[0]))
 				GenChordsList.append(GeneratedChords[0])
@@ -335,8 +336,9 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 			if Debug == True:
 				traceback.print_exc()
 			Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
+
 	#ChordsList = ChordsList[0]
-	return(ChordsList, unused, GenChordsList)
+	return(ChordsList, unused, GenChordsList, MidiLengths)
 
 def NumChords(Tonic,Mode,FS):
 	print("\nHow many chord(s) would you like to generate?\n")
@@ -424,10 +426,6 @@ def ScaleGen(Tonic, Mode, Number, FS, ChordTones, StartTonic, Random, Progressio
 					break
 	return(UsedScale, Progression, Notes, Limit)
 
-def export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
-	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
-	ExportMidi(GeneratedChords)
-
 def ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit, Modifier = "none"):
 	ScaleChordsGen = []
 	GeneratedChords = []
@@ -491,7 +489,6 @@ def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier, ScaleLen):
 		GeneratedChords[i][3] = (UsedScale[5])
 
 	if ("9" in Modifier):
-		print("9")
 		if (len(GeneratedChords[i]) == 4):
 			GeneratedChords[i][3] = (UsedScale[1])
 		if (len(GeneratedChords[i]) == 5):
@@ -702,6 +699,10 @@ def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
 	print ("Scale Chords:\n\n",ScaleChords,"\n\n")
 	print ("Chord(s) produced:\n\n",Chords)
 
+def export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = []):
+	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
+	ExportMidi(GeneratedChords,MidiLengths)
+
 def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 	print("\nWould you like to output these chords to a .txt file? (y/n)\n")
 	while True:
@@ -747,7 +748,7 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 			if Debug == True:
 				traceback.print_exc()
 
-def ExportMidi(GeneratedChords):
+def ExportMidi(GeneratedChords, MidiLengths):
 	print("\nWould you like to output these chords to a .mid file? (y/n)\n")
 	while True:
 		try:
@@ -762,20 +763,25 @@ def ExportMidi(GeneratedChords):
 						print("\nTry again!\n")
 						if Debug == True:
 							traceback.print_exc()
-				print("\nWould you like beats to be random or fixed?(r/f)\n")
-				while True:
-					try:
-						RanDur = str(input(">")).lower()
-						if RanDur == "f" or RanDur == "r":
-							Dur = []
-							break
-						else:
-							raise ValueError
-					except ValueError as error:
-						print("\nTry again!\n")
-						if Debug == True:
-							traceback.print_exc()
-				print ("\nHow many beats would you like each chord to last?\n")
+				Dur = []
+				if len(MidiLengths) == 0:
+					print("\nWould you like beats to be random or fixed?(r/f)\n")
+					while True:
+						try:
+							RanDur = str(input(">")).lower()
+							if RanDur == "f" or RanDur == "r":
+								print ("\nHow many beats would you like each chord to last?\n")
+								break
+							else:
+								raise ValueError
+						except ValueError as error:
+							print("\nTry again!\n")
+							if Debug == True:
+								traceback.print_exc()
+				else:
+					RanDur = "Manual"
+					for i in range(len(MidiLengths)):
+						Dur.append(MidiLengths[i])
 				while True:
 					if RanDur == "f":
 						try:
@@ -791,6 +797,8 @@ def ExportMidi(GeneratedChords):
 						Durations = [1,2,4]
 						for i in range(len(GeneratedChords)):
 							Dur.append(Durations[random.randint(0,2)])
+						break
+					elif RanDur == "Manual":
 						break
 					else:
 						print("\nSomething has went wrong\n")
