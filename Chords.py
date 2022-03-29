@@ -10,7 +10,7 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = False
+Debug = True
 Piano = True
 Guitar = True
 Bass = True
@@ -232,7 +232,7 @@ def	ModeConfig(Tonic,FS):
 				Mode = Modes[Mode-1]
 				break
 			elif Mode == int(len(Modes)):
-				Mode = Modes[random.randint(0,len(Modes)-1)]
+				Mode = Modes[random.randint(0,len(Modes)-2)]
 				print ("\n",Mode)
 				break
 			else:
