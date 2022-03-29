@@ -256,6 +256,11 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length,Modifier(s),Alt Scale Tonic,Alt Scale Number(Optional)\n\nEx)>"+Tonic+",4,4,sus2,add11,"+Tonic+",1""\n\n"+Tonic+"sus2add11\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
 	Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "none"]
 	ChordInputList = []
+
+	ChosenScale = UsedScale
+	ChosenChords = ScaleChords
+	#Set aside in case last generated chord is a substitution
+
 	while True:
 		ChordInput = (str(input(">")))
 		try:
@@ -296,11 +301,11 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 					else:
 						raise ValueError
 					if int(TempInput[-1]) in range(1,len(Modes[0:-2])):
-						ChordInput.append(int(TempInput[-1])-1)
+						ChordInput.append(Modes[int(TempInput[-1])-1])
 					else:
 						raise ValueError
 					CurrentTonic = ChordInput[-2].capitalize()
-					CurrentMode = Modes[ChordInput[-1]]
+					CurrentMode = Modes[Modes.index(ChordInput[-1])]
 
 				ChordInputList.append(ChordInput)
 			print(ChordInputList)
@@ -318,7 +323,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 			ChordTones = ChordInputList[0][1]
 			StartTonic = None
 			(UsedScale, Progression, Notes, Limit) = ScaleGen(CurrentTonic,CurrentMode,7,FS,4,"y","n",Progression)
-
+			print(UsedScale)
 			for i in range(len(ChordInputList)):
 				Progression = []
 				Progression.append(UsedScale.index((ChordInputList[i])[0]))
@@ -336,7 +341,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-			Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
+			Manual(ChosenScale, Tonic, Mode, FS, ChosenChords,Notes,Random)
 
 	#ChordsList = ChordsList[0]
 	return(ChordsList, unused, GenChordsList, MidiLengths)
