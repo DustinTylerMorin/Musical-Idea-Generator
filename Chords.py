@@ -10,7 +10,7 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = False
+Debug = True
 Piano = True
 Guitar = True
 Bass = True
@@ -146,7 +146,7 @@ def main():
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
 				(Chords, unused, GeneratedChords,MidiLengths)=Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
-				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths,AltScales)
+				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths)
 				break
 			elif OpMode == 2:
 				Random = False
@@ -253,7 +253,7 @@ def Genre(Tonic,FS):
 def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
 	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
-	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length(Currently Broken, Use any positive int),Modifier(s) as list\n\nEx)>"+Tonic+",3,4,sus2,add11\n\n"+Tonic+"sus2add11\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
+	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length,Modifier(s),Alt Scale Tonic,Alt Scale Number(Optional)\n\nEx)>"+Tonic+",4,4,sus2,add11,"+Tonic+",1""\n\n"+Tonic+"sus2add11\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
 	Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "none"]
 	ChordInputList = []
 	while True:
@@ -266,18 +266,42 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 
 			else:
 				TempInput = ChordInput.split(",")
-				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),(TempInput[3:])]))
+				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),list()]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
 					raise ValueError
 				if (ChordInput[1] in range(1,8)) == False:
 					raise ValueError
 				if (ChordInput[2] <= 0) == True:
 					raise ValueError
-				for i in range(0,len(ChordInput[3])):
-					if (ChordInput[3][i].lower() in Modifiers) == True:
-						ChordInput[3][i] = ChordInput[3][i].lower()
+				if (TempInput[-1] in Modifiers) and (TempInput[-2].capitalize() not in AllNotes):
+					print(len(TempInput[3:]))
+					for i in range(3,len(TempInput[3:])+3):
+
+						if (TempInput[i].lower() in Modifiers) == True:
+							TempInput[i] = TempInput[i].lower()
+							ChordInput[3].append(TempInput[i])
+						else:
+							raise ValueError
+					CurrentTonic = Tonic
+					CurrentMode = Mode
+				else:
+					for i in range(3,len(TempInput[3:-2])+3):
+						if (TempInput[i].lower() in Modifiers) == True:
+							TempInput[i] = TempInput[i].lower()
+							ChordInput[3].append(TempInput[i])
+						else:
+							raise ValueError
+					if (TempInput[-2]).capitalize() in AllNotes:
+						ChordInput.append(TempInput[-2])
 					else:
 						raise ValueError
+					if int(TempInput[-1]) in range(1,len(Modes[0:-2])):
+						ChordInput.append(int(TempInput[-1])-1)
+					else:
+						raise ValueError
+					CurrentTonic = ChordInput[-2].capitalize()
+					CurrentMode = Modes[ChordInput[-1]]
+
 				ChordInputList.append(ChordInput)
 			print(ChordInputList)
 		except:
@@ -293,7 +317,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 			Progression.append(UsedScale.index((ChordInputList[0])[0]))
 			ChordTones = ChordInputList[0][1]
 			StartTonic = None
-			(UsedScale, Progression, Notes, Limit) = ScaleGen(Tonic,Mode,7,FS,4,"y","n",Progression)
+			(UsedScale, Progression, Notes, Limit) = ScaleGen(CurrentTonic,CurrentMode,7,FS,4,"y","n",Progression)
 
 			for i in range(len(ChordInputList)):
 				Progression = []
@@ -665,6 +689,8 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				name = name.replace("713","7/13")
 			if "sus47" in name:
 				name = name.replace("sus47","Maj7sus4")
+			if "sus27" in name:
+				name = name.replace("sus27","Maj7sus2")
 			Chords.append(name)
 	except:
 		if Debug == True:
@@ -676,9 +702,9 @@ def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
 	print ("Scale Chords:\n\n",ScaleChords,"\n\n")
 	print ("Chord(s) produced:\n\n",Chords)
 
-def export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = [],AltScales = []):
+def export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = []):
 	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
-	ExportMidi(GeneratedChords,MidiLengths, AltScales)
+	ExportMidi(GeneratedChords,MidiLengths)
 
 def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 	print("\nWould you like to output these chords to a .txt file? (y/n)\n")
@@ -725,7 +751,7 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 			if Debug == True:
 				traceback.print_exc()
 
-def ExportMidi(GeneratedChords, MidiLengths,AltScales):
+def ExportMidi(GeneratedChords, MidiLengths):
 	print("\nWould you like to output these chords to a .mid file? (y/n)\n")
 	while True:
 		try:
@@ -803,13 +829,13 @@ def ExportMidi(GeneratedChords, MidiLengths,AltScales):
 				midi = MIDIFile(numtracks)
 				track = 0
 				if Piano == True:
-					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords, AltScales)
+					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords)
 					track += 1
 				if Guitar == True:
-					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords, AltScales)
+					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords)
 					track += 1
 				if Bass == True:
-					midi = BassGen(midi, track, bpm, Dur, GeneratedChords, AltScales)
+					midi = BassGen(midi, track, bpm, Dur, GeneratedChords)
 					track += 1
 				if Drums == True:
 					midi = DrumsGen(midi, track, bpm, Dur)
@@ -831,7 +857,7 @@ def ExportMidi(GeneratedChords, MidiLengths,AltScales):
 			print(e)
 			print("\nSomething has went wrong\n")
 			traceback.print_exc()
-def PianoGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
+def PianoGen(midi, track, bpm, Dur, GeneratedChords):
 	trackname = "Piano"
 	time = 0
 	midi.addTrackName(track, time, trackname)
@@ -874,7 +900,7 @@ def PianoGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
 		time = time + Dur[i]
 	return midi
 
-def GuitarGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
+def GuitarGen(midi, track, bpm, Dur, GeneratedChords):
 	trackname = "Guitar"
 	time = 0
 	midi.addTrackName(track, time, trackname)
@@ -917,7 +943,7 @@ def GuitarGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
 		time = time + Dur[i]
 	return midi
 
-def BassGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
+def BassGen(midi, track, bpm, Dur, GeneratedChords):
 	trackname = "Bass"
 	time = 0
 	midi.addTrackName(track, time, trackname)
