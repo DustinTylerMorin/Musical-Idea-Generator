@@ -61,29 +61,6 @@ Scale = {
 
 Modes = list(Scale.keys())
 
-Tones = {
-"Ab": [56],
-"A" : [57],
-"A#": [58],
-"Bb": [58],
-"B" : [59],
-"Cb": [59],
-"B#": [60],
-"C" : [60],
-"C#": [61],
-"Db": [61],
-"D" : [62],
-"D#": [63],
-"Eb": [63],
-"E" : [64],
-"Fb": [64],
-"E#": [65],
-"F" : [65],
-"F#": [66],
-"Gb": [66],
-"G" : [67],
-"G#": [68]
-}
 GenreList = {
 	"Pop" : {
 	"1" : ["Major",1,5,6,4],
@@ -169,7 +146,7 @@ def main():
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
 				(Chords, unused, GeneratedChords,MidiLengths)=Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
-				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths)
+				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths,AltScales)
 				break
 			elif OpMode == 2:
 				Random = False
@@ -699,9 +676,9 @@ def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
 	print ("Scale Chords:\n\n",ScaleChords,"\n\n")
 	print ("Chord(s) produced:\n\n",Chords)
 
-def export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = []):
+def export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = [],AltScales = []):
 	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
-	ExportMidi(GeneratedChords,MidiLengths)
+	ExportMidi(GeneratedChords,MidiLengths, AltScales)
 
 def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 	print("\nWould you like to output these chords to a .txt file? (y/n)\n")
@@ -748,7 +725,7 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 			if Debug == True:
 				traceback.print_exc()
 
-def ExportMidi(GeneratedChords, MidiLengths):
+def ExportMidi(GeneratedChords, MidiLengths,AltScales):
 	print("\nWould you like to output these chords to a .mid file? (y/n)\n")
 	while True:
 		try:
@@ -826,16 +803,16 @@ def ExportMidi(GeneratedChords, MidiLengths):
 				midi = MIDIFile(numtracks)
 				track = 0
 				if Piano == True:
-					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords)
+					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords, AltScales)
 					track += 1
 				if Guitar == True:
-					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords)
+					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords, AltScales)
 					track += 1
 				if Bass == True:
-					midi = BassGen(midi, track, bpm, Dur, GeneratedChords)
+					midi = BassGen(midi, track, bpm, Dur, GeneratedChords, AltScales)
 					track += 1
 				if Drums == True:
-					midi = DrumsGen(midi, track, bpm, Dur, GeneratedChords)
+					midi = DrumsGen(midi, track, bpm, Dur)
 					track += 1
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
@@ -854,65 +831,135 @@ def ExportMidi(GeneratedChords, MidiLengths):
 			print(e)
 			print("\nSomething has went wrong\n")
 			traceback.print_exc()
-def PianoGen(midi, track, bpm, Dur, GeneratedChords):
+def PianoGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
 	trackname = "Piano"
 	time = 0
 	midi.addTrackName(track, time, trackname)
 	midi.addTempo(track, time, bpm)
 	channel = 0
 	volume = 100
+	PianoTones = {
+	"Ab": [56],
+	"A" : [57],
+	"A#": [58],
+	"Bb": [58],
+	"B" : [59],
+	"Cb": [59],
+	"B#": [60],
+	"C" : [60],
+	"C#": [61],
+	"Db": [61],
+	"D" : [62],
+	"D#": [63],
+	"Eb": [63],
+	"E" : [64],
+	"Fb": [64],
+	"E#": [65],
+	"F" : [65],
+	"F#": [66],
+	"Gb": [66],
+	"G" : [67],
+	"G#": [68]
+	}
 	for i in range(len(GeneratedChords)):
-		pitch = Tones[GeneratedChords[i][0]][0]
+		pitch = PianoTones[GeneratedChords[i][0]][0]
 		for x in range(0,len(GeneratedChords[i])):
-			if Tones[GeneratedChords[i][x]][0] < pitch:
-				pitch = (Tones[GeneratedChords[i][x]][0]) + 12
-			elif Tones[GeneratedChords[i][x]][0] >= pitch:
-				pitch =	Tones[GeneratedChords[i][x]][0]
+			if PianoTones[GeneratedChords[i][x]][0] < pitch:
+				pitch = (PianoTones[GeneratedChords[i][x]][0]) + 12
+			elif PianoTones[GeneratedChords[i][x]][0] >= pitch:
+				pitch =	(PianoTones[GeneratedChords[i][x]][0])
 			else:
 				print ("Something went terribly wrong")
 			midi.addNote(track, channel, pitch, time, Dur[i], volume)
 		time = time + Dur[i]
 	return midi
-		# write it to disk
-def GuitarGen(midi, track, bpm, Dur, GeneratedChords):
+
+def GuitarGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
 	trackname = "Guitar"
 	time = 0
 	midi.addTrackName(track, time, trackname)
 	midi.addTempo(track, time, bpm)
 	channel = 1
 	volume = 100
+	GuitarTones = {
+	"E" : [40],
+	"Fb": [40],
+	"E#": [41],
+	"F" : [41],
+	"F#": [42],
+	"Gb": [42],
+	"G" : [43],
+	"G#": [44],
+	"Ab": [44],
+	"A" : [45],
+	"A#": [46],
+	"Bb": [46],
+	"B" : [47],
+	"Cb": [47],
+	"B#": [48],
+	"C" : [48],
+	"C#": [49],
+	"Db": [49],
+	"D" : [50],
+	"D#": [51],
+	"Eb": [51]
+	}
 	for i in range(len(GeneratedChords)):
-		pitch = Tones[GeneratedChords[i][0]][0]
+		pitch = GuitarTones[GeneratedChords[i][0]][0]
 		for x in range(0,len(GeneratedChords[i])):
-			if Tones[GeneratedChords[i][x]][0] < pitch:
-				pitch = (Tones[GeneratedChords[i][x]][0]) + 12
-			elif Tones[GeneratedChords[i][x]][0] >= pitch:
-				pitch =	Tones[GeneratedChords[i][x]][0]
+			if GuitarTones[GeneratedChords[i][x]][0] < pitch:
+				pitch = (GuitarTones[GeneratedChords[i][x]][0]) + 12
+			elif GuitarTones[GeneratedChords[i][x]][0] >= pitch:
+				pitch =	(GuitarTones[GeneratedChords[i][x]][0])
 			else:
 				print ("Something went terribly wrong")
 			midi.addNote(track, channel, pitch, time, Dur[i], volume)
 		time = time + Dur[i]
 	return midi
-		# write it to disk
-def BassGen(midi, track, bpm, Dur, GeneratedChords):
+
+def BassGen(midi, track, bpm, Dur, GeneratedChords, AltScales):
 	trackname = "Bass"
 	time = 0
 	midi.addTrackName(track, time, trackname)
 	midi.addTempo(track, time, bpm)
 	channel = 2
 	volume = 100
+	BassTones = {
+	"Ab": [56],
+	"A" : [57],
+	"A#": [58],
+	"Bb": [58],
+	"B" : [59],
+	"Cb": [59],
+	"B#": [60],
+	"C" : [60],
+	"C#": [61],
+	"Db": [61],
+	"D" : [62],
+	"D#": [63],
+	"Eb": [63],
+	"E" : [64],
+	"Fb": [64],
+	"E#": [65],
+	"F" : [65],
+	"F#": [66],
+	"Gb": [66],
+	"G" : [67],
+	"G#": [68]
+	}
 	for i in range(len(GeneratedChords)):
-		pitch = Tones[GeneratedChords[i][0]][0]
-		if Tones[GeneratedChords[i][0]][0] < pitch:
-			pitch = (Tones[GeneratedChords[i][0]][0]) - 12
-		elif Tones[GeneratedChords[i][0]][0] >= pitch:
-			pitch =	Tones[GeneratedChords[i][0]][0]
+		pitch = BassTones[GeneratedChords[i][0]][0]
+		if BassTones[GeneratedChords[i][0]][0] < pitch:
+			pitch = (BassTones[GeneratedChords[i][0]][0]) - 12
+		elif BassTones[GeneratedChords[i][0]][0] >= pitch:
+			pitch =	(BassTones[GeneratedChords[i][0]][0])
 		else:
 			print ("Something went terribly wrong")
 		midi.addNote(track, channel, pitch, time, Dur[i], volume)
 		time = time + Dur[i]
 	return midi
-def DrumsGen(midi, track, bpm, Dur, GeneratedChords):
+
+def DrumsGen(midi, track, bpm, Dur):
 	trackname = "Drums"
 	channel = 3
 	time = 0
