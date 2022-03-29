@@ -480,50 +480,40 @@ def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier):
 	return(GeneratedChords)
 
 def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier,ScaleLen):
+
 	if ("sus2" in Modifier) and (len(GeneratedChords[i]) >= 2):
 		GeneratedChords[i][1] = (UsedScale[1])
+
 	if ("sus4" in Modifier) and (len(GeneratedChords[i]) >= 2):
 		GeneratedChords[i][1] = (UsedScale[3])
-	if ("6" in Modifier) and (len(GeneratedChords[i]) == 4):
+
+	if ("6" in Modifier) and (len(GeneratedChords[i]) >= 4):
 		GeneratedChords[i][3] = (UsedScale[5])
-	if ("m6" in Modifier) and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[5])
-	if ("9" in Modifier) and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[1])
-	if ("11" in Modifier) and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[3])
-	if ("13" in Modifier) and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[5])
-	if ("9" in Modifier) and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[1])
-	if ("11" in Modifier) and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[3])
-	if ("13" in Modifier) and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[5])
-	if ("11" in Modifier) and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[3])
-	if ("13" in Modifier) and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[5])
-	if ("13" in Modifier) and (len(GeneratedChords[i]) == 7):
-		GeneratedChords[i][6] = (UsedScale[5])
-	if ("add9" in Modifier) and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[1])
-	if ("add11" in Modifier) and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[3])
-	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[5])
-	if ("add9" in Modifier) and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[1])
-	if ("add11" in Modifier) and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[3])
-	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[5])
-	if ("add11" in Modifier) and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[3])
-	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[5])
-	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 7):
-		GeneratedChords[i][6] = (UsedScale[5])
+
+	if ("9" in Modifier):
+		if (len(GeneratedChords[i]) == 4):
+			GeneratedChords[i][3] = (UsedScale[1])
+		if (len(GeneratedChords[i]) == 5):
+			GeneratedChords[i][3] = (UsedScale[1])
+
+	if ("11" in Modifier):
+		if (len(GeneratedChords[i]) == 4):
+			GeneratedChords[i][3] = (UsedScale[3])
+		if (len(GeneratedChords[i]) == 5):
+			GeneratedChords[i][4] = (UsedScale[3])
+		if (len(GeneratedChords[i]) == 6):
+			GeneratedChords[i][5] = (UsedScale[3])
+
+	if ("13" in Modifier):
+		if (len(GeneratedChords[i]) == 4):
+			GeneratedChords[i][3] = (UsedScale[5])
+		if (len(GeneratedChords[i]) == 5):
+			GeneratedChords[i][5] = (UsedScale[5])
+		if (len(GeneratedChords[i]) == 6):
+			GeneratedChords[i][5] = (UsedScale[5])
+		if (len(GeneratedChords[i]) == 7):
+			GeneratedChords[i][6] = (UsedScale[5])
+
 	return(GeneratedChords)
 
 def ChordName(GeneratedChords, Notes, Modifier):
@@ -611,12 +601,12 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				if (Notes.index(Root) < Notes.index(Ninth)):
 					if (("Majb7" in name[0]) and (Notes.index(Ninth) - Notes.index(Root) == 2)):
 						name[0]=(name[0]+"9")
-					elif Notes.index(Ninth) - Notes.index(Root) == 2:
+					elif ("sus2" not in name[0]) and Notes.index(Ninth) - Notes.index(Root) == 2:
 						name[0]=(name[0]+"add9")
 				else:
 					if (("Majb7" in name[0]) and (Notes.index(Ninth)+12 - Notes.index(Root) == 2)):
 						name[0]=(name[0]+"9")
-					elif Notes.index(Ninth)+12 - Notes.index(Root) == 2:
+					elif ("sus2" not in name[0]) and Notes.index(Ninth)+12 - Notes.index(Root) == 2:
 						name[0]=(name[0]+"add9")
 
 			if len(GeneratedChords[i]) >= 4 :
@@ -627,12 +617,12 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				if (Notes.index(Root) < Notes.index(Eleventh)):
 					if (("Majb7" in name[0]) and (Notes.index(Eleventh) - Notes.index(Root) == 5)):
 						name[0]=(name[0]+"11")
-					elif Notes.index(Eleventh) - Notes.index(Root) == 5:
+					elif ("sus4" not in name[0]) and Notes.index(Eleventh) - Notes.index(Root) == 5:
 						name[0]=(name[0]+"add11")
 				else:
 					if (("Majb7" in name[0]) and (Notes.index(Eleventh)+12 - Notes.index(Root) == 5)):
 						name[0]=(name[0]+"11")
-					elif Notes.index(Eleventh) + 12 - Notes.index(Root) == 5:
+					elif ("sus4" not in name[0]) and Notes.index(Eleventh) + 12 - Notes.index(Root) == 5:
 						name[0]=(name[0]+"add11")
 
 			if len(GeneratedChords[i]) >=4 :
@@ -643,12 +633,12 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				if (Notes.index(Root) < Notes.index(Thirteenth)):
 					if (("Majb7" in name[0]) and Notes.index(Thirteenth) - Notes.index(Root) == 9):
 						name[0]=(name[0]+"13")
-					elif Notes.index(Thirteenth) - Notes.index(Root) == 9:
+					elif ("6" not in name[0]) and Notes.index(Thirteenth) - Notes.index(Root) == 9:
 						name[0]=(name[0]+"add13")
 				else:
 					if (("Majb7" in name[0]) and Notes.index(Thirteenth)+12 - Notes.index(Root) == 9):
 						name[0]=(name[0]+"13")
-					elif Notes.index(Thirteenth)+12 - Notes.index(Root) == 9:
+					elif ("6" not in name[0]) and Notes.index(Thirteenth)+12 - Notes.index(Root) == 9:
 						name[0]=(name[0]+"add13")
 
 			name = str(name[0])
@@ -676,12 +666,16 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				name = name.replace("dimb7","dim7")
 			if "sus2sus4" in name:
 				name = name.replace("sus2sus4","")
+			if "sus26" in name:
+				name = name.replace("sus26","6sus2")
 			if "Maj6" in name:
 				name = name.replace("Maj6","6")
 			if "add9add11add13" in name:
 				name = name.replace("add9add11add13","add13")
 			if "add9add11" in name:
 				name = name.replace("add9add11","add11")
+			if "add9add13" in name:
+				name = name.replace("add9add13","add13")
 			if "791113" in name:
 				name = name.replace("791113","13")
 			if "7911" in name:
