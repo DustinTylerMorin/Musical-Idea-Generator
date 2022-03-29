@@ -167,7 +167,7 @@ def main():
 				(Mode) = ModeConfig(Tonic,FS)
 				(UsedScale, Progression, Notes, Limit)=ScaleGen(Tonic, Mode, 7, FS, 4, "y", True)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
-				(Chords, ScaleChords, GeneratedChords)=Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
+				(Chords, unused, GeneratedChords)=Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
 				export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 				break
@@ -277,7 +277,7 @@ def Genre(Tonic,FS):
 def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
 	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
-	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length(Currently Broken, Use any positive int),Modifier(s)\n\nEx)>"+Tonic+",3,4,sus2\n\n"+Tonic+"sus2\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
+	print ("Enter Chords 1 by 1 in this format:\n\nRoot,ChordTones,Midi Length(Currently Broken, Use any positive int),Modifier(s) as list\n\nEx)>"+Tonic+",3,4,sus2,add11\n\n"+Tonic+"sus2add11\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
 	Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "none"]
 	ChordInputList = []
 	while True:
@@ -290,15 +290,18 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 
 			else:
 				TempInput = ChordInput.split(",")
-				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),str(TempInput[3].lower())]))
+				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),(TempInput[3:])]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
 					raise ValueError
 				if (ChordInput[1] in range(1,8)) == False:
 					raise ValueError
 				if (ChordInput[2] <= 0) == True:
 					raise ValueError
-				if (ChordInput[3] in Modifiers) == False:
-					raise ValueError
+				for i in range(0,len(ChordInput[3])):
+					if (ChordInput[3][i].lower() in Modifiers) == True:
+						ChordInput[3][i] = ChordInput[3][i].lower()
+					else:
+						raise ValueError
 				ChordInputList.append(ChordInput)
 			print(ChordInputList)
 		except:
@@ -309,6 +312,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 		try:
 			ChordsList = []
 			Progression = []
+			GenChordsList = []
 			Progression.append(UsedScale.index((ChordInputList[0])[0]))
 			ChordTones = ChordInputList[0][1]
 			StartTonic = None
@@ -317,14 +321,13 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 			for i in range(len(ChordInputList)):
 				Progression = []
 				Progression.append(UsedScale.index((ChordInputList[i])[0]))
-				Modifier = ChordInputList[i][3]
+				Modifier = list(ChordInputList[i][3])
 				ChordTones = ChordInputList[i][1]
 				Limit = 1
-				if i  == 0:
-					(unused ,ScaleChords, unused)=ChordGenPrep(1, UsedScale, 4, Progression, Notes, 7, Modifier)
-				(Chords, unused, GeneratedChords)=ChordGenPrep(1, UsedScale, ChordTones, Progression, Notes, Limit, Modifier)
+				(Chords,unused,GeneratedChords)=ChordGenPrep(1, UsedScale, ChordTones, Progression, Notes, Limit, Modifier)
 				ChordsList.append(str(Chords[0]))
-				if i == (len(ChordInputList)-1):
+				GenChordsList.append(GeneratedChords[0])
+				if i == (len(ChordInputList)):
 					break
 			break
 		except:
@@ -333,7 +336,7 @@ def Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random):
 				traceback.print_exc()
 			Manual(UsedScale, Tonic, Mode, FS, ScaleChords,Notes,Random)
 	#ChordsList = ChordsList[0]
-	return(ChordsList, ScaleChords, GeneratedChords)
+	return(ChordsList, unused, GenChordsList)
 
 def NumChords(Tonic,Mode,FS):
 	print("\nHow many chord(s) would you like to generate?\n")
@@ -439,71 +442,88 @@ def ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit, Modif
 	for z in range(Limit):
 		Temp = z
 		ScaleChordsGen.insert(z,[UsedScale[z]])
-		(ScaleChords)=ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones, "none")
+		(ScaleChords)=ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones, Modifier)
 	Chords = ChordName(GeneratedChords, Notes, Modifier)
 	ScaleChords = ChordName(ScaleChordsGen, Notes, Modifier)
 	return (Chords, ScaleChords, GeneratedChords)
 
 
 def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier):
+	Scale=[]
+	ScaleLen = len(UsedScale)
+	for x in range(len(UsedScale)):
+		try:
+			Scale.append(UsedScale[Temp])
+			Temp += 1
+		except:
+			Temp = 0
+			Scale.append(UsedScale[Temp])
+			Temp += 1
+	Temp = 0
 	while len(GeneratedChords[i]) != ChordTones:
 		try:
 			ScaleLen = len(UsedScale)
 			Temp = Temp + 2
 			if Temp >= ScaleLen:
 				Temp = Temp - ScaleLen
-				GeneratedChords[i].append(UsedScale[Temp])
+				GeneratedChords[i].append(Scale[Temp])
 			else:
-				GeneratedChords[i].append(UsedScale[Temp])
+				GeneratedChords[i].append(Scale[Temp])
+
 
 		except ValueError as error:
 			print("\nSomething has went wrong\n")
 			if Debug == True:
 				traceback.print_exc()
-	if (Modifier == "sus2") and (len(GeneratedChords[i]) == 2):
-		GeneratedChords[i][1] = (UsedScale[(Temp - 1)%ScaleLen])
-	if (Modifier == "sus4") and (len(GeneratedChords[i]) == 2):
-		GeneratedChords[i][1] = (UsedScale[(Temp + 1)%ScaleLen])
-	if (Modifier == "6") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp - 1)%ScaleLen])
-	if (Modifier == "m6") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp - 1)%ScaleLen])
-	if (Modifier == "9") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp+2)%ScaleLen])
-	if (Modifier == "11") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp+4)%ScaleLen])
-	if (Modifier == "13") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp+6)%ScaleLen])
-	if (Modifier == "9") and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[Temp%ScaleLen])
-	if (Modifier == "11") and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[(Temp+2)%ScaleLen])
-	if (Modifier == "13") and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[(Temp+4)%ScaleLen])
-	if (Modifier == "11") and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[Temp%ScaleLen])
-	if (Modifier == "13") and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[(Temp+2)%ScaleLen])
-	if (Modifier == "13") and (len(GeneratedChords[i]) == 7):
-		GeneratedChords[i][6] = (UsedScale[Temp%ScaleLen])
-	if (Modifier == "add9") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp+2)%ScaleLen])
-	if (Modifier == "add11") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp+4)%ScaleLen])
-	if (Modifier == "add13") and (len(GeneratedChords[i]) == 4):
-		GeneratedChords[i][3] = (UsedScale[(Temp+6)%ScaleLen])
-	if (Modifier == "add9") and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[Temp%ScaleLen])
-	if (Modifier == "add11") and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[(Temp+2)%ScaleLen])
-	if (Modifier == "add13") and (len(GeneratedChords[i]) == 5):
-		GeneratedChords[i][4] = (UsedScale[(Temp+4)%ScaleLen])
-	if (Modifier == "add11") and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[Temp%ScaleLen])
-	if (Modifier == "add13") and (len(GeneratedChords[i]) == 6):
-		GeneratedChords[i][5] = (UsedScale[(Temp+2)%ScaleLen])
-	if (Modifier == "add13") and (len(GeneratedChords[i]) == 7):
-		GeneratedChords[i][6] = (UsedScale[Temp%ScaleLen])
+	Temp = 0
+	GeneratedChords=Modify(i, GeneratedChords, Scale, ChordTones, Modifier,ScaleLen)
+	return(GeneratedChords)
+#Make it not dependent on scale..
+def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier,ScaleLen):
+	if ("sus2" in Modifier) and (len(GeneratedChords[i]) >= 2):
+		GeneratedChords[i][1] = (UsedScale[1])
+	if ("sus4" in Modifier) and (len(GeneratedChords[i]) >= 2):
+		GeneratedChords[i][1] = (UsedScale[3])
+	if ("6" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[5])
+	if ("m6" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[5])
+	if ("9" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[1])
+	if ("11" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[3])
+	if ("13" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[5])
+	if ("9" in Modifier) and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[1])
+	if ("11" in Modifier) and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[3])
+	if ("13" in Modifier) and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[5])
+	if ("11" in Modifier) and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[3])
+	if ("13" in Modifier) and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[5])
+	if ("13" in Modifier) and (len(GeneratedChords[i]) == 7):
+		GeneratedChords[i][6] = (UsedScale[5])
+	if ("add9" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[1])
+	if ("add11" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[3])
+	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 4):
+		GeneratedChords[i][3] = (UsedScale[5])
+	if ("add9" in Modifier) and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[1])
+	if ("add11" in Modifier) and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[3])
+	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 5):
+		GeneratedChords[i][4] = (UsedScale[5])
+	if ("add11" in Modifier) and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[3])
+	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 6):
+		GeneratedChords[i][5] = (UsedScale[5])
+	if ("add13" in Modifier) and (len(GeneratedChords[i]) == 7):
+		GeneratedChords[i][6] = (UsedScale[5])
 	return(GeneratedChords)
 
 def ChordName(GeneratedChords, Notes, Modifier):
@@ -632,16 +652,17 @@ def ChordName(GeneratedChords, Notes, Modifier):
 						name[0]=(name[0]+"add13")
 
 			name = str(name[0])
-			print (name)
 			if "m7" in name:
 				name = name.replace("m7","mMaj7")
 			if "mb5bb7" in name:
 				name = name.replace("mb5bb7","dim7")
 			if "Maj#57" in name:
 				name = name.replace("Maj#57","Maj7#5")
-			if "b56add13" in name and Modifier != "add13":
+			if "Maj#5" in name:
+				name = name.replace("Maj#5","aug")
+			if "b56add13" in name and "add13" not in Modifier:
 				name = name.replace("b56add13","dim7")
-			if "b56add13" in name and Modifier == "6":
+			if "b56add13" in name and "6" in Modifier:
 				name = name.replace("b56add13","dim6")
 			if "mb5b7" in name:
 				name = name.replace("mb5b7","m7b5")
@@ -673,6 +694,8 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				name = name.replace("913","9/13")
 			if "713" in name:
 				name = name.replace("713","7/13")
+			if "sus47" in name:
+				name = name.replace("sus47","Maj7sus4")
 			Chords.append(name)
 	except:
 		if Debug == True:
