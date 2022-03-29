@@ -10,7 +10,7 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = True
+Debug = False
 Piano = True
 Guitar = True
 Bass = True
@@ -478,7 +478,7 @@ def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier):
 	Temp = 0
 	GeneratedChords=Modify(i, GeneratedChords, Scale, ChordTones, Modifier,ScaleLen)
 	return(GeneratedChords)
-#Make it not dependent on scale..
+
 def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier,ScaleLen):
 	if ("sus2" in Modifier) and (len(GeneratedChords[i]) >= 2):
 		GeneratedChords[i][1] = (UsedScale[1])
