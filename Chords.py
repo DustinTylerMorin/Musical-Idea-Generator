@@ -479,8 +479,8 @@ def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier):
 	GeneratedChords=Modify(i, GeneratedChords, Scale, ChordTones, Modifier,ScaleLen)
 	return(GeneratedChords)
 
-def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier,ScaleLen):
-
+def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier, ScaleLen):
+	Modifier = str(Modifier[0:])
 	if ("sus2" in Modifier) and (len(GeneratedChords[i]) >= 2):
 		GeneratedChords[i][1] = (UsedScale[1])
 
@@ -491,10 +491,11 @@ def Modify(i, GeneratedChords, UsedScale, ChordTones, Modifier,ScaleLen):
 		GeneratedChords[i][3] = (UsedScale[5])
 
 	if ("9" in Modifier):
+		print("9")
 		if (len(GeneratedChords[i]) == 4):
 			GeneratedChords[i][3] = (UsedScale[1])
 		if (len(GeneratedChords[i]) == 5):
-			GeneratedChords[i][4] = (UsedScale[1])
+			GeneratedChords[i][2] = (UsedScale[1])
 
 	if ("11" in Modifier):
 		if (len(GeneratedChords[i]) == 4):
