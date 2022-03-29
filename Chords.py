@@ -10,11 +10,11 @@ from midiutil.MidiFile import MIDIFile
 import traceback
 
 #Configuration
-Debug = True
+Debug = False
 Piano = True
 Guitar = True
 Bass = True
-Drums = False
+Drums = True
 #Configuration
 
 AllNotes = ["Ab", "A", "A#", "Bb", "B", 'B#', "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
