@@ -1,0 +1,144 @@
+*****Musical-Idea-Generator******
+
+Introductory Information
+	1)Valid Musical Notes.
+		Ab, A, A#, Bb, B, B#, Cb, C, C#, Db, D, D#, Eb, E, E#, Fb, F, F#, Gb, G, G#
+			i)Sharps and Flats.
+				# denotes a note as sharp, and b denotes a note as flat.
+			ii)What's a Tonic?
+				The tonic is the root note in a given key
+				For example in the key C Major (Containing the Notes C,D,E,F,G,A,B), C would be the tonic.
+	2)Valid Musical Scales/Modes.
+		1) Major                 2) Dorian
+		3) Phrygian              4) Lydian
+		5) Mixolydian            6) Minor
+		7) Locrian               8) Major Pentatonic
+		9) Minor Pentatonic      10) Harmonic Major
+		11) Dorian b5            12) Phrygian b4
+		13) Lydian b3            14) Mixolydian b2
+		15) Lydian Augmented #2  16) Locrian bb7
+		17) Harmonic Minor       18) Locrian 6
+		19) Ionian #5            20) Dorian #4
+		21) Phrygian Dominant    22) Lydian #2
+		23) Super Locrian bb7    24) Melodic Minor
+		25) Dorian b2            26) Lydian Augmented
+		27) Lydian Dominant      28) Mixolydian b6
+		29) Locrian #2           30) Super Locrian
+		31) Whole Tone           32) Chromatic
+		33) Random
+			i)What's a mode?
+				A mode is a musical scale based on a parent mode. Instead of starting on a parent scales tonic,
+				starting on a different scale degree will make a new scale which is a mode of that parent scale.
+			ii)Parent Modes.
+				Major, Harmonic Major, Harmonic Minor, Melodic Minor.
+			iii)Modes.
+				1)Major(Ionian)
+					Dorian
+					Phrygian
+					Lydian
+					Mixolydian
+					Minor(Aeolian)
+					Locrian
+				2)Harmonic Major
+					Dorian b5
+					Phrygian b4
+					Lydian b3
+					Mixolydian b2
+					Lydian Augmented #2
+					Locrian bb7
+				3)Harmonic Minor
+					Locrian 6
+					Ionian #5
+					Dorian #4
+					Phrygian Dominant
+					Lydian #2
+					Super Locrian bb7
+				4)Melodic Minor
+					Dorian b2
+					Lydian Augmented
+					Lydian Dominant
+					Mixolydian b6
+					Locrian #2
+					Super Locrian
+			iv)Scales that aren't modes.
+				1)Major Pentatonic
+					i)Contains 5 notes from the major scale.
+				2)Minor Pentatonic
+					i)Contains 5 notes from the minor scale.
+				3)Whole Tone
+					i)Built from 6 notes all 2 steps apart.
+					ii)There are only 2 distinct Whole Tone scales.
+						i)One will contain half(6) the possible notes.
+						ii)The other will have the remaining half(6).
+				4Chromatic
+					i)Contains all notes.
+
+
+
+Step By Step Guide.
+	1)Entering a tonic.
+		i)Type a valid music note at the prompt and press enter.
+	2)Choose a mode of operation.
+		i)Enter the number associated with a given menu option and press enter.
+		ii)Random Based On Scale.
+			i)Chords are generated randomly given the note and scale/mode selected.
+			ii)The chords selected will be random based upon possible chords in the scale.
+		iii)Genre Based.
+			i)Choose a genre
+			ii)Chords and chord progression are pre-selected from a key given your input tonic.
+		iv)Manual Entry.
+			i)Chords are manually input by user given the tonic and scale/mode selected.
+			ii)User can specify what chords to add, the amount of chord tones, modifiers such as sus2,
+				lengths of notes in midi, and for substitutions user specifies the tonic and scale of
+				the substitute chord.
+	3)Random Based On Scale
+
+		ii)Type the number of chords you want to generate, 1 or more and press enter.
+		iii)Type the number of chord tones for every chord to have, press enter.
+		iv)Type y if you want the progression to start on your chosen tonic or n to not, press enter.
+			i)At this point the program will print the tonic, scale, scale chords, and the chords that were generated.
+		v)Type y to export .txt file containing this information, n to skip export, press enter.
+			i)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
+		vii)Type y to export .mid file containing this information, n to skip export, press enter.
+			i)Type a beats per minute value for the midi file to be, press enter.
+			ii)Type r for each chord to play a random amount of time, or f to select a fixed amount of time for every chord, press enter.
+				i)If fixed was chosen, type how long you would lie every note to last as a whole note > 0, press enter.
+			iii)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
+	4)Genre Based
+		i)Type the number associated with the genre you want and press enter.
+		ii)Type the number of chord tones for every chord to have, press enter.
+			i)At this point the program will print the tonic, scale, scale chords, and the chords that were generated.
+		iii)Type y to export .txt file containing this information, n to skip export, press enter.
+			i)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
+		iv)Type y to export .mid file containing this information, n to skip export, press enter.
+			i)Type a beats per minute value for the midi file to be, press enter.
+			ii)Type r for each chord to play a random amount of time, or f to select a fixed amount of time for every chord, press enter.
+				i)If fixed was chosen, type how long you would lie every note to last as a whole note > 0, press enter.
+			i)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
+	5)Manual Entry
+		i)Type the number associated with the scale/mode you want and press enter.
+		ii)At the prompt type Note,ChordTones,Midi Length,Modifier(s),Alt Scale Tonic,Alt Scale Number(Optional) then press enter.
+			i)Note is a valid note.
+			ii)ChordTones is a 0<whole number<8.
+			iii)Midi Length is a whole number > 0.
+			iv)Modifier(s) are modifiers separated by ,(s) from this list:[sus2, sus4, 6, m6, 9, 11, 13, add9, add11, add13, none].
+				i)If you are using no modifiers, Type none.
+				ii)you can string multiple modifiers together however some combinations don't make sense musically
+				 such as having 9 and add9 as modifiers.
+			v)If substitution is occurring enter the tonic/note for the substitution key.
+			vi)If substitution is occurring enter the scale/mode number from the list above.
+			vii)Ensure every option is separated by a ,.
+		iii)If you want to remove the last added chord, type r then enter to remove it.
+		iv)If you want to stop adding chords and move to the next step type q then press enter.
+		v)Type y to export .txt file containing this information, n to skip export, press enter.
+			i)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
+		vi)Type y to export .mid file containing this information, n to skip export, press enter.
+			i)Type a beats per minute value for the midi file to be, press enter.
+			ii)Since Midi lengths are specified when a chord is added, that option is not needed here.
+			i)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
