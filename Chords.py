@@ -98,7 +98,13 @@ GenreList = {
 	"14": ["Lydian",1,6,2,3,6,2,1],
 	"15": ["Harmonic Major",1,4,5],
 	"16": ["Harmonic Major",1,2,4,5],
-	"17": ["Harmonic Major",1,3,5,4]
+	"17": ["Harmonic Major",1,3,5,4],
+	"18": ["Minor",1,6,7],
+	"19": ["Minor",1,6,3,7],
+	"20": ["Minor",1,4,1,6,5,1],
+	"21": ["Minor",6,7,1],
+	"22": ["Minor",1,7,6,5],
+	"22": ["Minor",1,4,3,6]
 	},
 
 	"Blues" : {
@@ -106,7 +112,8 @@ GenreList = {
 	"2" : ["Major",1,1,1,1,4,4,1,1,5,5,1,1],
 	"3"	: ["Major",1,4,1,1,4,4,1,1,5,4,1,5],
 	"4" : ["Major",1,1,1,1,4,4,1,1,5,4,1,4,1,5],
-	"5" : ["Major",1,1,1,1,4,4,1,1,5,6,1,5]
+	"5" : ["Major",1,1,1,1,4,4,1,1,5,6,1,5],
+	"6" : ["Minor",1,4,1,6,5,1]
 	}
 }
 #Nested Dicts of preset chord progressions for a few genres.
@@ -359,14 +366,22 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 
 		try:
 			if ChordInput.lower() == "q":
-				break
-				#Exit manual entry.
+				if len(ChordInputList) > 0:
+					break
+					#Exit manual entry.
+
+				else:
+					raise ValueError
+					#There are no inputs, try again!
+
 			elif ChordInput.lower() == "r":
 				del ChordInputList[-1]
 				#Remove the last added chord.
+
 			else:
 				TempInput = ChordInput.split(",")
 				#Create list of all items from user input config.
+
 				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),list()]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
 					raise ValueError
@@ -377,16 +392,23 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 				if (ChordInput[2] <= 0) == True:
 					raise ValueError
 					#Check if ChordInput[2] is a valid length for midi export.
+
 				if (TempInput[-1].lower() in Modifiers) and (TempInput[-2].capitalize() not in AllNotes):
 					#if the last item in config is a modifier and there's no substitution occuring.
+					if (ChordInput[0].capitalize() in UsedScale) == False:
+						raise ValueError
+						#Ensure note is actually in scale and wasn't meant to be substitution.
+
 					for i in range(3,len(TempInput[3:])+3):
 						#For every Modifier.
+
 						if (TempInput[i].lower() in Modifiers) == True:
 							TempInput[i] = TempInput[i].lower()
 							ChordInput[3].append(TempInput[i])
 							#Ensure modifier(s) are changed to lower().
 						else:
 							raise ValueError
+
 				else:
 					#Subsitution might exist
 					for i in range(3,len(TempInput[3:-2])+3):
