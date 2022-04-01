@@ -104,7 +104,21 @@ GenreList = {
 	"20": ["Minor",1,4,1,6,5,1],
 	"21": ["Minor",6,7,1],
 	"22": ["Minor",1,7,6,5],
-	"22": ["Minor",1,4,3,6]
+	"22": ["Minor",1,4,3,6],
+	"23": ["Major",1,2,5,1],
+	"24": ["Minor",1,2,5,1],
+	"25": ["Minor",3,2,1,6],
+	"26": ["Minor",1,5,6,7]
+	},
+
+	"Metal" : {
+	"1" : ["Minor",6,4,1,3],
+	"2" : ["Minor",1,1,6,5],
+	"3" : ["Harmonic Minor",1,7,6,5],
+	"4" : ["Minor",1,1,6,7],
+	"5" : ["Minor",6,6,1,7],
+	"6" : ["Minor",3,2,1,6],
+	"7" : ["Minor",1,6,3,7]
 	},
 
 	"Blues" : {
@@ -113,8 +127,23 @@ GenreList = {
 	"3"	: ["Major",1,4,1,1,4,4,1,1,5,4,1,5],
 	"4" : ["Major",1,1,1,1,4,4,1,1,5,4,1,4,1,5],
 	"5" : ["Major",1,1,1,1,4,4,1,1,5,6,1,5],
-	"6" : ["Minor",1,4,1,6,5,1]
+	"6" : ["Minor",1,4,1,6,5,1],
+	"7" : ["Major",6,2,6,4,3],
+	"8" : ["Major",6,1,7]
+	},
+
+	"Country" : {
+	"1" : ["Major",1,4,5],
+	"2" : ["Major",1,5,4],
+	"3" : ["Major",1,5,6,4],
+	"4" : ["Major",1,6,5,4],
+	"5" : ["Major",6,5,4],
+	"6" : ["Major",6,1,5,4],
+	"7" : ["Major",6,2,5,1,4],
+	"8" : ["Major",1,6,2,5],
+	"9" : ["Major",1,6,2,5,1]
 	}
+
 }
 #Nested Dicts of preset chord progressions for a few genres.
 #For each genre the progressions are given an index, a Scale/Mode, and a list of scale degree(s).
@@ -128,7 +157,7 @@ def main():
 		try:
 			Tonic = str(input(">")).capitalize()
 			#Tonic is the root of the key or the 1 of the key.
-			FS = DetermineFS(Tonic)
+			Tonic, FS = DetermineFS(Tonic)
 			if FS != None:
 				break
 			else:
@@ -217,7 +246,7 @@ def DetermineFS(Tonic):
 		if Debug == True:
 			traceback.print_exc()
 
-	return(FS)
+	return(Tonic, FS)
 #Function used to determine set of notes to use based upon tonic
 #FS{String} returned
 
@@ -457,7 +486,7 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 
 			for i in range(len(ChordInputList)):
 				Progression = []
-				FS = DetermineFS(Tonic)
+				Tonic, FS = DetermineFS(Tonic)
 				Notes = ChosenNotes
 				#Ensure FS is default to selected Scale.
 				try:
@@ -466,7 +495,7 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 						TempAltTonic = AltTonic.pop(0)
 						TempAltMode = AltMode.pop(0)
 						#Temp Alts.
-						FS = DetermineFS(TempAltTonic)
+						TempAltTonic, FS = DetermineFS(TempAltTonic)
 						#Ensure FS is set to substitution Scale.
 						(UsedScale, Progression, Notes, Limit) = ScaleGen(TempAltTonic, TempAltMode, 7, FS, "Other", False, Progression)
 						#Update UsedScale to reflect substitution.
