@@ -1298,7 +1298,8 @@ def DrumsGen(midi, track, bpm, Dur):
 		if x%16 == 0:
 			midi.addNote(track, channel, 49, x/2, 1, volume-25)
 			#Crash
-		midi.addNote(track, channel, 42, x/2, 1, volume-25)
+		midi.addNote(track, channel, 42, x/2, .5, volume-25)
+	midi.addNote(track, channel, 42, (TotalDur-.5), .5, volume-25)
 	return midi
 #Function for generating midi Drums.
 #midi{MIDIObject} returned.
