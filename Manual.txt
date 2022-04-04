@@ -1,4 +1,7 @@
 *****Musical-Idea-Generator******
+## Program created for generating musical ideas.
+## Program created by Dustin Morin.
+##GPL-3.0-or-later.
 
 Introductory Information
 	1)Valid Musical Notes.
@@ -104,7 +107,8 @@ Step By Step Guide.
 			i)Type a beats per minute value for the midi file to be, press enter.
 			ii)Type r for each chord to play a random amount of time, or f to select a fixed amount of time for every chord, press enter.
 				i)If fixed was chosen, type how long you would lie every note to last as a whole note > 0, press enter.
-			iii)Exported files are located at CurrentWorkingDirectory/Music
+			iii)Type a number associated with the genre of music you want reflected.
+			iv)Exported files are located at CurrentWorkingDirectory/Music
 				i)If Music folder does not exist, it will be created.
 	4)Genre Based
 		i)Type the number associated with the genre you want and press enter.
@@ -116,7 +120,7 @@ Step By Step Guide.
 		iv)Type y to export .mid file containing this information, n to skip export, press enter.
 			i)Type a beats per minute value for the midi file to be, press enter.
 			ii)Type r for each chord to play a random amount of time, or f to select a fixed amount of time for every chord, press enter.
-				i)If fixed was chosen, type how long you would lie every note to last as a whole note > 0, press enter.
+				i)If fixed was chosen, type how long you would like every note to last as a whole note > 0, press enter.
 			i)Exported files are located at CurrentWorkingDirectory/Music
 				i)If Music folder does not exist, it will be created.
 	5)Manual Entry
@@ -140,5 +144,7 @@ Step By Step Guide.
 		vi)Type y to export .mid file containing this information, n to skip export, press enter.
 			i)Type a beats per minute value for the midi file to be, press enter.
 			ii)Since Midi lengths are specified when a chord is added, that option is not needed here.
-			i)Exported files are located at CurrentWorkingDirectory/Music
+			iii)Type a number associated with the genre of music you want reflected.
+			iv)Exported files are located at CurrentWorkingDirectory/Music
+			iv)Exported files are located at CurrentWorkingDirectory/Music
 				i)If Music folder does not exist, it will be created.

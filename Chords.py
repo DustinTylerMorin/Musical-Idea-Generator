@@ -1,4 +1,4 @@
-## Program created for generating random chords.
+## Program created for generating musical ideas.
 ## Program created by Dustin Morin.
 ##GPL-3.0-or-later.
 
@@ -8,147 +8,9 @@ import os
 from datetime import datetime
 from midiutil.MidiFile import MIDIFile
 import traceback
+from musicalideageneratorconfigure import *
+#Import required configuration variables.
 #Import required libraries.
-
-#Configuration.
-Debug = False
-#Debug messages will print when issues occur.
-Piano = True
-Guitar = True
-Bass = True
-Drums = True
-#Enable/Disable each instrument in Midi output files.
-#Configuration.
-
-AllNotes = ["Ab", "A", "A#", "Bb", "B", "B#", "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
-NotesSharp = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
-NotesFlat = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"]
-NotesAltSharp = ["A", "A#", "B", "B#", "C#", "D", "D#", "E", "E#", "F#", "G", "G#"]
-NotesAltFlat = ["A", "Bb", "Cb", "C", "Db", "D", "Eb", "Fb", "F", "Gb", "G", "Ab"]
-#Lists of notes to be used for Scale/Note/Chord Generation.
-
-Scale = {
-"Major": [0,2,2,1,2,2,2],
-"Dorian": [0,2,1,2,2,2,1],
-"Phrygian": [0,1,2,2,2,1,2],
-"Lydian": [0,2,2,2,1,2,2],
-"Mixolydian": [0,2,2,1,2,2,1],
-"Minor": [0,2,1,2,2,1,2],
-"Locrian": [0,1,2,2,1,2,2],
-"Major Pentatonic": [0,2,2,3,2],
-"Minor Pentatonic": [0,3,2,2,3],
-"Harmonic Major": [0,2,2,1,2,1,3],
-"Dorian b5": [0,2,1,2,1,3,1],
-"Phrygian b4": [0,1,2,1,3,1,2],
-"Lydian b3": [0,2,1,3,1,2,2],
-"Mixolydian b2": [0,1,3,1,2,2,1],
-"Lydian Augmented #2": [0,3,1,2,2,1,2],
-"Locrian bb7": [0,1,2,2,1,2,1],
-"Harmonic Minor": [0,2,1,2,2,1,3],
-"Locrian 6": [0,1,2,2,1,3,1],
-"Ionian #5": [0,2,2,1,3,1,2],
-"Dorian #4": [0,2,1,3,1,2,1],
-"Phrygian Dominant": [0,1,3,1,2,1,2],
-"Lydian #2": [0,3,1,2,1,2,2],
-"Super Locrian bb7": [0,1,2,1,2,2,1],
-"Melodic Minor": [0,2,1,2,2,2,2],
-"Dorian b2": [0,1,2,2,2,2,1],
-"Lydian Augmented": [0,2,2,2,2,1,2],
-"Lydian Dominant": [0,2,2,2,1,2,1],
-"Mixolydian b6": [0,2,2,1,2,1,2],
-"Locrian #2": [0,2,1,2,1,2,2],
-"Super Locrian": [0,1,2,1,2,2,2],
-"Whole Tone": [0,2,2,2,2,2],
-"Chromatic": [0,1,1,1,1,1,1,1,1,1,1,1],
-"Random": []
-}
-#Dict of possible scales. Numbers represent the number of steps between notes.
-#For ex, 2 will move 2 keys on a piano or 2 frets on a guitar ie. A -> B.
-
-Modes = list(Scale.keys())
-#List of Modes/Scales derived from the dict of possible scales.
-
-GenreList = {
-	"Pop" : {
-	"1" : ["Major",1,5,6,4],
-	"2" : ["Major",5,6,4,1],
-	"3" : ["Major",1,4,5],
-	"4" : ["Major",1,6,4,5],
-	"5" : ["Major",6,4,1,5],
-	"6" : ["Major",1,4,6,5],
-	"7" : ["Major",1,6,3,7],
-	"8" : ["Major",2,5,1],
-	"9" : ["Major",1,5,4]
-	},
-
-	"Rock" : {
-	"1" : ["Major",1,5,6,4],
-	"2" : ["Major",1,4,5],
-	"3" : ["Major",4,6,1,5],
-	"4" : ["Minor",1,4,7],
-	"5" : ["Major",1,5,6,3,4,1,4,5],
-	"6" : ["Major",2,4,5],
-	"7" : ["Major",5,4,1],
-	"8" : ["Major",2,1,5,7],
-	"9" : ["Mixolydian",1,7],
-	"10": ["Mixolydian",1,7,4,1],
-	"11": ["Mixolydian",1,7,4,5,1],
-	"12": ["Major",2,1,4,5],
-	"13": ["Phrygian",1,3,5,4,6],
-	"14": ["Lydian",1,6,2,3,6,2,1],
-	"15": ["Harmonic Major",1,4,5],
-	"16": ["Harmonic Major",1,2,4,5],
-	"17": ["Harmonic Major",1,3,5,4],
-	"18": ["Minor",1,6,7],
-	"19": ["Minor",1,6,3,7],
-	"20": ["Minor",1,4,1,6,5,1],
-	"21": ["Minor",6,7,1],
-	"22": ["Minor",1,7,6,5],
-	"22": ["Minor",1,4,3,6],
-	"23": ["Major",1,2,5,1],
-	"24": ["Minor",1,2,5,1],
-	"25": ["Minor",3,2,1,6],
-	"26": ["Minor",1,5,6,7]
-	},
-
-	"Metal" : {
-	"1" : ["Minor",6,4,1,3],
-	"2" : ["Minor",1,1,6,5],
-	"3" : ["Harmonic Minor",1,7,6,5],
-	"4" : ["Minor",1,1,6,7],
-	"5" : ["Minor",6,6,1,7],
-	"6" : ["Minor",3,2,1,6],
-	"7" : ["Minor",1,6,3,7]
-	},
-
-	"Blues" : {
-	"1" : ["Major",1,1,1,1,4,4,1,1,5,4,1,5],
-	"2" : ["Major",1,1,1,1,4,4,1,1,5,5,1,1],
-	"3"	: ["Major",1,4,1,1,4,4,1,1,5,4,1,5],
-	"4" : ["Major",1,1,1,1,4,4,1,1,5,4,1,4,1,5],
-	"5" : ["Major",1,1,1,1,4,4,1,1,5,6,1,5],
-	"6" : ["Minor",1,4,1,6,5,1],
-	"7" : ["Major",6,2,6,4,3],
-	"8" : ["Major",6,1,7]
-	},
-
-	"Country" : {
-	"1" : ["Major",1,4,5],
-	"2" : ["Major",1,5,4],
-	"3" : ["Major",1,5,6,4],
-	"4" : ["Major",1,6,5,4],
-	"5" : ["Major",6,5,4],
-	"6" : ["Major",6,1,5,4],
-	"7" : ["Major",6,2,5,1,4],
-	"8" : ["Major",1,6,2,5],
-	"9" : ["Major",1,6,2,5,1]
-	}
-
-}
-#Nested Dicts of preset chord progressions for a few genres.
-#For each genre the progressions are given an index, a Scale/Mode, and a list of scale degree(s).
-#For ex) "Pop" : {"1" : ["Major",1,5,6,4]} would mean a major scale, in the specified keys using scale degrees 1,5,6,and 4.
-#If C was chosen as the tonic, this would be a progression of C, G, A, F.
 
 def main():
 	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
@@ -181,12 +43,12 @@ def main():
 				break
 			elif OpMode == 2:
 				Random = False
-				(Mode, Number, StartTonic, Progression) = Genre(Tonic, FS)
+				(Mode, Number, StartTonic, Progression, Genre) = ChooseGenre(Tonic, FS)
 				(ChordTones) = NumChordTones()
 				(UsedScale, Progression, Notes, Limit) = ScaleGen(Tonic, Mode, Number, FS, StartTonic, Random, Progression)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
-				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords)
+				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords,[], Genre)
 				break
 			elif OpMode ==1:
 				Random = True
@@ -306,8 +168,8 @@ def	ModeConfig(Tonic,FS):
 #if random is picked there is a random mode/scale chosen from the list Modes.
 #Mode{String} returned to main() to be used in subsequent functions.
 
-#Genre(Tonic{String},FS{String})
-def Genre(Tonic,FS):
+#ChooseGenre(Tonic{String},FS{String})
+def ChooseGenre(Tonic,FS):
 	TempGenre = list(GenreList.keys())
 	#Temp var so list(GenreList.keys()) doesn't need called multiple times.
 
@@ -349,6 +211,10 @@ def Genre(Tonic,FS):
 
 				StartTonic = Progression[0]
 				#Set StartTonic to the first value of the progression.
+				TempGenre = list(GenreList.keys())
+				#Temp var so list(GenreList.keys()) doesn't need called multiple times.
+
+				Genre = list(GenreList.keys())[Genre]
 
 				for i in range (len(Progression)):
 					Progression[i] = int(Progression[i]-1)
@@ -359,7 +225,7 @@ def Genre(Tonic,FS):
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-	return (Mode,Number,StartTonic,Progression)
+	return (Mode,Number,StartTonic,Progression,Genre)
 #Function used if Genre mode is selected in main().
 #User chooses a genre based upon the nested Dict GenreList.
 #A random progression is chosen from the Genres Dict.
@@ -965,9 +831,9 @@ def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
 #Function for outputing the scale and chords generated.
 
 #Export(UsedScale{List},GeneratedChords{List},Chords{List},Tonic{String},Mode{String},ScaleChords{List},MidiLengths{List})
-def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = []):
+def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = [],Genre = None):
 	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
-	ExportMidi(GeneratedChords,MidiLengths)
+	ExportMidi(GeneratedChords,MidiLengths,UsedScale,Genre)
 #Function for Exporting Txt and/or Midi files.
 #Pass values to ExportTxt and ExportMidi
 
@@ -1024,7 +890,7 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords):
 #Function for exporting TXT files of the generated chords.
 
 #ExportMidi(GeneratedChords{List},MidiLengths{List})
-def ExportMidi(GeneratedChords, MidiLengths):
+def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 	print("\nWould you like to output these chords to a .mid file? (y/n)\n")
 	while True:
 		try:
@@ -1070,7 +936,7 @@ def ExportMidi(GeneratedChords, MidiLengths):
 							if Debug == True:
 								traceback.print_exc()
 					elif RanDur == "r":
-						Durations = [1,2,4]
+						Durations = [1,2,4,6,8]
 						for i in range(len(GeneratedChords)):
 							Dur.append(Durations[random.randint(0,2)])
 						break
@@ -1078,6 +944,26 @@ def ExportMidi(GeneratedChords, MidiLengths):
 						break
 					else:
 						print("\nSomething has went wrong\n")
+				if Genre == None:
+					print("\nWhat genre of music would you like?\n")
+					TempGenre = list(GenreList.keys())
+					for i in range(len(TempGenre)):
+						print((str(i+1)+") " + str(TempGenre[i])))
+					print()
+					while True:
+						try:
+							Genre = int(input(">"))
+							if Genre in range(1,len(TempGenre)+1):
+								Genre = TempGenre[Genre-1]
+								break
+							else:
+								raise ValueError
+						except ValueError as error:
+							print("\nTry again!\n")
+							if Debug == True:
+								traceback.print_exc()
+				else:
+					pass
 				cwd = os.getcwd()
 				try:
 					os.mkdir("Music")
@@ -1091,27 +977,35 @@ def ExportMidi(GeneratedChords, MidiLengths):
 				else:
 					now = str(cwd)+'\\Music'+"\\"+"chords_"+datetime.now().strftime("%H-%M-%S")+'.mid'
 				numtracks = 0
-				if Piano == True:
+				if Piano[0] == True:
 					numtracks += 1
-				if Guitar == True:
+					if Piano[1] == "Lead":
+						numtracks += 1
+				if Guitar[0] == True:
 					numtracks += 1
-				if Bass == True:
+					if Guitar[1] == "Lead":
+						numtracks += 1
+				if Bass[0] == True:
 					numtracks += 1
-				if Drums == True:
+				if Drums[0] == True:
 					numtracks += 1
 				midi = MIDIFile(numtracks)
 				track = 0
-				if Piano == True:
-					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords)
+				if Piano[0] == True:
+					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale)
 					track += 1
-				if Guitar == True:
-					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords)
+					if Piano[1] == "Lead":
+						track += 1
+				if Guitar[0] == True:
+					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale)
 					track += 1
-				if Bass == True:
-					midi = BassGen(midi, track, bpm, Dur, GeneratedChords)
+					if Guitar[1] == "Lead":
+						track += 1
+				if Bass[0] == True:
+					midi = BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale)
 					track += 1
-				if Drums == True:
-					midi = DrumsGen(midi, track, bpm, Dur)
+				if Drums[0] == True:
+					midi = DrumsGen(midi, track, bpm, Dur, Genre)
 					track += 1
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
@@ -1132,37 +1026,14 @@ def ExportMidi(GeneratedChords, MidiLengths):
 			traceback.print_exc()
 #Function for exporting Midi files of the generated chords.
 
-#PianoGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List})
-def PianoGen(midi, track, bpm, Dur, GeneratedChords):
+#PianoGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List})
+def PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale):
 	trackname = "Piano"
 	time = 0
 	midi.addTrackName(track, time, trackname)
 	midi.addTempo(track, time, bpm)
-	channel = 0
+	channel = track
 	volume = 100
-	PianoTones = {
-	"Ab": [56],
-	"A" : [57],
-	"A#": [58],
-	"Bb": [58],
-	"B" : [59],
-	"Cb": [59],
-	"B#": [60],
-	"C" : [60],
-	"C#": [61],
-	"Db": [61],
-	"D" : [62],
-	"D#": [63],
-	"Eb": [63],
-	"E" : [64],
-	"Fb": [64],
-	"E#": [65],
-	"F" : [65],
-	"F#": [66],
-	"Gb": [66],
-	"G" : [67],
-	"G#": [68]
-	}
 	for i in range(len(GeneratedChords)):
 		pitch = PianoTones[GeneratedChords[i][0]][0]
 		for x in range(0,len(GeneratedChords[i])):
@@ -1174,41 +1045,177 @@ def PianoGen(midi, track, bpm, Dur, GeneratedChords):
 				print ("Something went terribly wrong")
 			midi.addNote(track, channel, pitch, time, Dur[i], volume)
 		time = time + Dur[i]
+	if Piano[1] == "Lead":
+		time = 0
+		track += 1
+		channel = track
+		trackname = "Lead Piano"
+		midi.addTrackName(track, time, trackname)
+		midi.addTempo(track, time, bpm)
+		try:
+			for i in range(len(GeneratedChords)):
+				rootpitch = PianoTones[GeneratedChords[i][0]][0]
+				try:
+					secondpitch = PianoTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 1) % len(UsedScale)]][0]
+				except:
+					pass
+					#No second
+				try:
+					thirdpitch = PianoTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 2) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Third
+
+				try:
+					fifthpitch = PianoTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 4) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Fifth
+
+				try:
+					leadingpitch = PianoTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) - 1) % len(UsedScale)]][0]
+				except:
+					pass
+					#Leading note not possible
+
+				RandomNum = random.randint(0,7)
+				if RandomNum == 0:
+					#Play just root note.
+					midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+
+				if RandomNum == 1:
+					try:
+						if (int(Dur[i]) >= 2):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/2, volume)
+							#Play root then fifth
+						else:
+							raise Exception
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesn't exist in chord, play root.
+
+				if RandomNum == 2:
+					try:
+						if (2 <=Dur[i]<=4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/2, volume)
+							#Play root then third
+						elif (Dur[i] > 4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#third doesn't exist in chord or duration too short, play root.
+				if RandomNum == 3:
+					try:
+						if (Dur[i] % 4 == 0):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
+							#Play root then leading pitch
+						elif (Dur[i] % 6 == 0):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/3, volume)
+							#root,thrid,leading.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#third or leading doesn't exist in chord or duration too short, play root.
+				if RandomNum == 4:
+					try:
+						if (Dur[i] == 2):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							#Play triplett on root
+						elif (Dur[i] == 4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/6, volume)
+							Temptime = time + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
+							#Triplet then quarter note
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#Triplet not possible in context.
+				if RandomNum == 5:
+					try:
+						if (Dur[i] == 1):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							#Play triplett on root
+						elif (Dur[i] == 2):
+							midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							#Quarter note then triplet
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#Triplet not possible in context.
+				if RandomNum == 6:
+					try:
+						if (fifthpitch in locals()):
+							midi.addNote(track, channel, fifthpitch, time, Dur[i], volume)
+							#play fifth.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesnt exist, play root.
+				if RandomNum == 7:
+					try:
+						if (thridpitch in locals()):
+							midi.addNote(track, channel, thridpitch, time, Dur[i], volume)
+							#play fifth.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesnt exist, play root.
+				time = time + Dur[i]
+		except:
+			print("\nSoemthing has gone terribly wrong!\n")
+			if Debug == True:
+				traceback.print_exc()
 	return midi
 #Function for generating midi Piano.
 #midi{MIDIObject} returned.
 
-#GuitarGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List})
-def GuitarGen(midi, track, bpm, Dur, GeneratedChords):
-	trackname = "Guitar"
+#GuitarGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List})
+def GuitarGen(midi, track, bpm, Dur, GeneratedChords,UsedScale):
+	trackname = "Rhythm Guitar"
 	time = 0
 	midi.addTrackName(track, time, trackname)
 	midi.addTempo(track, time, bpm)
-	channel = 1
+	channel = track
 	volume = 100
-	GuitarTones = {
-	"E" : [40],
-	"Fb": [40],
-	"E#": [41],
-	"F" : [41],
-	"F#": [42],
-	"Gb": [42],
-	"G" : [43],
-	"G#": [44],
-	"Ab": [44],
-	"A" : [45],
-	"A#": [46],
-	"Bb": [46],
-	"B" : [47],
-	"Cb": [47],
-	"B#": [48],
-	"C" : [48],
-	"C#": [49],
-	"Db": [49],
-	"D" : [50],
-	"D#": [51],
-	"Eb": [51]
-	}
 	for i in range(len(GeneratedChords)):
 		pitch = GuitarTones[GeneratedChords[i][0]][0]
 		for x in range(0,len(GeneratedChords[i])):
@@ -1220,86 +1227,529 @@ def GuitarGen(midi, track, bpm, Dur, GeneratedChords):
 				print ("Something went terribly wrong")
 			midi.addNote(track, channel, pitch, time, Dur[i], volume)
 		time = time + Dur[i]
+		#Generate Rhythm Guitar
+	if Guitar[1] == "Lead":
+		time = 0
+		track += 1
+		channel = track
+		trackname = "Lead Guitar"
+		midi.addTrackName(track, time, trackname)
+		midi.addTempo(track, time, bpm)
+		try:
+			for i in range(len(GeneratedChords)):
+				rootpitch = GuitarTones[GeneratedChords[i][0]][0]
+				try:
+					secondpitch = GuitarTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 1) % len(UsedScale)]][0]
+				except:
+					pass
+					#No second
+				try:
+					thirdpitch = GuitarTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 2) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Third
+
+				try:
+					fifthpitch = GuitarTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 4) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Fifth
+
+				try:
+					leadingpitch = GuitarTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) - 1) % len(UsedScale)]][0]
+				except:
+					pass
+					#Leading note not possible
+
+				RandomNum = random.randint(0,7)
+				if RandomNum == 0:
+					#Play just root note.
+					midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+
+				if RandomNum == 1:
+					try:
+						if (int(Dur[i]) >= 2):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/2, volume)
+							#Play root then fifth
+						else:
+							raise Exception
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesn't exist in chord, play root.
+
+				if RandomNum == 2:
+					try:
+						if (2 <=Dur[i]<=4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/2, volume)
+							#Play root then third
+						elif (Dur[i] > 4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#third doesn't exist in chord or duration too short, play root.
+				if RandomNum == 3:
+					try:
+						if (Dur[i] % 4 == 0):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
+							#Play root then leading pitch
+						elif (Dur[i] % 6 == 0):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/3, volume)
+							#root,thrid,leading.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#third or leading doesn't exist in chord or duration too short, play root.
+				if RandomNum == 4:
+					try:
+						if (Dur[i] == 2):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							#Play triplett on root
+						elif (Dur[i] == 4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/6, volume)
+							Temptime = time + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
+							#Triplet then quarter note
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#Triplet not possible in context.
+				if RandomNum == 5:
+					try:
+						if (Dur[i] == 1):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							#Play triplett on root
+						elif (Dur[i] == 2):
+							midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							#Quarter note then triplet
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#Triplet not possible in context.
+				if RandomNum == 6:
+					try:
+						if (fifthpitch in locals()):
+							midi.addNote(track, channel, fifthpitch, time, Dur[i], volume)
+							#play fifth.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesnt exist, play root.
+				if RandomNum == 7:
+					try:
+						if (thridpitch in locals()):
+							midi.addNote(track, channel, thridpitch, time, Dur[i], volume)
+							#play fifth.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesnt exist, play root.
+				time = time + Dur[i]
+		except:
+			print("\nSoemthing has gone terribly wrong!\n")
+			if Debug == True:
+				traceback.print_exc()
 	return midi
 #Function for generating midi Guitar.
 #midi{MIDIObject} returned.
 
-#BassGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List})
-def BassGen(midi, track, bpm, Dur, GeneratedChords):
+#BassGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List})
+def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale):
 	trackname = "Bass"
 	time = 0
 	midi.addTrackName(track, time, trackname)
 	midi.addTempo(track, time, bpm)
-	channel = 2
+	channel = track
 	volume = 100
-	BassTones = {
-	"E" : [28],
-	"Fb": [28],
-	"E#": [29],
-	"F" : [29],
-	"F#": [30],
-	"Gb": [30],
-	"G" : [31],
-	"G#": [32],
-	"Ab": [32],
-	"A" : [33],
-	"A#": [34],
-	"Bb": [34],
-	"B" : [35],
-	"Cb": [35],
-	"B#": [36],
-	"C" : [36],
-	"C#": [37],
-	"Db": [37],
-	"D" : [38],
-	"D#": [39],
-	"Eb": [39]
-	}
-	for i in range(len(GeneratedChords)):
-		pitch = BassTones[GeneratedChords[i][0]][0]
-		if BassTones[GeneratedChords[i][0]][0] < pitch:
-			pitch = (BassTones[GeneratedChords[i][0]][0]) - 12
-		elif BassTones[GeneratedChords[i][0]][0] >= pitch:
-			pitch =	(BassTones[GeneratedChords[i][0]][0])
-		else:
-			print ("Something went terribly wrong")
-		midi.addNote(track, channel, pitch, time, Dur[i], volume)
-		time = time + Dur[i]
+	try:
+		for i in range(len(GeneratedChords)):
+			rootpitch = BassTones[GeneratedChords[i][0]][0]
+			try:
+				secondpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 1) % len(UsedScale)]][0]
+			except:
+				pass
+				#No second
+			try:
+				thirdpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 2) % len(UsedScale)]][0]
+			except:
+				pass
+				#No Third
+
+			try:
+				fifthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 4) % len(UsedScale)]][0]
+			except:
+				pass
+				#No Fifth
+
+			try:
+				leadingpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) - 1) % len(UsedScale)]][0]
+			except:
+				pass
+				#Leading note not possible
+
+			RandomNum = random.randint(0,7)
+			if Bass[1] == "Basic":
+				try:
+					#Just play root notes.
+					midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+				except:
+					raise ValueError
+			if Bass[1] == "Advanced":
+
+				if RandomNum == 0:
+					#Play just root note.
+					midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+
+				if RandomNum == 1:
+					try:
+						if (int(Dur[i]) >= 2):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/2, volume)
+							#Play root then fifth
+						else:
+							raise Exception
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesn't exist in chord, play root.
+
+				if RandomNum == 2:
+					try:
+						if (2 <=Dur[i]<=4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/2, volume)
+							#Play root then third
+						elif (Dur[i] > 4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#third doesn't exist in chord or duration too short, play root.
+				if RandomNum == 3:
+					try:
+						if (Dur[i] % 4 == 0):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
+							#Play root then leading pitch
+						elif (Dur[i] % 6 == 0):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/3, volume)
+							#root,thrid,leading.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#third or leading doesn't exist in chord or duration too short, play root.
+				if RandomNum == 4:
+					try:
+						if (Dur[i] == 2):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							#Play triplett on root
+						elif (Dur[i] == 4):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/6, volume)
+							Temptime = time + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
+							#Triplet then quarter note
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#Triplet not possible in context.
+				if RandomNum == 5:
+					try:
+						if (Dur[i] == 1):
+							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+							Temptime = time + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							Temptime = Temptime + Dur[i]/3
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+							#Play triplett on root
+						elif (Dur[i] == 2):
+							midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
+							Temptime = time + Dur[i]/2
+							midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							Temptime = Temptime + Dur[i]/6
+							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+							#Quarter note then triplet
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#Triplet not possible in context.
+				if RandomNum == 6:
+					try:
+						if (fifthpitch in locals()):
+							midi.addNote(track, channel, fifthpitch, time, Dur[i], volume)
+							#play fifth.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesnt exist, play root.
+				if RandomNum == 7:
+					try:
+						if (thridpitch in locals()):
+							midi.addNote(track, channel, thridpitch, time, Dur[i], volume)
+							#play fifth.
+						else:
+							raise ValueError
+					except:
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						#fifth doesnt exist, play root.
+			time = time + Dur[i]
+	except ValueError as error:
+		print("\nSomething has went wrong\n")
+		if Debug == True:
+			traceback.print_exc()
 	return midi
 #Function for generating midi Bass.
 #midi{MIDIObject} returned.
 
 #PianoGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int})
-def DrumsGen(midi, track, bpm, Dur):
+def DrumsGen(midi, track, bpm, Dur, Genre):
 	trackname = "Drums"
-	channel = 3
+	channel = track
 	time = 0
+	midi.addTrackName(track, time, trackname)
+	midi.addTempo(track, time, bpm)
 	volume = 100
-	DrumTones = {
-	"Kick": [36],
-	"Snare": [38],
-	"Hat": [42],
-	"Crash": [49],
-	"Ride": [51],
-	"Floor": [43],
-	"Rack": [48],
-	"Crash2": [57]
-	}
+	if Genre == None:
+		Genre = Drums[1]
+
 	TotalDur = 0
-	for i in range (len(Dur)):
-		TotalDur += Dur[i]
-	for x in range (TotalDur * 2 - 1):
-		if x%4 == 2:
-			midi.addNote(track, channel, 38, x/2, .5, volume)
-			#Snare
-		if x%4 == 0:
-			midi.addNote(track, channel, 36, x/2, .5, volume)
-			#Kick
-		if x%16 == 0:
-			midi.addNote(track, channel, 49, x/2, 1, volume-25)
-			#Crash
-		midi.addNote(track, channel, 42, x/2, .5, volume-25)
-	midi.addNote(track, channel, 42, (TotalDur-.5), .5, volume-25)
+
+	if Genre == "Pop":
+		for i in range (len(Dur)):
+			TotalDur += Dur[i]
+		RandomNum = random.randint(0,1)
+		if RandomNum == 0:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], (x/2-.25), .5, volume-25)
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
+			midi.addNote(track, channel, DrumTones["ClosedHat"][0], (TotalDur-.5), .5, volume-25)
+		if RandomNum == 1:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], (x/2-.25), .5, volume-25)
+					midi.addNote(track, channel,DrumTones["Hand Clap"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .5, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
+			midi.addNote(track, channel, DrumTones["ClosedHat"][0], (TotalDur-.5), .5, volume-25)
+
+	elif Genre == "Rock":
+		for i in range (len(Dur)):
+			TotalDur += Dur[i]
+		RandomNum = random.randint(0,2)
+		if RandomNum == 0:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-75)
+			midi.addNote(track, channel, DrumTones["OpenHat"][0], (TotalDur-.5), .5, volume-75)
+		if RandomNum == 1:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-75)
+			midi.addNote(track, channel, DrumTones["ClosedHat"][0], (TotalDur-.5), .5, volume-75)
+		if RandomNum == 2:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["Ride"][0], x/2, .5, volume)
+			midi.addNote(track, channel, DrumTones["Ride"][0], (TotalDur-.5), .5, volume)
+
+	if Genre == "Metal":
+		for i in range (len(Dur)):
+			TotalDur += Dur[i]
+		for x in range (TotalDur * 2 - 1):
+			if x%4 == 2:
+				midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+				#Snare
+			if x%4 == 0:
+				midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+				midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
+				midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .5, .75, volume)
+				#Kick
+			midi.addNote(track, channel, DrumTones["Crash"][0], x/2, .5, volume-25)
+		midi.addNote(track, channel, DrumTones["Crash"][0], (TotalDur-.5), .5, volume-25)
+
+	if Genre == "Blues":
+		for i in range (len(Dur)):
+			TotalDur += Dur[i]
+		RandomNum  = randon.randint(0,1)
+		if RandomNum == 0:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, 1, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, 1, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 2, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["Ride"][0], x/2 + .5, .5, volume-25)
+				midi.addNote(track, channel, DrumTones["Ride"][0], x/2, .5, volume-25)
+		if RandomNum == 1:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, 1, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, 1, volume)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, 1, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 2, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2 + .5, .5, volume-25)
+				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
+
+	if Genre == "Country":
+		for i in range (len(Dur)):
+			TotalDur += Dur[i]
+		RandomNum = random.randint(0,1)
+		if RandomNum == 0:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 1:
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2+.25, .25, volume-25)
+					pass
+					#Hat
+				if x%4 == 3:
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2+.25, .25, volume-25)
+					pass
+					#Hat
+				if x%4 == 2:
+					#midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2-.25, .25, volume-25)
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .75, volume-25)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+			midi.addNote(track, channel, DrumTones["ClosedHat"][0], (TotalDur - .25), .25, volume-25)
+		if RandomNum == 1:
+			for x in range (TotalDur * 2 - 1):
+				if x%8 == 1:
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
+					#Hat
+				if x%4 == 2:
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2-.25, .5, volume-25)
+					midi.addNote(track, channel,DrumTones["Rim"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2 +.75, .5, volume-25)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .5, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+			midi.addNote(track, channel, DrumTones["ClosedHat"][0], (TotalDur-.5), .5, volume-25)
+			#add missing last hat beat
 	return midi
 #Function for generating midi Drums.
 #midi{MIDIObject} returned.
