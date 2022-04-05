@@ -963,6 +963,14 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 						break
 					else:
 						print("\nSomething has went wrong\n")
+					DurLen = 0
+					for i in range(len(Dur)+1):
+						Durlen += Dur[i]
+					if Durlen%4 != 0:
+						Temp = Durlen%4
+						Dur[-1] = Dur[-1] + Temp
+					#Ensure 4/4 for now
+
 				if Genre == None:
 					print("\nWhat genre of music would you like?\n")
 					TempGenre = list(GenreList.keys())
@@ -1648,7 +1656,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								Temptime = Temptime + Dur[i]/3
 								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
 								#Play triplett on root
-							elif (Dur[i] == 2):
+							elif (Dur[i] % 2 == 0):
 								midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
 								Temptime = time + Dur[i]/2
 								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
@@ -1715,14 +1723,14 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
 					if RandomNum == 1:
 						try:
-							if (Dur[i] % 4 == 0):
+							if (Dur[i] % 8 == 0):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/8, volume)
 								Temptime = time + Dur[i]/8
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, sixthpitch, time, Dur[i]/8, volume)
+								midi.addNote(track, channel, sixthpitch, Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
@@ -1732,7 +1740,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
 								#Walking bass on chord tones
-							elif (Dur[i] == 2):
+							elif (Dur[i] % 4 == 0):
 								midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
 								Temptime = time + Dur[i]/4
 								midi.addNote(track, channel, thirdpitch, Temptime, Dur[i]/4, volume)
@@ -1754,7 +1762,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, sixthpitch, time, Dur[i]/8, volume)
+								midi.addNote(track, channel, sixthpitch, Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
@@ -1786,7 +1794,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch, time, Dur[i]/8, volume)
+								midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
@@ -2054,9 +2062,9 @@ def DrumsGen(midi, track, bpm, Dur, Genre):
 				midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
 				#Snare
 			if x%4 == 0:
-				midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+				midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .5, volume)
 				midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
-				midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .5, .75, volume)
+				midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .5, .5, volume)
 				#Kick
 			midi.addNote(track, channel, DrumTones["Crash"][0], x/2, .5, volume-25)
 		midi.addNote(track, channel, DrumTones["Crash"][0], (TotalDur-.5), .5, volume-25)
@@ -2064,7 +2072,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre):
 	if Genre == "Blues":
 		for i in range (len(Dur)):
 			TotalDur += Dur[i]
-		RandomNum  = randon.randint(0,1)
+		RandomNum  = random.randint(0,1)
 		if RandomNum == 0:
 			for x in range (TotalDur * 2 - 1):
 				if x%4 == 2:
