@@ -1668,14 +1668,14 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
 								Temptime = time + Dur[i]/2
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
+								Temptime = Temptime + Dur[i]/4
 								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
 								#Play root then fifth then root pitch
 							elif (Dur[i] % 2 == 0):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
 								Temptime = time + Dur[i]/2
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
+								Temptime = Temptime + Dur[i]/4
 								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
 								#Play root then fifth then root pitch
 							else:
@@ -1688,7 +1688,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
 								Temptime = time + Dur[i]/3
 								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
+								Temptime = Temptime + Dur[i]/3
 								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
 								#Play root 3 times
 							else:
@@ -1701,7 +1701,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
 								Temptime = time + Dur[i]/3
 								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
+								Temptime = Temptime + Dur[i]/3
 								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
 								#Play root 3 times
 							else:
@@ -1723,11 +1723,11 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, sixthpitch, time, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
+								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
+								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
@@ -1755,11 +1755,11 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, sixthpitch, time, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
+								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
+								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
@@ -1787,11 +1787,11 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, fifthpitch, time, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
+								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
+								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
 								Temptime = Temptime + Dur[i]/8
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
