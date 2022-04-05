@@ -599,11 +599,10 @@ def Modify(i, GeneratedChords, UsedScale, Modifier):
 		GeneratedChords[i][1] = (UsedScale[3])
 
 	if ("5" in Modifier) and (len(GeneratedChords[i]) >= 2):
-		print(GeneratedChords[i])
-		GeneratedChords[i] = list(GeneratedChords[i][0])
-		print(GeneratedChords[i])
+		Temp = str(GeneratedChords[i][0])
+		GeneratedChords[i] = []
+		GeneratedChords[i] = [Temp]
 		GeneratedChords[i].append(UsedScale[4])
-		print(GeneratedChords[i])
 
 	if ("6" in Modifier) and (len(GeneratedChords[i]) >= 4):
 		GeneratedChords[i][3] = (UsedScale[5])
