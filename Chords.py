@@ -28,11 +28,22 @@ def main():
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
-	print("\nWould you like the chords to be:\n \n1)Random Based On Scale \n2)Genre Based \n3)Manual Entry\n")
+	print("\nWould you like the chords to be:\n \n1)Random Based On Scale \n2)Genre Based \n3)Manual Entry\n4)Output Scale Chords\n")
 	while True:
 		try:
 			OpMode = int(input(">"))
-			if OpMode == 3:
+			if OpMode == 4:
+				(Mode) = ModeConfig(Tonic, FS)
+				(UsedScale, Progression, Notes, Limit)=ScaleGen(Tonic, Mode, 7, FS, "y", True)
+				Random = False
+				Progression = []
+				for i in range(len(UsedScale)+1):
+					Progression.append(i)
+				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
+				Genre = None
+				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
+				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords, [], Genre)
+			elif OpMode == 3:
 				Random = False
 				(Mode) = ModeConfig(Tonic, FS)
 				unused,unused,unused,unused,Genre = ChooseGenre(Tonic,FS)
@@ -931,7 +942,8 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 						try:
 							RanDur = str(input(">")).lower()
 							if RanDur == "f" or RanDur == "r":
-								print ("\nHow many beats (Quarter Notes) would you like each chord to last?\n")
+								if RanDur == "f":
+									print ("\nHow many beats (Quarter Notes) would you like each chord to last?\n")
 								break
 							else:
 								raise ValueError
