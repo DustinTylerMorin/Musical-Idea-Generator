@@ -649,6 +649,7 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				Second=GeneratedChords[i][1]
 				Third=GeneratedChords[i][1]
 				Fourth=GeneratedChords[i][1]
+				Fifth=GeneratedChords[i][1]
 				if (Notes.index(Root) < Notes.index(Third)):
 					if Notes.index(Third) - Notes.index(Root) == 4:
 						name[0]=(name[0]+"Maj")
@@ -658,6 +659,8 @@ def ChordName(GeneratedChords, Notes, Modifier):
 						name[0]=(name[0]+"sus2")
 					elif Notes.index(Fourth) - Notes.index(Root) == 5:
 						name[0]=(name[0]+"sus4")
+					elif Notes.index(Fifth) - Notes.index(Root) == 7:
+						name[0]=(name[0]+"5")
 
 				else:
 					if Notes.index(Third) + 12 - Notes.index(Root) == 4:
@@ -668,6 +671,8 @@ def ChordName(GeneratedChords, Notes, Modifier):
 							name[0]=(name[0]+"sus2")
 					elif Notes.index(Fourth)+ 12 - Notes.index(Root) == 5:
 						name[0]=(name[0]+"sus4")
+					elif Notes.index(Fifth)+ 12 - Notes.index(Root) == 7:
+						name[0]=(name[0]+"5")
 
 
 
@@ -912,7 +917,7 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 						try:
 							RanDur = str(input(">")).lower()
 							if RanDur == "f" or RanDur == "r":
-								print ("\nHow many beats would you like each chord to last?\n")
+								print ("\nHow many beats (Quarter Notes) would you like each chord to last?\n")
 								break
 							else:
 								raise ValueError
@@ -1749,6 +1754,44 @@ def DrumsGen(midi, track, bpm, Dur, Genre):
 					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
 					#Crash
 			midi.addNote(track, channel, DrumTones["ClosedHat"][0], (TotalDur-.5), .5, volume-25)
+			#add missing last hat beat
+	if Genre == "Punk":
+		for i in range (len(Dur)):
+			TotalDur += Dur[i]
+		RandomNum = random.randint(0,1)
+		if RandomNum == 0:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					#midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2-.25, .25, volume-25)
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["OpenHatHat"][0], x/2, .75, volume-25)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
+			midi.addNote(track, channel, DrumTones["OpenHat"][0], (TotalDur - .5), .25, volume-25)
+		if RandomNum == 1:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					#midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2-.25, .25, volume-25)
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["OpenHatHat"][0], x/2, .75, volume-25)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .5 , .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
+			midi.addNote(track, channel, DrumTones["OpenHat"][0], (TotalDur - .5), .25, volume-25)
 			#add missing last hat beat
 	return midi
 #Function for generating midi Drums.
