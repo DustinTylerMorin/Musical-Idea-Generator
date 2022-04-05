@@ -129,7 +129,7 @@ Step By Step Guide.
 			i)Note is a valid note.
 			ii)ChordTones is a 0<whole number<8.
 			iii)Midi Length is a whole number > 0.
-			iv)Modifier(s) are modifiers separated by ,(s) from this list:[sus2, sus4, 6, m6, 9, 11, 13, add9, add11, add13, none].
+			iv)Modifier(s) are modifiers separated by ,(s) from this list:[sus2, sus4, 6, m6, 9, 11, 13, add9, add11, add13, 5, none].
 				i)If you are using no modifiers, Type none.
 				ii)you can string multiple modifiers together however some combinations don't make sense musically
 				 such as having 9 and add9 as modifiers.

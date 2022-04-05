@@ -237,7 +237,7 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
 	print ("Enter Chords 1 by 1 in this format:\n\nNote,ChordTones,Midi Length,Modifier(s),Alt Scale Tonic,Alt Scale Number(Optional)\n\nEx)>"+Tonic+",4,4,sus2,add11,"+Tonic+",1""\n\n"+Tonic+"sus2add11\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
 
-	Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "none"]
+	Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "5", "none" ]
 	#List of possible modifications that can be made to chords.
 
 	ChordInputList = []
@@ -536,7 +536,7 @@ def ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit, Modif
 	for z in range(Limit):
 		Temp = z
 		ScaleChordsGen.insert(z,[UsedScale[z]])
-		(ScaleChords)=ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones, Modifier)
+		(ScaleChords)=ChordGen(z, Temp, ScaleChordsGen, UsedScale, ChordTones, [])
 		#Generate chords that are in the scale.
 	Chords = ChordName(GeneratedChords, Notes, Modifier)
 	ScaleChords = ChordName(ScaleChordsGen, Notes, Modifier)
@@ -598,6 +598,13 @@ def Modify(i, GeneratedChords, UsedScale, Modifier):
 	if ("sus4" in Modifier) and (len(GeneratedChords[i]) >= 2):
 		GeneratedChords[i][1] = (UsedScale[3])
 
+	if ("5" in Modifier) and (len(GeneratedChords[i]) >= 2):
+		print(GeneratedChords[i])
+		GeneratedChords[i] = list(GeneratedChords[i][0])
+		print(GeneratedChords[i])
+		GeneratedChords[i].append(UsedScale[4])
+		print(GeneratedChords[i])
+
 	if ("6" in Modifier) and (len(GeneratedChords[i]) >= 4):
 		GeneratedChords[i][3] = (UsedScale[5])
 
@@ -650,6 +657,13 @@ def ChordName(GeneratedChords, Notes, Modifier):
 				Third=GeneratedChords[i][1]
 				Fourth=GeneratedChords[i][1]
 				Fifth=GeneratedChords[i][1]
+
+				if "5" in Modifier:
+					if Notes.index(Fifth) - Notes.index(Root) == 7:
+						name[0]=(name[0]+"5")
+					elif Notes.index(Fifth)+ 12 - Notes.index(Root) == 7:
+						name[0]=(name[0]+"5")
+
 				if (Notes.index(Root) < Notes.index(Third)):
 					if Notes.index(Third) - Notes.index(Root) == 4:
 						name[0]=(name[0]+"Maj")
@@ -659,8 +673,6 @@ def ChordName(GeneratedChords, Notes, Modifier):
 						name[0]=(name[0]+"sus2")
 					elif Notes.index(Fourth) - Notes.index(Root) == 5:
 						name[0]=(name[0]+"sus4")
-					elif Notes.index(Fifth) - Notes.index(Root) == 7:
-						name[0]=(name[0]+"5")
 
 				else:
 					if Notes.index(Third) + 12 - Notes.index(Root) == 4:
@@ -671,8 +683,7 @@ def ChordName(GeneratedChords, Notes, Modifier):
 							name[0]=(name[0]+"sus2")
 					elif Notes.index(Fourth)+ 12 - Notes.index(Root) == 5:
 						name[0]=(name[0]+"sus4")
-					elif Notes.index(Fifth)+ 12 - Notes.index(Root) == 7:
-						name[0]=(name[0]+"5")
+
 
 
 
