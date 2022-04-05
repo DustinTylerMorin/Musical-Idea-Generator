@@ -847,8 +847,8 @@ def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
 
 #Export(UsedScale{List},GeneratedChords{List},Chords{List},Tonic{String},Mode{String},ScaleChords{List},MidiLengths{List})
 def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = [],Genre = None):
-	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 	ExportMidi(GeneratedChords,MidiLengths,UsedScale,Genre)
+	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords)
 #Function for Exporting Txt and/or Midi files.
 #Pass values to ExportTxt and ExportMidi
 
