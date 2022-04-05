@@ -1890,7 +1890,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 							#Triplet not possible in context.
 					if RandomNum == 5:
 						try:
-							if (Dur[i] % 4 = 0):
+							if (Dur[i] % 4 == 0):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
 								Temptime = time + Dur[i]/2
 								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
