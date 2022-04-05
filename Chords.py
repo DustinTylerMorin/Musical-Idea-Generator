@@ -1007,17 +1007,17 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 				midi = MIDIFile(numtracks)
 				track = 0
 				if Piano[0] == True:
-					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale)
+					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre)
 					track += 1
 					if Piano[1] == "Lead":
 						track += 1
 				if Guitar[0] == True:
-					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale)
+					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre)
 					track += 1
 					if Guitar[1] == "Lead":
 						track += 1
 				if Bass[0] == True:
-					midi = BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale)
+					midi = BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre)
 					track += 1
 				if Drums[0] == True:
 					midi = DrumsGen(midi, track, bpm, Dur, Genre)
@@ -1041,8 +1041,8 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 			traceback.print_exc()
 #Function for exporting Midi files of the generated chords.
 
-#PianoGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List})
-def PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale):
+#PianoGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List},Genre{String})
+def PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 	trackname = "Piano"
 	time = 0
 	midi.addTrackName(track, time, trackname)
@@ -1223,8 +1223,8 @@ def PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale):
 #Function for generating midi Piano.
 #midi{MIDIObject} returned.
 
-#GuitarGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List})
-def GuitarGen(midi, track, bpm, Dur, GeneratedChords,UsedScale):
+#GuitarGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List},Genre{String})
+def GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 	trackname = "Rhythm Guitar"
 	time = 0
 	midi.addTrackName(track, time, trackname)
@@ -1406,8 +1406,8 @@ def GuitarGen(midi, track, bpm, Dur, GeneratedChords,UsedScale):
 #Function for generating midi Guitar.
 #midi{MIDIObject} returned.
 
-#BassGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List})
-def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale):
+#BassGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List},Genre{String})
+def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 	trackname = "Bass"
 	time = 0
 	midi.addTrackName(track, time, trackname)
@@ -1578,7 +1578,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale):
 #Function for generating midi Bass.
 #midi{MIDIObject} returned.
 
-#PianoGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int})
+#DrumGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},Genre{String})
 def DrumsGen(midi, track, bpm, Dur, Genre):
 	trackname = "Drums"
 	channel = track
