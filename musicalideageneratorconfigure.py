@@ -6,8 +6,8 @@
 #Configuration.
 Debug = False
 #Debug messages will print when issues occur.
-Piano = [True,"Rhythm"] #Rhythm or Lead
-Guitar = [True,"Rhythm"] #Rhythm or Lead
+Piano = [True,"Lead"] #Rhythm or Lead
+Guitar = [True,"Lead"] #Rhythm or Lead
 Bass = [True,"Advanced"] #Basic or Advanced
 Drums = [True,"Rock"] # Pop, Rock, Blues, Metal, Country ***Genre configuration does not overwrite user input genre, Used for development reasons***
 #Enable/Disable each instrument in Midi output files. Options for how the instruments act.

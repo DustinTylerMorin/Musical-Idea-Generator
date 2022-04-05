@@ -1912,7 +1912,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
 							#Triplet not possible in context.
 				if Genre == "Punk":
-					RandomNum = random.randint(0,3)
+					RandomNum = random.randint(0,2)
 					if RandomNum == 0:
 						#Play just root note.
 						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
@@ -1922,9 +1922,9 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
 								Temptime = time + Dur[i]/4
 								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
+								Temptime = Temptime + Dur[i]/4
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+								Temptime = Temptime + Dur[i]/4
 								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
 								#4xroot
 							else:
@@ -1936,9 +1936,9 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 					if RandomNum == 2:
 						try:
 							Temptime = time
-							for x in range(Dur[i]):
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/x, volume)
-								Temptime = time + Dur[i]/x
+							for x in range(1,Dur[i]+1):
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/Dur[i], volume)
+								Temptime = Temptime + Dur[i]/Dur[i]
 							else:
 								raise ValueError
 						except:
