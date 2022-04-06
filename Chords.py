@@ -43,6 +43,7 @@ def main():
 				Genre = None
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
 				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords, [], Genre)
+				break
 			elif OpMode == 3:
 				Random = False
 				(Mode) = ModeConfig(Tonic, FS)
@@ -1063,7 +1064,6 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 			print(e)
 			print("\nSomething has went wrong\n")
 			traceback.print_exc()
-	return (GeneratedChords,Genre)
 #Function for exporting Midi files of the generated chords.
 #Returns GeneratedChords{List}
 
