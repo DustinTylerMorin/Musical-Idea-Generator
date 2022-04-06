@@ -8,7 +8,7 @@ import os
 from datetime import datetime
 from midiutil.MidiFile import MIDIFile
 import traceback
-from musicalideageneratorconfigure import *
+from migconfigure import *
 #Import required configuration variables.
 #Import required libraries.
 
