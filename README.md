@@ -1,13 +1,13 @@
 # Musical-Idea-Generator
-Simple python program to generate musical ideas.\n
-Choose a tonic for your key, scale, and the number of notes/chords you'd like to generate.\n
-This can be used for the creations of chord progressions, riffs and/or melodies.\n
-This program simply gives the user notes in a key in a random order and selection to spark new musical ideas.\n
-Other modes of operation exist for more control over the randomness if you have a starting point already.\n
-Major/Minor/Harmonic Major/Harmonic Minor/Melodic Minor/Major Pentatonic/Minor Pentatonic/Whole Tone/Chromatic are currently working along with the corresponding modes for each scale.\n
-Output can be read from terminal or output to a file in the current working directory at Your-CWD/Music/Your-output-file.mid/.txt.\n
-Both .txt and .mid are currently supported outputs to save ideas produced by the program.\n
-Written 100% in python3.\n
+Simple python program to generate musical ideas.\
+Choose a tonic for your key, scale, and the number of notes/chords you'd like to generate.\
+This can be used for the creations of chord progressions, riffs and/or melodies.\
+This program simply gives the user notes in a key in a random order and selection to spark new musical ideas.\
+Other modes of operation exist for more control over the randomness if you have a starting point already.\
+Major/Minor/Harmonic Major/Harmonic Minor/Melodic Minor/Major Pentatonic/Minor Pentatonic/Whole Tone/Chromatic are currently working along with the corresponding modes for each scale.\
+Output can be read from terminal or output to a file in the current working directory at Your-CWD/Music/Your-output-file.mid/.txt.\
+Both .txt and .mid are currently supported outputs to save ideas produced by the program.\
+Written 100% in python3.\
 
 #Modes of operation:
 ###Random Based On Scale
