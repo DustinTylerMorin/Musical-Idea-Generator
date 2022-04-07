@@ -95,7 +95,7 @@ Step By Step Guide.
 				lengths of notes in midi, and for substitutions user specifies the tonic and scale of
 				the substitute chord.
 	3)Random Based On Scale
-
+		i)Type the number associated with the scale/mode you want and press enter.
 		ii)Type the number of chords you want to generate, 1 or more and press enter.
 		iii)Type the number of chord tones for every chord to have, press enter.
 		iv)Type y if you want the progression to start on your chosen tonic or n to not, press enter.
@@ -146,5 +146,18 @@ Step By Step Guide.
 			ii)Since Midi lengths are specified when a chord is added, that option is not needed here.
 			iii)Type a number associated with the genre of music you want reflected.
 			iv)Exported files are located at CurrentWorkingDirectory/Music
+			iv)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
+	6)Output Scale Chords
+		i)Type the number associated with the scale/mode you want and press enter.
+			i)At this point the program will print the tonic, scale, scale chords, and the chords that were generated.
+		ii)Type y to export .txt file containing this information, n to skip export, press enter.
+			i)Exported files are located at CurrentWorkingDirectory/Music
+				i)If Music folder does not exist, it will be created.
+		iii)Type y to export .mid file containing this information, n to skip export, press enter.
+			i)Type a beats per minute value for the midi file to be, press enter.
+			ii)Type r for each chord to play a random amount of time, or f to select a fixed amount of time for every chord, press enter.
+				i)If fixed was chosen, type how long you would lie every note to last as a whole note > 0, press enter.
+			iii)Type a number associated with the genre of music you want reflected.
 			iv)Exported files are located at CurrentWorkingDirectory/Music
 				i)If Music folder does not exist, it will be created.
