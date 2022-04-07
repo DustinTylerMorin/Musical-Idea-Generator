@@ -4,7 +4,7 @@
 #musical-idea-generator Configuration File
 
 #Configuration.
-Debug = False
+Debug = True
 #Debug messages will print when issues occur.
 Piano = [True,"Lead"] #Rhythm or Lead
 Guitar = [True,"Lead"] #Rhythm or Lead
