@@ -9,7 +9,7 @@ Debug = False
 Piano = [True,"Lead"] #Rhythm or Lead
 Guitar = [True,"Lead"] #Rhythm or Lead
 Bass = [True,"Advanced"] #Basic or Advanced
-Drums = [True,"Rock"] # Pop, Rock, Blues, Metal, Country ***Genre configuration does not overwrite user input genre, Used for development reasons***
+Drums = [True,"Rock"] # Pop, Rock, Blues, Metal, Country, Punk ***Genre configuration does not overwrite user input genre, Used for development reasons***
 #Enable/Disable each instrument in Midi output files. Options for how the instruments act.
 #Configuration.
 
@@ -89,51 +89,3 @@ GenreList = {
 #For ex) "Pop" : {"1" : ["Major",1,5,6,4]} would mean a major scale, in the specified keys using scale degrees 1,5,6,and 4.
 #If C was chosen as the tonic, this would be a progression of C, G, A, F.
 #Custom progressions/genres can be added by follwing the above format
-
-DrumTones = {
-"Kick": [36],
-"Snare": [38],
-"Hand Clap": [39],
-"Rim": [40],
-"ClosedHat": [42],
-"OpenHat": [46],
-"Crash": [49],
-"Ride": [48],
-"Floor": [57],
-"Rack1": [45],
-"Rack2": [43]
-}
-#Drum tones ***Different VST Drums use different values, experimentation may be necessary for these numbers to properly match your VST Drums.***
-
-BassTones = {
-"E" : [28], "Fb": [28], "E#": [29],
-"F" : [29], "F#": [30], "Gb": [30],
-"G" : [31], "G#": [32], "Ab": [32],
-"A" : [33], "A#": [34], "Bb": [34],
-"B" : [35], "Cb": [35], "B#": [36],
-"C" : [36], "C#": [37], "Db": [37],
-"D" : [38], "D#": [39], "Eb": [39]
-}
-#Bass tones ***Different VST Basses use different values, experimentation may be necessary for these numbers to properly match your VST Bass.***
-
-GuitarTones = {
-"E" : [40], "Fb": [40], "E#": [41],
-"F" : [41], "F#": [42], "Gb": [42],
-"G" : [43], "G#": [44], "Ab": [44],
-"A" : [45], "A#": [46], "Bb": [46],
-"B" : [47], "Cb": [47], "B#": [48],
-"C" : [48], "C#": [49], "Db": [49],
-"D" : [50], "D#": [51], "Eb": [51]
-}
-#Guitar tones ***Different VST Guitars use different values, experimentation may be necessary for these numbers to properly match your VST Guitar.***
-
-PianoTones = {
-"Ab": [56], "A" : [57], "A#": [58],
-"Bb": [58], "B" : [59], "Cb": [59],
-"B#": [60], "C" : [60], "C#": [61],
-"Db": [61], "D" : [62], "D#": [63],
-"Eb": [63], "E" : [64], "Fb": [64],
-"E#": [65], "F" : [65], "F#": [66],
-"Gb": [66], "G" : [67], "G#": [68]
-}
-#Piano tones
