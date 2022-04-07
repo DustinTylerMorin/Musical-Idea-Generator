@@ -21,5 +21,5 @@ Choose a tonic/starting note by choice or random, choose a scale/mode by choice 
 
 
 **Requirements**
-python3,
+python3\
 pip package midiutil
