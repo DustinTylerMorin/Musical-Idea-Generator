@@ -17,7 +17,7 @@ from migconfigure import *
 #Import required libraries.
 
 def main():
-	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s) or single notes in a desired key.\n")
+	print ("\nProgram created by Dustin Morin for the purposes of generating chord(s), riff(s) or random notes in a desired key.\n")
 	print ("What's the tonic of the desired key?\n\nEx(C, Gb, A#, Random)\n")
 	while True:
 		try:
@@ -978,7 +978,7 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 						print(error)
 					else:
 						pass
-				if platform.system() == ("Linux" or "MacOS") :
+				if platform.system() == ("Linux") :
 					now = str(cwd)+'/Music'+'/'+'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
 				else:
 					now = str(cwd)+'\\Music'+"\\"+"chords_"+datetime.now().strftime("%H-%M-%S")+'.mid'
@@ -1016,9 +1016,6 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
 					file.close()
-				if platform.system() == ("Linux" or "MacOS") :
-					print ("\nFile output to:"+now)
-				else:
 					print ("\nFile output to:"+now)
 				break
 			elif export == "n":
