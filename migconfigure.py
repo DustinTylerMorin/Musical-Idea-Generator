@@ -10,7 +10,7 @@ Piano = [True,"Lead"] #Rhythm or Lead
 Guitar = [True,"Lead"] #Rhythm or Lead
 Bass = [True,"Advanced"] #Basic or Advanced
 Drums = [True,"Rock"] # Pop, Rock, Blues, Metal, Country, Punk ***Genre configuration does not overwrite user input genre, Used for development reasons***
-#Enable/Disable each instrument in Midi output files. Options for how the instruments act.
+#Enable(True)/Disable(False) each instrument in Midi output files. Options for how the instruments act.
 #Configuration.
 
 AllNotes = ["Ab", "A", "A#", "Bb", "B", "B#", "Cb", "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "Fb", "F", "F#", "Gb", "G", "G#"]
@@ -23,14 +23,27 @@ NotesAltFlat = ["A", "Bb", "Cb", "C", "Db", "D", "Eb", "Fb", "F", "Gb", "G", "Ab
 Scale = {
 "Major": [0,2,2,1,2,2,2], "Dorian": [0,2,1,2,2,2,1], "Phrygian": [0,1,2,2,2,1,2],
 "Lydian": [0,2,2,2,1,2,2], "Mixolydian": [0,2,2,1,2,2,1], "Minor": [0,2,1,2,2,1,2],
-"Locrian": [0,1,2,2,1,2,2], "Major Pentatonic": [0,2,2,3,2], "Minor Pentatonic": [0,3,2,2,3],
+"Locrian": [0,1,2,2,1,2,2],
+
+"Major Pentatonic": [0,2,2,3,2], "Minor Pentatonic": [0,3,2,2,3], "Blues Minor Pentatonic": [0,3,2,3,2],
+"Suspended Pentatonic":[0,2,3,2,3], "Blues Hexatonic": [0,3,2,1,1,3],
+
 "Harmonic Major": [0,2,2,1,2,1,3], "Dorian b5": [0,2,1,2,1,3,1],"Phrygian b4": [0,1,2,1,3,1,2],
 "Lydian b3": [0,2,1,3,1,2,2], "Mixolydian b2": [0,1,3,1,2,2,1], "Lydian Augmented #2": [0,3,1,2,2,1,2],
-"Locrian bb7": [0,1,2,2,1,2,1], "Harmonic Minor": [0,2,1,2,2,1,3], "Locrian 6": [0,1,2,2,1,3,1],
-"Ionian #5": [0,2,2,1,3,1,2], "Dorian #4": [0,2,1,3,1,2,1], "Phrygian Dominant": [0,1,3,1,2,1,2],
-"Lydian #2": [0,3,1,2,1,2,2], "Super Locrian bb7": [0,1,2,1,2,2,1], "Melodic Minor": [0,2,1,2,2,2,2],
-"Dorian b2": [0,1,2,2,2,2,1], "Lydian Augmented": [0,2,2,2,2,1,2], "Lydian Dominant": [0,2,2,2,1,2,1],
-"Mixolydian b6": [0,2,2,1,2,1,2], "Locrian #2": [0,2,1,2,1,2,2],"Super Locrian": [0,1,2,1,2,2,2],
+"Locrian bb7": [0,1,2,2,1,2,1],
+
+"Harmonic Minor": [0,2,1,2,2,1,3], "Locrian 6": [0,1,2,2,1,3,1], "Ionian #5": [0,2,2,1,3,1,2],
+"Dorian #4": [0,2,1,3,1,2,1], "Phrygian Dominant": [0,1,3,1,2,1,2], "Lydian #2": [0,3,1,2,1,2,2],
+"Super Locrian bb7": [0,1,2,1,2,2,1],
+
+"Melodic Minor": [0,2,1,2,2,2,2], "Dorian b2": [0,1,2,2,2,2,1], "Lydian Augmented": [0,2,2,2,2,1,2],
+"Lydian Dominant": [0,2,2,2,1,2,1], "Mixolydian b6": [0,2,2,1,2,1,2], "Locrian #2": [0,2,1,2,1,2,2],
+"Super Locrian": [0,1,2,1,2,2,2],
+
+"Double Harmonic Major":[0,1,3,1,2,1,3], "Lydian #2 #6":[0,3,1,2,1,3,1], "Ultraphrygian":[0,1,2,1,3,1,1],
+"Harmonic Minor #4":[0,2,1,3,1,1,3], "Mixolydian b2 b5":[0,1,3,1,1,3,1], "Ionian Augmented #2":[0,3,1,1,3,1,2],
+"Locrian bb3 bb7":[0,1,1,3,1,2,1],
+
 "Whole Tone": [0,2,2,2,2,2], "Chromatic": [0,1,1,1,1,1,1,1,1,1,1,1], "Random": []
 }
 #Dict of possible scales. Numbers represent the number of steps between notes.
@@ -69,18 +82,23 @@ GenreList = {
 	"1" : ["Major",1,1,1,1,4,4,1,1,5,4,1,5], "2" : ["Major",1,1,1,1,4,4,1,1,5,5,1,1],
 	"3" : ["Major",1,4,1,1,4,4,1,1,5,4,1,5], "4" : ["Major",1,1,1,1,4,4,1,1,5,4,1,4,1,5],
 	"5" : ["Major",1,1,1,1,4,4,1,1,5,6,1,5], "6" : ["Minor",1,4,1,6,5,1],
-	"7" : ["Major",6,2,6,4,3], "8" : ["Major",6,1,7]
+	"7" : ["Major",6,2,6,4,3], "8" : ["Major",6,1,7], "9" : ["Major",6,6,1,1,7,7]
 	},
 
 	"Country" : {
 	"1" : ["Major",1,4,5], "2" : ["Major",1,5,4], "3" : ["Major",1,5,6,4],
 	"4" : ["Major",1,6,5,4], "5" : ["Major",6,5,4], "6" : ["Major",6,1,5,4],
-	"7" : ["Major",6,2,5,1,4], "8" : ["Major",1,6,2,5], "9" : ["Major",1,6,2,5,1]
+	"7" : ["Major",6,2,5,1,4], "8" : ["Major",1,6,2,5], "9" : ["Major",1,6,2,5,1],
+	"10" : ["Major",1,1,4,5]
 	},
 
 	"Punk" : {
 	"1" : ["Major",1,4,5,], "2" : ["Major",1,5,6,4], "3" : ["Major",1,6,3,7],
-	"4" : ["Major",1,6,3,7]
+	"4" : ["Major",1,6,3,7], "5" : ["Major",4,1,5,6]
+	},
+
+	"Stoner Rock" : {
+	"1" : ["Dorian",1,7,1,6,7,3,4], "2" : ["Minor",1,7,1,5,3,4], "3" : ["Dorian",1,7,1,7,6,5,3]
 	}
 
 }

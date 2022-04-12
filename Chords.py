@@ -713,10 +713,8 @@ def ChordName(GeneratedChords, Notes, Modifier, UsedScale):
 				if IntervalDistance ==  10:
 					name[0]=(name[0]+"b7")
 				if IntervalDistance ==  9 and ("13" not in str(Modifier[0])):
-					print (Modifier)
 					name[0]=(name[0]+"6")
 				if IntervalDistance ==  8 and ("13" not in str(Modifier[0])):
-					print (Modifier)
 					name[0]=(name[0]+"6")
 
 			if len(GeneratedChords[i]) >= 4:
@@ -807,6 +805,10 @@ def ChordName(GeneratedChords, Notes, Modifier, UsedScale):
 				name = name.replace("sus47","Maj7sus4")
 			if "sus27" in name:
 				name = name.replace("sus27","Maj7sus2")
+			if "Majb5b7" in name:
+				name = name.replace("Majb5b7","7b5")
+			if "sus2b56" in name:
+				name = name.replace("sus2b56","dimsus2bb7")
 			#Conditionals to make chord names more proper.
 			Chords.append(name)
 			#After chord name is sanitized, add it to the list of chord names.

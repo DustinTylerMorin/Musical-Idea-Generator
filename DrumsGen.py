@@ -248,7 +248,52 @@ def DrumsGen(midi, track, bpm, Dur, Genre):
 					midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .75, volume-25)
 			midi.addNote(track, channel, DrumTones["OpenHat"][0], (TotalDur - .5), .5, volume-25)
 			#add missing last hat beat
-
+	elif Genre == "Stoner Rock":
+		for i in range (len(Dur)):
+			TotalDur += Dur[i]
+		RandomNum = random.randint(0,2)
+		if RandomNum == 0:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-75)
+			midi.addNote(track, channel, DrumTones["OpenHat"][0], (TotalDur-.5), .5, volume-75)
+		if RandomNum == 1:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-75)
+			midi.addNote(track, channel, DrumTones["ClosedHat"][0], (TotalDur-.5), .5, volume-75)
+		if RandomNum == 2:
+			for x in range (TotalDur * 2 - 1):
+				if x%4 == 2:
+					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .75, volume)
+					#Snare
+				if x%4 == 0:
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .75, volume)
+					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .25, .75, volume)
+					#Kick
+				if x == 0:
+					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
+					#Crash
+				midi.addNote(track, channel, DrumTones["Ride"][0], x/2, .5, volume)
+			midi.addNote(track, channel, DrumTones["Ride"][0], (TotalDur-.5), .5, volume)
 	return midi
 #Function for generating midi Drums.
 #midi{MIDIObject} returned.

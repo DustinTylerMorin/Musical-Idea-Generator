@@ -38,7 +38,11 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 			except:
 				pass
 				#No Third
-
+			try:
+				fourthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 3) % len(UsedScale)]][0]
+			except:
+				pass
+				#No fourth
 			try:
 				fifthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 4) % len(UsedScale)]][0]
 			except:
@@ -549,6 +553,91 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
 						except:
 							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
 							#third doesn't exist in chord or duration too short, play root.
+				if Genre == "Stoner Rock":
+					RandomNum = 4#random.randint(0,5)
+					if RandomNum == 0:
+						#Play just root note.
+						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+					if RandomNum == 1:
+						try:
+							if (int(Dur[i]) % 4 == 0):
+								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
+								Temptime = time + Dur[i]/4
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+								Temptime = Temptime + Dur[i]/4
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+								Temptime = Temptime + Dur[i]/4
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+								#4xroot
+							else:
+								raise Exception
+						except:
+							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							#fifth doesn't exist in chord, play root.
+
+					if RandomNum == 2:
+						try:
+							Temptime = time
+							for x in range(1,Dur[i]+1):
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/Dur[i], volume)
+								Temptime = Temptime + Dur[i]/Dur[i]
+							else:
+								raise ValueError
+						except:
+							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							#third doesn't exist in chord or duration too short, play root.
+					if RandomNum == 3:
+						try:
+							if ((int(Dur[i]) % 2 == 0) and (int(Dur[i]) < 7)):
+								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+								Temptime = time + Dur[i]/2
+								midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/2, volume)
+								#Root, seventh
+							else:
+								raise Exception
+						except:
+							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							#play just root.
+					if RandomNum == 4:
+						try:
+							if (int(Dur[i]) % 4 == 0):
+								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
+								Temptime = time + Dur[i]/4
+								midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/4, volume)
+								Temptime = Temptime + Dur[i]/4
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+								Temptime = Temptime + Dur[i]/4
+								midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/4, volume)
+								#Root, seventh, root, fifth
+							else:
+								raise Exception
+						except:
+							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							#play just root.
+					if RandomNum == 5:
+						try:
+							if (int(Dur[i]) % 4 == 0):
+								midi.addNote(track, channel, thirdpitch, time, Dur[i]/4, volume)
+								Temptime = time + Dur[i]/4
+								midi.addNote(track, channel, fourthpitch, Temptime, Dur[i]/4, volume)
+								Temptime = Temptime + Dur[i]/4
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+								Temptime = Temptime + Dur[i]/4
+								midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/4, volume)
+								#third, fourth, root, seventh
+							elif (int(Dur[i]) % 2 == 0):
+								print(time)
+								print(Dur[i]/2)
+								midi.addNote(track, channel, thirdpitch, time, Dur[i]/2, volume)
+								Temptime = time + Dur[i]/2
+								print(Temptime)
+								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/2, volume)
+								#Third, root
+							else:
+								raise Exception
+						except:
+							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							#play just root.
 			time = time + Dur[i]
 	except ValueError as error:
 		print("\nSomething has went wrong\n")
