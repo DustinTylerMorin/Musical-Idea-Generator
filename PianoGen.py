@@ -18,7 +18,7 @@ PianoTones = {
 #Piano tones
 
 #PianoGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List},Genre{String})
-def PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
+def PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig):
 	trackname = "Piano"
 	time = 0
 	midi.addTrackName(track, time, trackname)

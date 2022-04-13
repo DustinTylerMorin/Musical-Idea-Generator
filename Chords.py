@@ -193,12 +193,14 @@ def ChooseGenre(Tonic,FS):
 	print ("\nChoose a Genre:\n")
 	for i in range(len(TempGenre)):
 		print((str(i+1)+") " + str(TempGenre[i])))
+	print(str(len(TempGenre)+1)+") " + "Random")
 	print()
 	while True:
 		try:
 			Genre=int(input(">"))
 			#Int associated with menu item/genre.
-
+			if Genre == len(TempGenre) + 1:
+				Genre = random.randint(1,len(TempGenre))
 			if Genre in range(1,len(TempGenre)+1):
 				Genre = Genre - 1
 				#Change user input into an index.
@@ -208,7 +210,7 @@ def ChooseGenre(Tonic,FS):
 
 				GenreValues = GenreList[TempGenreList[Genre]]
 				#List Var to store the values associated with the selected genre.
-				#ie. the index(s) and Scale Degree(s) of the sel;ected genre.
+				#ie. the index(s) and Scale Degree(s) of the selected genre.
 
 				TempInt = str(random.randint(1,len(GenreValues)))
 				#Temp String var to store the index of which Genre progression to use from the list of GenreValues.
@@ -247,6 +249,27 @@ def ChooseGenre(Tonic,FS):
 #User chooses a genre based upon the nested Dict GenreList.
 #A random progression is chosen from the Genres Dict.
 #Mode{String},Number{Integer},StartTonic{String},Progression{List} returned to main() for use in subsequent functons.
+
+#ChooseTimeSignature()
+def ChooseTimeSignature():
+	print("\nChoose a time signature:\n")
+	for i in range(len(TimeSignatures)):
+		print (str(i+1)+") "+TimeSignatures[i])
+	print(str(len(TimeSignatures)+1)+") "+"Random")
+	try:
+		TimeSig = int(input("\n>"))
+		if TimeSig == len(TimeSignatures)+1:
+			TimeSig = random.randint(1,len(TimeSignatures))
+		if TimeSig in range(0,len(TimeSignatures)+1):
+			TimeSig = TimeSignatures[TimeSig - 1]
+			return TimeSig
+	except:
+		print("\nTry again!\n")
+		if Debug == True:
+			traceback.print_exc()
+#Function used for selection of desired time signature.
+#User selects a time signature from the list in migconfigure
+#TimeSig{String} is returned.
 
 #ManualConfig(UsedScale{List},Tonic{String},Mode{String},FS{String},ScaleChords{List},Notes{List},Random{Boolean})
 def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
@@ -909,6 +932,9 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 						print("\nTry again!\n")
 						if Debug == True:
 							traceback.print_exc()
+				TimeSig = ChooseTimeSignature()
+				Top = int(TimeSig.split('/')[0])
+				Bottom = int(TimeSig.split('/')[1])
 				Dur = []
 				if len(MidiLengths) == 0:
 					print("\nWould you like beats to be random or fixed?(r/f)\n")
@@ -949,13 +975,15 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 					else:
 						print("\nSomething has went wrong\n")
 					DurLen = 0
+
 					for i in range(len(Dur)):
 						DurLen += Dur[i]
-					if DurLen%8 != 0:
-						Temp = DurLen%8
-						Dur[-1] = Dur[-1] + 8%Temp
+					if DurLen%Top != 0:
+						print (DurLen,Dur[-1])
+						Temp = DurLen%Top
+						Dur[-1] = Dur[-1] + Top - Temp
+						print(Dur[-1])
 					break
-					#Ensure 4/4 for now
 
 				if Genre == None:
 					print("\nWhat genre of music would you like?\n")
@@ -1005,20 +1033,20 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 				midi = MIDIFile(numtracks)
 				track = 0
 				if Piano[0] == True:
-					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre)
+					midi = PianoGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig)
 					track += 1
 					if Piano[1] == "Lead":
 						track += 1
 				if Guitar[0] == True:
-					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre)
+					midi =	GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig)
 					track += 1
 					if Guitar[1] == "Lead":
 						track += 1
 				if Bass[0] == True:
-					midi = BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre)
+					midi = BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig)
 					track += 1
 				if Drums[0] == True:
-					midi = DrumsGen(midi, track, bpm, Dur, Genre)
+					midi = DrumsGen(midi, track, bpm, Dur, Genre, TimeSig)
 					track += 1
 				with open(now, 'wb') as file:
 					midi.writeFile(file)

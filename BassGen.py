@@ -18,7 +18,7 @@ BassTones = {
 #Bass tones ***Different VST Basses use different values, experimentation may be necessary for these numbers to properly match your VST Bass.***
 
 #BassGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List},Genre{String})
-def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
+def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig):
 	trackname = "Bass"
 	time = 0
 	midi.addTrackName(track, time, trackname)

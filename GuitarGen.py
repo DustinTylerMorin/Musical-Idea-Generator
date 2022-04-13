@@ -18,7 +18,7 @@ GuitarTones = {
 #Guitar tones ***Different VST Guitars use different values, experimentation may be necessary for these numbers to properly match your VST Guitar.***
 
 #GuitarGen(midi{MIDIObject},track{Int},bpm{Int},Dur{Int},GeneratedChords{List},UsedScale{List},Genre{String})
-def GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre):
+def GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig):
 	trackname = "Rhythm Guitar"
 	time = 0
 	midi.addTrackName(track, time, trackname)

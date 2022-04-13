@@ -4,7 +4,7 @@
 #musical-idea-generator Configuration File
 
 #Configuration.
-Debug = False
+Debug = True
 #Debug messages will print when issues occur.
 Piano = [True,"Lead"] #Rhythm or Lead
 Guitar = [True,"Lead"] #Rhythm or Lead
@@ -52,6 +52,15 @@ Scale = {
 
 Modes = list(Scale.keys())
 #List of Modes/Scales derived from the dict of possible scales.
+
+TimeSignatures = ["4/4", "3/4", "2/4", "6/8", "9/8", "5/4"]
+#List of possible time signatures.
+Accents = {
+"4/4":["Kick",0,"Snare",2], "3/4":["Kick",0,1,"Snare",2],
+"2/4":["Kick",0,"Snare",1], "6/8":["Kick",0,1,"Snare",3],
+"9/8":["Kick",0,3,7,"Snare",4,8], "5/4":["Kick",0,2,"Snare",1,3]
+}
+#Index of where the kick/snare accents are in each time signature
 
 GenreList = {
 	"Pop" : {
