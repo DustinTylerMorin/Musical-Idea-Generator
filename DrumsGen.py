@@ -199,20 +199,17 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 		if RandomNum == 1:
 			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
-					#midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2-.25, .25, volume-25)
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
-					midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
 					#Snare
 				if (x)%Top in KickAcc:
 					midi.addNote(track, channel, DrumTones["Kick"][0], x/2, .5, volume)
-					midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
-					midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .5 , .5, volume)
+					if Top >= 4:
+						midi.addNote(track, channel, DrumTones["Kick"][0], x/2 + .5 , .5, volume)
 					#Kick
 				if x == 0:
 					midi.addNote(track, channel, DrumTones["Crash"][0], x/2, 1, volume-25)
 					#Crash
-				if x%2 == 1:
-					midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
+				midi.addNote(track, channel, DrumTones["OpenHat"][0], (x/2), .5, volume-25)
 	elif Genre == "Stoner Rock":
 		RandomNum = random.randint(0,2)
 		if RandomNum == 0:

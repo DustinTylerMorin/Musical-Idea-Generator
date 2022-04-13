@@ -127,7 +127,7 @@ def GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig)
 						#third or leading doesn't exist in chord or duration too short, play root.
 				if RandomNum == 4:
 					try:
-						if (Dur[i] == 2):
+						if (Dur[i] > 2):
 							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
 							Temptime = time + Dur[i]/3
 							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
@@ -150,14 +150,14 @@ def GuitarGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig)
 						#Triplet not possible in context.
 				if RandomNum == 5:
 					try:
-						if (Dur[i] == 1):
+						if (Dur[i] > 2):
 							midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
 							Temptime = time + Dur[i]/3
 							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
 							Temptime = Temptime + Dur[i]/3
 							midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
 							#Play triplett on root
-						elif (Dur[i] == 2):
+						elif (Dur[i] > 2):
 							midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
 							Temptime = time + Dur[i]/2
 							midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
