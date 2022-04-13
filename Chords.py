@@ -250,12 +250,12 @@ def ChooseGenre(Tonic,FS):
 
 #ManualConfig(UsedScale{List},Tonic{String},Mode{String},FS{String},ScaleChords{List},Notes{List},Random{Boolean})
 def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
-	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
-	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
-	print ("Enter Chords 1 by 1 in this format:\n\nNote,ChordTones,Midi Length,Modifier(s),Alt Scale Tonic,Alt Scale Number(Optional)\n\nEx)>"+Tonic+",4,4,sus2,add11,"+Tonic+",1""\n\n"+Tonic+"sus2add11\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
-
 	Modifiers = ["sus2","sus4","6","9","11","13","add9","add11","add13", "m6", "5", "none" ]
 	#List of possible modifications that can be made to chords.
+	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
+	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
+	print ("Avaliable Modifiers:\n\n", Modifiers,"\n")
+	print ("Enter Chords 1 by 1 in this format:\n\nNote,ChordTones,Midi Length(r for random),Modifier(s),Alt Scale Tonic(Optional),Alt Scale Number(Optional)\n\nEx)>"+Tonic+",4,4,sus2,add13,"+Tonic+",1""\n\n"+Tonic+"sus2add13\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
 
 	ChordInputList = []
 	#Used for containing the "config" of chords to be generated.
@@ -293,17 +293,22 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 				TempInput = ChordInput.split(",")
 				#Create list of all items from user input config.
 
-				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),int(TempInput[2]),list()]))
+				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),(TempInput[2]),list()]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
 					raise ValueError
 					#Check for if the ChordInput[0] is a Note.
 				if (ChordInput[1] in range(1,8)) == False:
 					raise ValueError
 					#Check if ChordInput[1] represents a valid number of chord tones.
-				if (ChordInput[2] <= 0) == True:
-					raise ValueError
-					#Check if ChordInput[2] is a valid length for midi export.
-
+				try:
+					ChordInput[2]=(int(ChordInput[2]))
+				except:
+					if (ChordInput[2].lower() == "r"):
+						ManDur = [1,2,4,6,8]
+						rand = random.randint(0,4)
+						ChordInput[2] = int(ManDur[rand])
+					else:
+						raise ValueError
 				if (TempInput[-1].lower() in Modifiers) and (TempInput[-2].capitalize() not in AllNotes):
 					#if the last item in config is a modifier and there's no substitution occuring.
 					if (ChordInput[0].capitalize() in UsedScale) == False:
@@ -939,17 +944,17 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 						Durations = [1,2,4,6,8]
 						for i in range(len(GeneratedChords)):
 							Dur.append(Durations[random.randint(0,2)])
-						break
 					elif RanDur == "Manual":
 						break
 					else:
 						print("\nSomething has went wrong\n")
 					DurLen = 0
-					for i in range(len(Dur)+1):
-						Durlen += Dur[i]
-					if Durlen%4 != 0:
-						Temp = Durlen%4
-						Dur[-1] = Dur[-1] + Temp
+					for i in range(len(Dur)):
+						DurLen += Dur[i]
+					if DurLen%8 != 0:
+						Temp = DurLen%8
+						Dur[-1] = Dur[-1] + 8%Temp
+					break
 					#Ensure 4/4 for now
 
 				if Genre == None:
