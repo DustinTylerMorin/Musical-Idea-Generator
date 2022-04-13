@@ -967,22 +967,34 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 							if Debug == True:
 								traceback.print_exc()
 					elif RanDur == "r":
-						Durations = [1,2,4,6,8]
+						Durations = []
+						for i in range(1,Top+1):
+							Durations.append(i)
 						for i in range(len(GeneratedChords)):
-							Dur.append(Durations[random.randint(0,2)])
+							Dur.append(Durations[random.randint(0,Top-1)])
+
 					elif RanDur == "Manual":
 						break
 					else:
 						print("\nSomething has went wrong\n")
 					DurLen = 0
-
+					CurLen = 0
 					for i in range(len(Dur)):
+						if CurLen + Dur[i] == Top:
+							CurLen = 0
+							CurLen += Dur[i]
+						elif CurLen + Dur[i] > Top:
+							Dur[i] = Top - CurLen
+							CurLen = 0
+							CurLen += Dur[i]
+						else:
+							CurLen += Dur[i]
 						DurLen += Dur[i]
-					if DurLen%Top != 0:
-						print (DurLen,Dur[-1])
-						Temp = DurLen%Top
-						Dur[-1] = Dur[-1] + Top - Temp
-						print(Dur[-1])
+					if DurLen%(Top) != 0:
+						Temp = Top - DurLen%(Top)
+						DurLen = DurLen - Dur[1]
+						Dur[-1] = Dur[-1] + Temp
+						DurLen = DurLen + Dur[1]
 					break
 
 				if Genre == None:

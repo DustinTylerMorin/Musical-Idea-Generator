@@ -38,13 +38,13 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 	SnareAcc = CurAccents[CurAccents.index("Snare")+1:]
 	Top = int(TimeSig.split('/')[0])
 	Bottom = int(TimeSig.split('/')[1])
-	print (KickAcc,SnareAcc)
+	for i in range (len(Dur)):
+		TotalDur += Dur[i]
+	TotalDur = int(TotalDur * 2)
 	if Genre == "Pop":
-		for i in range (len(Dur)):
-			TotalDur += Dur[i]
 		RandomNum = random.randint(0,1)
 		if RandomNum == 0:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel, DrumTones["ClosedHat"][0], (x/2-.25), .5, volume-25)
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
@@ -57,7 +57,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
 		if RandomNum == 1:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel, DrumTones["ClosedHat"][0], (x/2-.25), .5, volume-25)
 					midi.addNote(track, channel,DrumTones["Hand Clap"][0], x/2, .5, volume)
@@ -71,11 +71,9 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
 
 	elif Genre == "Rock":
-		for i in range (len(Dur)):
-			TotalDur += Dur[i]
 		RandomNum = random.randint(0,2)
 		if RandomNum == 0:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top  in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -88,7 +86,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-75)
 		if RandomNum == 1:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -101,7 +99,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-75)
 		if RandomNum == 2:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -116,10 +114,8 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 
 	if Genre == "Metal":
 		RandomNum = random.randint(0,0)
-		for i in range (len(Dur)):
-			TotalDur += Dur[i]
 		if RandomNum == 0:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -131,11 +127,9 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 				midi.addNote(track, channel, DrumTones["Crash"][0], x/2, .5, volume-25)
 
 	if Genre == "Blues":
-		for i in range (len(Dur)):
-			TotalDur += Dur[i]
 		RandomNum  = random.randint(0,1)
 		if RandomNum == 0:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -147,7 +141,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["Ride"][0], x/2, .5, volume-25)
 		if RandomNum == 1:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -161,11 +155,9 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
 
 	if Genre == "Country":
-		for i in range (len(Dur)):
-			TotalDur += Dur[i]
 		RandomNum = random.randint(0,1)
 		if RandomNum == 0:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -177,7 +169,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2+.25, .25, volume-25)
 		if RandomNum == 1:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2-.25, .5, volume-25)
 					midi.addNote(track, channel,DrumTones["Rim"][0], x/2, .5, volume)
@@ -191,11 +183,9 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-25)
 	if Genre == "Punk":
-		for i in range (len(Dur)):
-			TotalDur += Dur[i]
 		RandomNum = random.randint(0,1)
 		if RandomNum == 0:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -207,7 +197,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["OpenHat"][0], (x/2), .5, volume-25)
 		if RandomNum == 1:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					#midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2-.25, .25, volume-25)
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
@@ -224,11 +214,9 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 				if x%2 == 1:
 					midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-25)
 	elif Genre == "Stoner Rock":
-		for i in range (len(Dur)):
-			TotalDur += Dur[i]
 		RandomNum = random.randint(0,2)
 		if RandomNum == 0:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -241,7 +229,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["OpenHat"][0], x/2, .5, volume-75)
 		if RandomNum == 1:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
@@ -254,7 +242,7 @@ def DrumsGen(midi, track, bpm, Dur, Genre, TimeSig):
 					#Crash
 				midi.addNote(track, channel, DrumTones["ClosedHat"][0], x/2, .5, volume-75)
 		if RandomNum == 2:
-			for x in range (TotalDur * 2):
+			for x in range (TotalDur):
 				if (x)%Top in SnareAcc:
 					midi.addNote(track, channel,DrumTones["Snare"][0], x/2, .5, volume)
 					#Snare
