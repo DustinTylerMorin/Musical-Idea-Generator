@@ -982,7 +982,6 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 					for i in range(len(Dur)):
 						if CurLen + Dur[i] == Top:
 							CurLen = 0
-							CurLen += Dur[i]
 						elif CurLen + Dur[i] > Top:
 							Dur[i] = Top - CurLen
 							CurLen = 0

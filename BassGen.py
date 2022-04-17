@@ -293,7 +293,7 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig):
 							raise ValueError
 					if RandomNum == 3:
 						try:
-							if (Dur[i] % 4 == 1):
+							if (Dur[i] % 4 == 1 and Dur[1] > 1):
 								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
 								Temptime = time + Dur[i]/3
 								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
