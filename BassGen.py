@@ -27,617 +27,620 @@ def BassGen(midi, track, bpm, Dur, GeneratedChords, UsedScale, Genre, TimeSig):
 	volume = 100
 	try:
 		for i in range(len(GeneratedChords)):
-			rootpitch = BassTones[GeneratedChords[i][0]][0]
-			try:
-				secondpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 1) % len(UsedScale)]][0]
-			except:
-				pass
-				#No second
-			try:
-				thirdpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 2) % len(UsedScale)]][0]
-			except:
-				pass
-				#No Third
-			try:
-				fourthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 3) % len(UsedScale)]][0]
-			except:
-				pass
-				#No fourth
-			try:
-				fifthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 4) % len(UsedScale)]][0]
-			except:
-				pass
-				#No Fifth
-			try:
-				sixthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 5) % len(UsedScale)]][0]
-			except:
-				pass
-				#No Sixth
-			try:
-				seventhpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 6) % len(UsedScale)]][0]
-			except:
-				pass
-				#No Seventh
-
-			try:
-				leadingpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) - 1) % len(UsedScale)]][0]
-			except:
-				pass
-				#Leading note not possible
-
-			if Bass[1] == "Basic":
+			if GeneratedChords[i][0] != "Rest":
+				rootpitch = BassTones[GeneratedChords[i][0]][0]
 				try:
-					#Just play root notes.
-					midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+					secondpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 1) % len(UsedScale)]][0]
 				except:
-					raise ValueError
-			if Bass[1] == "Advanced":
-				if Genre == "Pop":
-					RandomNum = random.randint(0,4)
-					if RandomNum == 0:
-						#Play just root note.
-						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-					if RandomNum == 1:
-						try:
-							if (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
-								#Play root then leading pitch
-							else:
-								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-						except:
-							raise ValueError
-					if RandomNum == 2:
-						try:
-							if (Dur[i] % 2 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/2, volume)
-								#Play root then fifth pitch
-							else:
-								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-						except:
-							raise ValueError
-					if RandomNum == 3:
-						try:
-							if (Dur[i] % 2 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
-								#Play root then root
-							else:
-								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-						except:
-							raise ValueError
-					if RandomNum == 4:
-						try:
-							if (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/2, volume)
-								#Play root then leading pitch
-							else:
-								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-						except:
-							raise ValueError
-				if Genre == "Rock":
-					RandomNum = random.randint(0,7)
-					if RandomNum == 0:
-						#Play just root note.
-						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+					pass
+					#No second
+				try:
+					thirdpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 2) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Third
+				try:
+					fourthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 3) % len(UsedScale)]][0]
+				except:
+					pass
+					#No fourth
+				try:
+					fifthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 4) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Fifth
+				try:
+					sixthpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 5) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Sixth
+				try:
+					seventhpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) + 6) % len(UsedScale)]][0]
+				except:
+					pass
+					#No Seventh
 
-					if RandomNum == 1:
-						try:
-							if (int(Dur[i]) >= 2):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/2, volume)
-								#Play root then fifth
-							else:
-								raise Exception
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#fifth doesn't exist in chord, play root.
+				try:
+					leadingpitch = BassTones[UsedScale[(UsedScale.index(GeneratedChords[i][0]) - 1) % len(UsedScale)]][0]
+				except:
+					pass
+					#Leading note not possible
 
-					if RandomNum == 2:
-						try:
-							if (2 <=Dur[i]<=4):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/2, volume)
-								#Play root then third
-							elif (Dur[i] > 4):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#third doesn't exist in chord or duration too short, play root.
-					if RandomNum == 3:
-						try:
-							if (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
-								#Play root then leading pitch
-							elif (Dur[i] % 6 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/3, volume)
-								#root,thrid,leading.
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#third or leading doesn't exist in chord or duration too short, play root.
-					if RandomNum == 4:
-						try:
-							if (Dur[i] == 2):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								#Play triplett on root
-							elif (Dur[i] == 4):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/6, volume)
-								Temptime = time + Dur[i]/6
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
-								Temptime = Temptime + Dur[i]/6
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
-								Temptime = Temptime + Dur[i]/6
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
-								#Triplet then quarter note
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#Triplet not possible in context.
-					if RandomNum == 5:
-						try:
-							if (Dur[i] == 1):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								#Play triplett on root
-							elif (Dur[i] == 2):
-								midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
-								Temptime = Temptime + Dur[i]/6
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
-								Temptime = Temptime + Dur[i]/6
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
-								#Quarter note then triplet
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#Triplet not possible in context.
-					if RandomNum == 6:
-						try:
-							if (fifthpitch in locals()):
-								midi.addNote(track, channel, fifthpitch, time, Dur[i], volume)
-								#play fifth.
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#fifth doesnt exist, play root.
-					if RandomNum == 7:
-						try:
-							if (thridpitch in locals()):
-								midi.addNote(track, channel, thridpitch, time, Dur[i], volume)
-								#play fifth.
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#fifth doesnt exist, play root.
-				if Genre == "Metal":
-					RandomNum = random.randint(0,4)
-					if RandomNum == 0:
-						#Play just root note.
+				if Bass[1] == "Basic":
+					try:
+						#Just play root notes.
 						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-					if RandomNum == 1:
-						try:
-							if (Dur[i] == 1):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								#Play triplett on root
-							elif (Dur[i] % 2 == 0):
-								midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
-								Temptime = Temptime + Dur[i]/6
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
-								Temptime = Temptime + Dur[i]/6
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
-								#Quarter note then triplet
-							else:
-								raise ValueError
-						except:
+					except:
+						raise ValueError
+				if Bass[1] == "Advanced":
+					if Genre == "Pop":
+						RandomNum = random.randint(0,4)
+						if RandomNum == 0:
+							#Play just root note.
 							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#Triplet not possible in context.
-					if RandomNum == 2:
-						try:
-							if (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
-								#Play root then fifth then root pitch
-							elif (Dur[i] % 2 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
-								#Play root then fifth then root pitch
-							else:
+						if RandomNum == 1:
+							try:
+								if (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
+									#Play root then leading pitch
+								else:
+									midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							except:
+								raise ValueError
+						if RandomNum == 2:
+							try:
+								if (Dur[i] % 2 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/2, volume)
+									#Play root then fifth pitch
+								else:
+									midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							except:
+								raise ValueError
+						if RandomNum == 3:
+							try:
+								if (Dur[i] % 2 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
+									#Play root then root
+								else:
+									midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							except:
+								raise ValueError
+						if RandomNum == 4:
+							try:
+								if (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/2, volume)
+									#Play root then leading pitch
+								else:
+									midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							except:
+								raise ValueError
+					if Genre == "Rock":
+						RandomNum = random.randint(0,7)
+						if RandomNum == 0:
+							#Play just root note.
+							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+
+						if RandomNum == 1:
+							try:
+								if (int(Dur[i]) >= 2):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/2, volume)
+									#Play root then fifth
+								else:
+									raise Exception
+							except:
 								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-						except:
-							raise ValueError
-					if RandomNum == 3:
-						try:
-							if (Dur[i] % 4 == 1 and Dur[1] > 1):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								#Play root 3 times
-							else:
+								#fifth doesn't exist in chord, play root.
+
+						if RandomNum == 2:
+							try:
+								if (2 <=Dur[i]<=4):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/2, volume)
+									#Play root then third
+								elif (Dur[i] > 4):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+								else:
+									raise ValueError
+							except:
 								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-						except:
-							raise ValueError
-					if RandomNum == 4:
-						try:
-							if (Dur[i] % 3 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
-								#Play root 3 times
-							else:
+								#third doesn't exist in chord or duration too short, play root.
+						if RandomNum == 3:
+							try:
+								if (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
+									#Play root then leading pitch
+								elif (Dur[i] % 6 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/3, volume)
+									#root,thrid,leading.
+								else:
+									raise ValueError
+							except:
 								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-						except:
-							raise ValueError
-				if Genre == "Blues":
-					RandomNum = random.randint(0,3)
-					if RandomNum == 0:
-						#Play just root note.
-						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-					if RandomNum == 1:
-						try:
-							if (Dur[i] % 8 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, sixthpitch, Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
-								#Walking bass on chord tones
-							elif (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, thirdpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
-								#Walking bass on chord tones
-							else:
-								raise ValueError
-						except:
+								#third or leading doesn't exist in chord or duration too short, play root.
+						if RandomNum == 4:
+							try:
+								if (Dur[i] == 2):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									#Play triplett on root
+								elif (Dur[i] == 4):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/6, volume)
+									Temptime = time + Dur[i]/6
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+									Temptime = Temptime + Dur[i]/6
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+									Temptime = Temptime + Dur[i]/6
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
+									#Triplet then quarter note
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#Triplet not possible in context.
+						if RandomNum == 5:
+							try:
+								if (Dur[i] == 1):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									#Play triplett on root
+								elif (Dur[i] == 2):
+									midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
+									Temptime = Temptime + Dur[i]/6
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+									Temptime = Temptime + Dur[i]/6
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+									#Quarter note then triplet
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#Triplet not possible in context.
+						if RandomNum == 6:
+							try:
+								if (fifthpitch in locals()):
+									midi.addNote(track, channel, fifthpitch, time, Dur[i], volume)
+									#play fifth.
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#fifth doesnt exist, play root.
+						if RandomNum == 7:
+							try:
+								if (thridpitch in locals()):
+									midi.addNote(track, channel, thridpitch, time, Dur[i], volume)
+									#play fifth.
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#fifth doesnt exist, play root.
+					if Genre == "Metal":
+						RandomNum = random.randint(0,4)
+						if RandomNum == 0:
+							#Play just root note.
 							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-					if RandomNum == 2:
-						try:
-							if (Dur[i] % 8 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, sixthpitch, Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
-								#Walking bass on chord tones
-							elif (Dur[i] == 4):
-								midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, thirdpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
-								#Walking bass on chord tones
-							else:
+						if RandomNum == 1:
+							try:
+								if (Dur[i] == 1):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									#Play triplett on root
+								elif (Dur[i] % 2 == 0):
+									midi.addNote(track, channel, rootpitch,time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/6, volume)
+									Temptime = Temptime + Dur[i]/6
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+									Temptime = Temptime + Dur[i]/6
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/6, volume)
+									#Quarter note then triplet
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#Triplet not possible in context.
+						if RandomNum == 2:
+							try:
+								if (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
+									#Play root then fifth then root pitch
+								elif (Dur[i] % 2 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
+									#Play root then fifth then root pitch
+								else:
+									midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							except:
 								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-					if RandomNum == 3:
-						try:
-							if (Dur[i] % 8 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/8, volume)
-								Temptime = time + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
-								Temptime = Temptime + Dur[i]/8
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
-								#Walking bass on chord tones
-							elif (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, thirdpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/4, volume)
-								#Walking bass on chord tones
-							else:
+						if RandomNum == 3:
+							try:
+								if (Dur[i] % 4 == 1 and Dur[1] > 1):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									#Play root 3 times
+								else:
+									midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							except:
 								raise ValueError
-						except:
+						if RandomNum == 4:
+							try:
+								if (Dur[i] % 3 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/3, volume)
+									#Play root 3 times
+								else:
+									midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+							except:
+								raise ValueError
+					if Genre == "Blues":
+						RandomNum = random.randint(0,3)
+						if RandomNum == 0:
+							#Play just root note.
 							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-				if Genre == "Country":
-					RandomNum = random.randint(0,5)
-					if RandomNum == 0:
-						#Play just root note.
-						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						if RandomNum == 1:
+							try:
+								if (Dur[i] % 8 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/8, volume)
+									Temptime = time + Dur[i]/8
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, sixthpitch, Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
+									#Walking bass on chord tones
+								elif (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, thirdpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
+									#Walking bass on chord tones
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						if RandomNum == 2:
+							try:
+								if (Dur[i] % 8 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/8, volume)
+									Temptime = time + Dur[i]/8
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, sixthpitch, Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
+									#Walking bass on chord tones
+								elif (Dur[i] == 4):
+									midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, thirdpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
+									#Walking bass on chord tones
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+						if RandomNum == 3:
+							try:
+								if (Dur[i] % 8 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/8, volume)
+									Temptime = time + Dur[i]/8
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, sixthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/8, volume)
+									Temptime = Temptime + Dur[i]/8
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/8, volume)
+									#Walking bass on chord tones
+								elif (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, thirdpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, seventhpitch,Temptime, Dur[i]/4, volume)
+									#Walking bass on chord tones
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+					if Genre == "Country":
+						RandomNum = random.randint(0,5)
+						if RandomNum == 0:
+							#Play just root note.
+							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
 
-					if RandomNum == 1:
-						try:
-							if (int(Dur[i]) >= 2):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/2, volume)
-								#Play root then fifth
-							else:
-								raise Exception
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#fifth doesn't exist in chord, play root.
+						if RandomNum == 1:
+							try:
+								if (int(Dur[i]) >= 2):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/2, volume)
+									#Play root then fifth
+								else:
+									raise Exception
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#fifth doesn't exist in chord, play root.
 
-					if RandomNum == 2:
-						try:
-							if (2 <=Dur[i]<=4):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/2, volume)
-								#Play root then third
-							elif (Dur[i] > 4):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-							else:
-								raise ValueError
-						except:
+						if RandomNum == 2:
+							try:
+								if (2 <=Dur[i]<=4):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/2, volume)
+									#Play root then third
+								elif (Dur[i] > 4):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#third doesn't exist in chord or duration too short, play root.
+						if RandomNum == 3:
+							try:
+								if (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
+									#Play root then leading pitch
+								elif (Dur[i] % 6 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
+									Temptime = time + Dur[i]/3
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
+									Temptime = Temptime + Dur[i]/3
+									midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/3, volume)
+									#root,thrid,leading.
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#third or leading doesn't exist in chord or duration too short, play root.
+						if RandomNum == 4:
+							try:
+								if (Dur[i] == 2):
+									midi.addNote(track, channel, fifthpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
+									#Play fifth root
+								elif (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, fifthpitch, time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									#fifth, root, root, fifth
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#Triplet not possible in context.
+						if RandomNum == 5:
+							try:
+								if (Dur[i] % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									#root third fifth
+								elif (Dur[i] % 2 == 0):
+									midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
+									#Quarter note then triplet
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#Triplet not possible in context.
+					if Genre == "Punk":
+						RandomNum = random.randint(0,2)
+						if RandomNum == 0:
+							#Play just root note.
 							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#third doesn't exist in chord or duration too short, play root.
-					if RandomNum == 3:
-						try:
-							if (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/2, volume)
-								#Play root then leading pitch
-							elif (Dur[i] % 6 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/3, volume)
-								Temptime = time + Dur[i]/3
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/3, volume)
-								Temptime = Temptime + Dur[i]/3
-								midi.addNote(track, channel, leadingpitch,Temptime, Dur[i]/3, volume)
-								#root,thrid,leading.
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#third or leading doesn't exist in chord or duration too short, play root.
-					if RandomNum == 4:
-						try:
-							if (Dur[i] == 2):
-								midi.addNote(track, channel, fifthpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/2, volume)
-								#Play fifth root
-							elif (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, fifthpitch, time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								#fifth, root, root, fifth
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#Triplet not possible in context.
-					if RandomNum == 5:
-						try:
-							if (Dur[i] % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								#root third fifth
-							elif (Dur[i] % 2 == 0):
-								midi.addNote(track, channel, rootpitch,time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch,Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, thirdpitch,Temptime, Dur[i]/4, volume)
-								#Quarter note then triplet
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#Triplet not possible in context.
-				if Genre == "Punk":
-					RandomNum = random.randint(0,2)
-					if RandomNum == 0:
-						#Play just root note.
-						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-					if RandomNum == 1:
-						try:
-							if (int(Dur[i]) % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								#4xroot
-							else:
-								raise Exception
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#fifth doesn't exist in chord, play root.
+						if RandomNum == 1:
+							try:
+								if (int(Dur[i]) % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									#4xroot
+								else:
+									raise Exception
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#fifth doesn't exist in chord, play root.
 
-					if RandomNum == 2:
-						try:
-							Temptime = time
-							for x in range(1,Dur[i]+1):
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/Dur[i], volume)
-								Temptime = Temptime + Dur[i]/Dur[i]
-							else:
-								raise ValueError
-						except:
+						if RandomNum == 2:
+							try:
+								Temptime = time
+								for x in range(1,Dur[i]+1):
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/Dur[i], volume)
+									Temptime = Temptime + Dur[i]/Dur[i]
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#third doesn't exist in chord or duration too short, play root.
+					if Genre == "Stoner Rock":
+						RandomNum = 4#random.randint(0,5)
+						if RandomNum == 0:
+							#Play just root note.
 							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#third doesn't exist in chord or duration too short, play root.
-				if Genre == "Stoner Rock":
-					RandomNum = 4#random.randint(0,5)
-					if RandomNum == 0:
-						#Play just root note.
-						midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-					if RandomNum == 1:
-						try:
-							if (int(Dur[i]) % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								#4xroot
-							else:
-								raise Exception
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#fifth doesn't exist in chord, play root.
+						if RandomNum == 1:
+							try:
+								if (int(Dur[i]) % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									#4xroot
+								else:
+									raise Exception
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#fifth doesn't exist in chord, play root.
 
-					if RandomNum == 2:
-						try:
-							Temptime = time
-							for x in range(1,Dur[i]+1):
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/Dur[i], volume)
-								Temptime = Temptime + Dur[i]/Dur[i]
-							else:
-								raise ValueError
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#third doesn't exist in chord or duration too short, play root.
-					if RandomNum == 3:
-						try:
-							if ((int(Dur[i]) % 2 == 0) and (int(Dur[i]) < 7)):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/2, volume)
-								#Root, seventh
-							else:
-								raise Exception
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#play just root.
-					if RandomNum == 4:
-						try:
-							if (int(Dur[i]) % 4 == 0):
-								midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/4, volume)
-								#Root, seventh, root, fifth
-							else:
-								raise Exception
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#play just root.
-					if RandomNum == 5:
-						try:
-							if (int(Dur[i]) % 4 == 0):
-								midi.addNote(track, channel, thirdpitch, time, Dur[i]/4, volume)
-								Temptime = time + Dur[i]/4
-								midi.addNote(track, channel, fourthpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
-								Temptime = Temptime + Dur[i]/4
-								midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/4, volume)
-								#third, fourth, root, seventh
-							elif (int(Dur[i]) % 2 == 0):
-								print(time)
-								print(Dur[i]/2)
-								midi.addNote(track, channel, thirdpitch, time, Dur[i]/2, volume)
-								Temptime = time + Dur[i]/2
-								print(Temptime)
-								midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/2, volume)
-								#Third, root
-							else:
-								raise Exception
-						except:
-							midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
-							#play just root.
+						if RandomNum == 2:
+							try:
+								Temptime = time
+								for x in range(1,Dur[i]+1):
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/Dur[i], volume)
+									Temptime = Temptime + Dur[i]/Dur[i]
+								else:
+									raise ValueError
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#third doesn't exist in chord or duration too short, play root.
+						if RandomNum == 3:
+							try:
+								if ((int(Dur[i]) % 2 == 0) and (int(Dur[i]) < 7)):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/2, volume)
+									#Root, seventh
+								else:
+									raise Exception
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#play just root.
+						if RandomNum == 4:
+							try:
+								if (int(Dur[i]) % 4 == 0):
+									midi.addNote(track, channel, rootpitch, time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, fifthpitch, Temptime, Dur[i]/4, volume)
+									#Root, seventh, root, fifth
+								else:
+									raise Exception
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#play just root.
+						if RandomNum == 5:
+							try:
+								if (int(Dur[i]) % 4 == 0):
+									midi.addNote(track, channel, thirdpitch, time, Dur[i]/4, volume)
+									Temptime = time + Dur[i]/4
+									midi.addNote(track, channel, fourthpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/4, volume)
+									Temptime = Temptime + Dur[i]/4
+									midi.addNote(track, channel, seventhpitch, Temptime, Dur[i]/4, volume)
+									#third, fourth, root, seventh
+								elif (int(Dur[i]) % 2 == 0):
+									print(time)
+									print(Dur[i]/2)
+									midi.addNote(track, channel, thirdpitch, time, Dur[i]/2, volume)
+									Temptime = time + Dur[i]/2
+									print(Temptime)
+									midi.addNote(track, channel, rootpitch, Temptime, Dur[i]/2, volume)
+									#Third, root
+								else:
+									raise Exception
+							except:
+								midi.addNote(track, channel, rootpitch, time, Dur[i], volume)
+								#play just root.
+			else:
+				midi.addNote(track, channel, 0, time, Dur[i], 0)
 			time = time + Dur[i]
 	except ValueError as error:
 		print("\nSomething has went wrong\n")

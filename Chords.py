@@ -185,7 +185,7 @@ def	ModeConfig(Tonic,FS):
 #if random is picked there is a random mode/scale chosen from the list Modes.
 #Mode{String} returned to main() to be used in subsequent functions.
 
-#ChooseGenre(Tonic{String},FS{String})
+#ChooseGenre(Tonic{String})
 def ChooseGenre(Tonic):
 	TempGenre = list(GenreList.keys())
 	#Temp var so list(GenreList.keys()) doesn't need called multiple times.
@@ -236,11 +236,14 @@ def ChooseGenre(Tonic):
 				Genre = list(GenreList.keys())[Genre]
 
 				for i in range (len(Progression)):
-					Progression[i] = int(Progression[i]-1)
-					#Change the scale degree into an index
+					if Progression[i] != "Rest":
+						Progression[i] = int(Progression[i]-1)
+						#Change the scale degree into an index
 				break
+			else:
+				raise ValueError
 
-		except ValueError as error:
+		except:
 			print("\nTry again!\n")
 			if Debug == True:
 				traceback.print_exc()
@@ -256,17 +259,18 @@ def ChooseTimeSignature():
 	for i in range(len(TimeSignatures)):
 		print (str(i+1)+") "+TimeSignatures[i])
 	print(str(len(TimeSignatures)+1)+") "+"Random")
-	try:
-		TimeSig = int(input("\n>"))
-		if TimeSig == len(TimeSignatures)+1:
-			TimeSig = random.randint(1,len(TimeSignatures))
-		if TimeSig in range(0,len(TimeSignatures)+1):
-			TimeSig = TimeSignatures[TimeSig - 1]
+	while True:
+		try:
+			TimeSig = int(input("\n>"))
+			if TimeSig == len(TimeSignatures)+1:
+				TimeSig = random.randint(1,len(TimeSignatures))
+			if TimeSig in range(0,len(TimeSignatures)+1):
+				TimeSig = TimeSignatures[TimeSig - 1]
 			return TimeSig
-	except:
-		print("\nTry again!\n")
-		if Debug == True:
-			traceback.print_exc()
+		except:
+			print("\nTry again!\n")
+			if Debug == True:
+				traceback.print_exc()
 #Function used for selection of desired time signature.
 #User selects a time signature from the list in migconfigure
 #TimeSig{String} is returned.
@@ -315,10 +319,13 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 			else:
 				TempInput = ChordInput.split(",")
 				#Create list of all items from user input config.
-
+				if TempInput[0].capitalize() == 'Rest':
+					TempInput = TempInput[0:3]
+					TempInput[1] = 1
+					TempInput.append("none")
 				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),(TempInput[2]),list()]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
-					if ChordInput[0].capitalize() != Rest:
+					if ChordInput[0].capitalize() != "Rest":
 						raise ValueError
 					#Check for if the ChordInput[0] is a Note or specified rest.
 				if (ChordInput[1] in range(1,8)) == False:
@@ -336,8 +343,11 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 				if (TempInput[-1].lower() in Modifiers) and (TempInput[-2].capitalize() not in AllNotes):
 					#if the last item in config is a modifier and there's no substitution occuring.
 					if (ChordInput[0].capitalize() in UsedScale) == False:
-						raise ValueError
-						#Ensure note is actually in scale and wasn't meant to be substitution.
+						if ChordInput[0].capitalize() == "Rest":
+							pass
+						else:
+							raise ValueError
+							#Ensure note is actually in scale and wasn't meant to be substitution.
 
 					for i in range(3,len(TempInput[3:])+3):
 						#For every Modifier.
@@ -401,22 +411,25 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 				Notes = ChosenNotes
 				#Ensure FS is default to selected Scale.
 				try:
-					if (ChordInputList[i][-1] in Modes):
-						#If substitution exists.
-						TempAltTonic = AltTonic.pop(0)
-						TempAltMode = AltMode.pop(0)
-						#Temp Alts.
-						TempAltTonic, FS = DetermineFS(TempAltTonic)
-						#Ensure FS is set to substitution Scale.
-						(UsedScale, Progression, Notes, Limit) = ScaleGen(TempAltTonic, TempAltMode, 7, FS, "Other", False, Progression)
-						#Update UsedScale to reflect substitution.
-						Progression.append(UsedScale.index((ChordInputList[i])[0]))
-						#Add note index to progression for ChordGenPrep.
+					if (ChordInputList[i][0] == "Rest"):
+						Progression.append("Rest")
 					else:
-						UsedScale = ChosenScale
-						#Update UsedScale to reflect chosen scale.
-						Progression.append(UsedScale.index((ChordInputList[i])[0]))
-						#Add note index to progression for ChordGenPrep.
+						if (ChordInputList[i][-1] in Modes):
+							#If substitution exists.
+							TempAltTonic = AltTonic.pop(0)
+							TempAltMode = AltMode.pop(0)
+							#Temp Alts.
+							TempAltTonic, FS = DetermineFS(TempAltTonic)
+							#Ensure FS is set to substitution Scale.
+							(UsedScale, Progression, Notes, Limit) = ScaleGen(TempAltTonic, TempAltMode, 7, FS, "Other", False, Progression)
+							#Update UsedScale to reflect substitution.
+							Progression.append(UsedScale.index((ChordInputList[i])[0]))
+							#Add note index to progression for ChordGenPrep.
+						else:
+							UsedScale = ChosenScale
+							#Update UsedScale to reflect chosen scale.
+							Progression.append(UsedScale.index((ChordInputList[i])[0]))
+							#Add note index to progression for ChordGenPrep.
 				except:
 					print("\nTry again!\n")
 					if Debug == True:
@@ -570,14 +583,22 @@ def ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit, Modif
 	#Lists for chord and name generation.
 
 	for y in range (Number):
-		GeneratedRoots.append(UsedScale[Progression[y]])
-		#Add roots to list.
+		if Progression[y] == "Rest":
+			GeneratedRoots.append(Progression[y])
+			#Add roots to list.
+		else:
+			GeneratedRoots.append(UsedScale[Progression[y]])
 	while len(GeneratedChords) != len(GeneratedRoots):
 		for i in range(len(GeneratedRoots)):
-			Temp = UsedScale.index(GeneratedRoots[i])
-			GeneratedChords.insert(i,[GeneratedRoots[i]])
-			(GeneratedChords)=ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier)
-			#Generate chords(s) based on the provided roots.
+			if GeneratedRoots[i] != "Rest":
+				Temp = UsedScale.index(GeneratedRoots[i])
+				GeneratedChords.insert(i,[GeneratedRoots[i]])
+				(GeneratedChords)=ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier)
+				#Generate chords(s) based on the provided roots.
+			else:
+				Temp = "Rest"
+				GeneratedChords.insert(i,[GeneratedRoots[i]])
+				(GeneratedChords)=ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier)
 	for z in range(Limit):
 		Temp = z
 		ScaleChordsGen.insert(z,[UsedScale[z]])
@@ -597,34 +618,33 @@ def ChordGen(i, Temp, GeneratedChords, UsedScale, ChordTones, Modifier):
 	Scale = []
 	ScaleLen = len(UsedScale)
 	#Variables for scale length.
+	if Temp != "Rest":
+		for x in range(len(UsedScale)):
+			try:
+				Scale.append(UsedScale[Temp])
+				Temp += 1
+			except:
+				Temp = 0
+				Scale.append(UsedScale[Temp])
+				Temp += 1
+		#Generate scale
 
-	for x in range(len(UsedScale)):
-		try:
-			Scale.append(UsedScale[Temp])
-			Temp += 1
-		except:
-			Temp = 0
-			Scale.append(UsedScale[Temp])
-			Temp += 1
-	#Generate scale
+		Temp = 0
+		while len(GeneratedChords[i]) != ChordTones:
+			try:
+				ScaleLen = len(UsedScale)
+				Temp = Temp + 2
+				if Temp >= ScaleLen:
+					Temp = Temp - ScaleLen
+					GeneratedChords[i].append(Scale[Temp])
+				else:
+					GeneratedChords[i].append(Scale[Temp])
 
-	Temp = 0
-	while len(GeneratedChords[i]) != ChordTones:
-		try:
-			ScaleLen = len(UsedScale)
-			Temp = Temp + 2
-			if Temp >= ScaleLen:
-				Temp = Temp - ScaleLen
-				GeneratedChords[i].append(Scale[Temp])
-			else:
-				GeneratedChords[i].append(Scale[Temp])
-
-	#Add chord tones until the chord is done.
-		except ValueError as error:
-			print("\nSomething has went wrong\n")
-			if Debug == True:
-				traceback.print_exc()
-
+		#Add chord tones until the chord is done.
+			except ValueError as error:
+				print("\nSomething has went wrong\n")
+				if Debug == True:
+					traceback.print_exc()
 	GeneratedChords=Modify(i, GeneratedChords, Scale, Modifier)
 	#Modify chords based on modifiers
 
@@ -709,139 +729,141 @@ def ChordName(GeneratedChords, Notes, Modifier, UsedScale):
 	try:
 		for i in range(len(GeneratedChords)):
 			name = []
-			if len(GeneratedChords[i]) >= 1:
-				Interval1 = GeneratedChords[i][0]
-				name.append(Interval1)
-			if len(GeneratedChords[i]) >= 2:
-				Interval2 = GeneratedChords[i][1]
-				ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
-				if IntervalDistance ==  5:
-					name[0]=(name[0]+"sus4")
-				elif IntervalDistance ==  4:
-					name[0]=(name[0]+"Maj")
-				elif IntervalDistance ==  3:
-					name[0]=(name[0]+"m")
-				elif IntervalDistance ==  2:
-					name[0]=(name[0]+"sus2")
-
-			if len(GeneratedChords[i]) >= 3:
-				Interval2 = GeneratedChords[i][2]
-				ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
-				if IntervalDistance ==  8:
-					name[0]=(name[0]+"#5")
-				elif IntervalDistance ==  7:
-					pass
-				elif IntervalDistance ==  6:
-					name[0]=(name[0]+"b5")
-
-			if len(GeneratedChords[i]) >= 4:
-				Interval2 = GeneratedChords[i][3]
-				ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
-				if IntervalDistance ==  11:
-					name[0]=(name[0]+"7")
-				if IntervalDistance ==  10:
-					name[0]=(name[0]+"b7")
-				if IntervalDistance ==  9 and ("13" not in str(Modifier[0])):
-					name[0]=(name[0]+"6")
-				if IntervalDistance ==  8 and ("13" not in str(Modifier[0])):
-					name[0]=(name[0]+"6")
-
-			if len(GeneratedChords[i]) >= 4:
-				for x in range(3,len(GeneratedChords[i])):
-					Interval2 = GeneratedChords[i][x]
-					ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
-					if IntervalDistance ==  2:
-						break
-				if "Majb7" in name[0] and IntervalDistance ==  2:
-					name[0]=(name[0]+"9")
-				elif ("sus2" not in name[0]) and  IntervalDistance ==  2:
-					name[0]=(name[0]+"add9")
-
-			if len(GeneratedChords[i]) >= 4 :
-				for x in range(3,len(GeneratedChords[i])):
-					Interval2 = GeneratedChords[i][x]
+			if GeneratedChords[i][0] == "Rest":
+				name = "Rest"
+			else:
+				if len(GeneratedChords[i]) >= 1:
+					Interval1 = GeneratedChords[i][0]
+					name.append(Interval1)
+				if len(GeneratedChords[i]) >= 2:
+					Interval2 = GeneratedChords[i][1]
 					ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
 					if IntervalDistance ==  5:
-						break
+						name[0]=(name[0]+"sus4")
+					elif IntervalDistance ==  4:
+						name[0]=(name[0]+"Maj")
+					elif IntervalDistance ==  3:
+						name[0]=(name[0]+"m")
+					elif IntervalDistance ==  2:
+						name[0]=(name[0]+"sus2")
 
-				if "Majb7" in name[0] and IntervalDistance ==  5:
-					name[0]=(name[0]+"11")
-				elif ("sus4" not in name[0]) and IntervalDistance ==  5:
-					name[0]=(name[0]+"add11")
-
-			if len(GeneratedChords[i]) >=4 :
-				for x in range(3,len(GeneratedChords[i])):
-					Interval2 = GeneratedChords[i][x]
+				if len(GeneratedChords[i]) >= 3:
+					Interval2 = GeneratedChords[i][2]
 					ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
-					if (IntervalDistance == 8 or IntervalDistance == 9):
-						break
-				if "Majb7" in name[0] and (IntervalDistance == 8 or IntervalDistance == 9):
-					name[0]=(name[0]+"13")
-				elif ("6" not in name[0]) and (IntervalDistance == 8 or IntervalDistance == 9):
-					name[0]=(name[0]+"add13")
-			#Conditionals for determining what a chord is named.
+					if IntervalDistance ==  8:
+						name[0]=(name[0]+"#5")
+					elif IntervalDistance ==  7:
+						pass
+					elif IntervalDistance ==  6:
+						name[0]=(name[0]+"b5")
 
-			name = str(name[0])
-			if "m7" in name:
-				name = name.replace("m7","mMaj7")
-			if "mb5bb7" in name:
-				name = name.replace("mb5bb7","dim7")
-			if "Maj#57" in name:
-				name = name.replace("Maj#57","Maj7#5")
-			if "Maj#5" in name:
-				name = name.replace("Maj#5","aug")
-			if "b56add13" in name and "add13" not in Modifier:
-				name = name.replace("b56add13","dim7")
-			if "b56add13" in name and "6" in Modifier:
-				name = name.replace("b56add13","dim6")
-			if "mb5b7" in name:
-				name = name.replace("mb5b7","m7b5")
-			if "mb5" in name:
-				name = name.replace("mb5","dim")
-			if "mb" in name:
-				name = name.replace("mb","m")
-			if "Majb7" in name:
-				name = name.replace("Majb7","7")
-			if "dimb7" in name:
-				name = name.replace("dimb7","dim7")
-			if "sus2sus4" in name:
-				name = name.replace("sus2sus4","")
-			if "sus26" in name:
-				name = name.replace("sus26","6sus2")
-			if "Maj6" in name:
-				name = name.replace("Maj6","6")
-			if "add9add11add13" in name:
-				name = name.replace("add9add11add13","add13")
-			if "add9add11" in name:
-				name = name.replace("add9add11","add11")
-			if "add9add13" in name:
-				name = name.replace("add9add13","add13")
-			if "791113" in name:
-				name = name.replace("791113","13")
-			if "7911" in name:
-				name = name.replace("7911","11")
-			if "711" in name:
-				name = name.replace("711","7/11")
-			if "79" in name:
-				name = name.replace("79","9")
-			if "6add13" in name:
-				name = name.replace("6add13","add13")
-			if "913" in name:
-				name = name.replace("913","9/13")
-			if "713" in name:
-				name = name.replace("713","7/13")
-			if "sus47" in name:
-				name = name.replace("sus47","Maj7sus4")
-			if "sus27" in name:
-				name = name.replace("sus27","Maj7sus2")
-			if "Majb5b7" in name:
-				name = name.replace("Majb5b7","7b5")
-			if "sus2b56" in name:
-				name = name.replace("sus2b56","dimsus2bb7")
-			#Conditionals to make chord names more proper.
+				if len(GeneratedChords[i]) >= 4:
+					Interval2 = GeneratedChords[i][3]
+					ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
+					if IntervalDistance ==  11:
+						name[0]=(name[0]+"7")
+					if IntervalDistance ==  10:
+						name[0]=(name[0]+"b7")
+					if IntervalDistance ==  9 and ("13" not in str(Modifier[0])):
+						name[0]=(name[0]+"6")
+					if IntervalDistance ==  8 and ("13" not in str(Modifier[0])):
+						name[0]=(name[0]+"6")
+
+				if len(GeneratedChords[i]) >= 4:
+					for x in range(3,len(GeneratedChords[i])):
+						Interval2 = GeneratedChords[i][x]
+						ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
+						if IntervalDistance ==  2:
+							break
+					if "Majb7" in name[0] and IntervalDistance ==  2:
+						name[0]=(name[0]+"9")
+					elif ("sus2" not in name[0]) and  IntervalDistance ==  2:
+						name[0]=(name[0]+"add9")
+
+				if len(GeneratedChords[i]) >= 4 :
+					for x in range(3,len(GeneratedChords[i])):
+						Interval2 = GeneratedChords[i][x]
+						ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
+						if IntervalDistance ==  5:
+							break
+
+					if "Majb7" in name[0] and IntervalDistance ==  5:
+						name[0]=(name[0]+"11")
+					elif ("sus4" not in name[0]) and IntervalDistance ==  5:
+						name[0]=(name[0]+"add11")
+
+				if len(GeneratedChords[i]) >=4 :
+					for x in range(3,len(GeneratedChords[i])):
+						Interval2 = GeneratedChords[i][x]
+						ScaleDistance, IntervalDistance = IntervalChecker(Interval1, Interval2, UsedScale, Notes)
+						if (IntervalDistance == 8 or IntervalDistance == 9):
+							break
+					if "Majb7" in name[0] and (IntervalDistance == 8 or IntervalDistance == 9):
+						name[0]=(name[0]+"13")
+					elif ("6" not in name[0]) and (IntervalDistance == 8 or IntervalDistance == 9):
+						name[0]=(name[0]+"add13")
+				#Conditionals for determining what a chord is named.
+
+				name = str(name[0])
+				if "m7" in name:
+					name = name.replace("m7","mMaj7")
+				if "mb5bb7" in name:
+					name = name.replace("mb5bb7","dim7")
+				if "Maj#57" in name:
+					name = name.replace("Maj#57","Maj7#5")
+				if "Maj#5" in name:
+					name = name.replace("Maj#5","aug")
+				if "b56add13" in name and "add13" not in Modifier:
+					name = name.replace("b56add13","dim7")
+				if "b56add13" in name and "6" in Modifier:
+					name = name.replace("b56add13","dim6")
+				if "mb5b7" in name:
+					name = name.replace("mb5b7","m7b5")
+				if "mb5" in name:
+					name = name.replace("mb5","dim")
+				if "mb" in name:
+					name = name.replace("mb","m")
+				if "Majb7" in name:
+					name = name.replace("Majb7","7")
+				if "dimb7" in name:
+					name = name.replace("dimb7","dim7")
+				if "sus2sus4" in name:
+					name = name.replace("sus2sus4","")
+				if "sus26" in name:
+					name = name.replace("sus26","6sus2")
+				if "Maj6" in name:
+					name = name.replace("Maj6","6")
+				if "add9add11add13" in name:
+					name = name.replace("add9add11add13","add13")
+				if "add9add11" in name:
+					name = name.replace("add9add11","add11")
+				if "add9add13" in name:
+					name = name.replace("add9add13","add13")
+				if "791113" in name:
+					name = name.replace("791113","13")
+				if "7911" in name:
+					name = name.replace("7911","11")
+				if "711" in name:
+					name = name.replace("711","7/11")
+				if "79" in name:
+					name = name.replace("79","9")
+				if "6add13" in name:
+					name = name.replace("6add13","add13")
+				if "913" in name:
+					name = name.replace("913","9/13")
+				if "713" in name:
+					name = name.replace("713","7/13")
+				if "sus47" in name:
+					name = name.replace("sus47","Maj7sus4")
+				if "sus27" in name:
+					name = name.replace("sus27","Maj7sus2")
+				if "Majb5b7" in name:
+					name = name.replace("Majb5b7","7b5")
+				if "sus2b56" in name:
+					name = name.replace("sus2b56","dimsus2bb7")
+				#Conditionals to make chord names more proper.
 			Chords.append(name)
 			#After chord name is sanitized, add it to the list of chord names.
-
 	except:
 		if Debug == True:
 			traceback.print_exc()
@@ -1048,7 +1070,6 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre, Tonic, Mode):
 					print ("\nFile output to:",now)
 				break
 			elif export == "n":
-				print()
 				break
 			else:
 				print("\nTry again!\n")

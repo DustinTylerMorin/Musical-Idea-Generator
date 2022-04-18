@@ -61,7 +61,7 @@ Accents = {
 "9/8":["Kick",0,3,7,"Snare",4,8], "5/4":["Kick",0,2,"Snare",1,3]
 }
 #Index of where the kick/snare accents are in each time signature
-
+Rest = "Rest"
 GenreList = {
 	"Pop" : {
 	"1" : ["Major",1,5,6,4], "2" : ["Major",5,6,4,1], "3" : ["Major",1,4,5],
@@ -78,7 +78,8 @@ GenreList = {
 	"16": ["Harmonic Major",1,2,4,5], "17": ["Harmonic Major",1,3,5,4], "18": ["Minor",1,6,7],
 	"19": ["Minor",1,6,3,7], "20": ["Minor",1,4,1,6,5,1], "21": ["Minor",6,7,1],
 	"22": ["Minor",1,7,6,5], "22": ["Minor",1,4,3,6], "23": ["Major",1,2,5,1],
-	"24": ["Minor",1,2,5,1], "25": ["Minor",3,2,1,6], "26": ["Minor",1,5,6,7]
+	"24": ["Minor",1,2,5,1], "25": ["Minor",3,2,1,6], "26": ["Minor",1,5,6,7],
+	"27": ["Minor",1,Rest,7,Rest,5,Rest,6]
 	},
 
 	"Metal" : {
@@ -109,7 +110,6 @@ GenreList = {
 	"Stoner Rock" : {
 	"1" : ["Dorian",1,7,1,6,7,3,4], "2" : ["Minor",1,7,1,5,3,4], "3" : ["Dorian",1,7,1,7,6,5,3]
 	}
-
 }
 #Nested Dicts of preset chord progressions for a few genres.
 #For each genre the progressions are given an index, a Scale/Mode, and a list of scale degree(s).
