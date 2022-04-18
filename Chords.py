@@ -858,7 +858,7 @@ def Output(Tonic, Mode, UsedScale, ScaleChords, Chords):
 #Export(UsedScale{List},GeneratedChords{List},Chords{List},Tonic{String},Mode{String},ScaleChords{List},MidiLengths{List})
 def Export(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,MidiLengths = [],Genre = None):
 	ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,Genre)
-	ExportMidi(GeneratedChords,MidiLengths,UsedScale,Genre)
+	ExportMidi(GeneratedChords,MidiLengths,UsedScale,Genre,Tonic,Mode)
 #Function for Exporting Txt and/or Midi files.
 #Pass values to ExportTxt and ExportMidi
 
@@ -879,9 +879,9 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,Genre):
 					else:
 						pass
 				if platform.system() == ("Linux" or "MacOS") :
-					now = str(cwd)+'/Music'+'/'+'chords_'+datetime.now().strftime("%H-%M-%S")+'.txt'
+					now = str(cwd)+'/Music'+'/'+Tonic+Mode.replace(" ", "")+"_"+'chords_'+datetime.now().strftime("%H-%M-%S")+'.txt'
 				else:
-					now = str(cwd)+'\\Music'+"\\"+"chords_"+datetime.now().strftime("%H-%M-%S")+'.txt'
+					now = str(cwd)+'\\Music'+"\\"+Tonic+Mode.replace(" ", "")+"_"+'chords_'+datetime.now().strftime("%H-%M-%S")+'.txt'
 				with open(now, 'w') as file:
 					file.write("Scale Used:\n\n")
 					file.write("%s %s" % (Tonic,Mode) +"\n\n")
@@ -917,7 +917,7 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,Genre):
 #Function for exporting TXT files of the generated chords.
 
 #ExportMidi(GeneratedChords{List},MidiLengths{List})
-def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
+def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre, Tonic, Mode):
 	print("\nWould you like to output these chords to a .mid file? (y/n)\n")
 	while True:
 		try:
@@ -1025,9 +1025,9 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre):
 					else:
 						pass
 				if platform.system() == ("Linux") :
-					now = str(cwd)+'/Music'+'/'+'chords_'+datetime.now().strftime("%H-%M-%S")+'.mid'
+					now = str(cwd)+'/Music'+'/'++Tonic+Mode.replace(" ", "")+Genre.replace(" ", "")+"_"+datetime.now().strftime("%H-%M-%S")+'.mid'
 				else:
-					now = str(cwd)+'\\Music'+"\\"+"chords_"+datetime.now().strftime("%H-%M-%S")+'.mid'
+					now = str(cwd)+'\\Music'+"\\"+Tonic+Mode.replace(" ", "")+Genre.replace(" ", "")+"_"+datetime.now().strftime("%H-%M-%S")+'.mid'
 				numtracks = 0
 				if Piano[0] == True:
 					numtracks += 1
