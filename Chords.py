@@ -896,10 +896,8 @@ def ExportTxt(UsedScale,GeneratedChords,Chords,Tonic,Mode,ScaleChords,Genre):
 						file.write("%s %s" % (Chords[i],GeneratedChords[i]) + "\n")
 					file.write('\n')
 					file.close()
-					if platform.system() == ("Linux" or "MacOS") :
-						print ("\nFile output to:"+now)
-					else:
-						print ("\nFile output to:"+now)
+					print ("\nFile output to:"+now)
+
 
 				break
 				#Export txt file.
@@ -1062,7 +1060,7 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre, Tonic, Mode):
 				with open(now, 'wb') as file:
 					midi.writeFile(file)
 					file.close()
-					print ("\nFile output to:"+now)
+					print ("\nFile output to:",now)
 				break
 			elif export == "n":
 				print()
