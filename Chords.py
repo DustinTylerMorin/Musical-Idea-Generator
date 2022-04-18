@@ -51,7 +51,7 @@ def main():
 			elif OpMode == 3:
 				Random = False
 				(Mode) = ModeConfig(Tonic, FS)
-				unused,unused,unused,unused,Genre = ChooseGenre(Tonic,FS)
+				unused,unused,unused,unused,Genre = ChooseGenre(Tonic)
 				(UsedScale, Progression, Notes, Limit)=ScaleGen(Tonic, Mode, 7, FS, "y", True)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
 				(Chords, GeneratedChords, MidiLengths, UsedScale, ScaleChords)=ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords, Notes)
@@ -60,7 +60,7 @@ def main():
 				break
 			elif OpMode == 2:
 				Random = False
-				(Mode, Number, StartTonic, Progression, Genre) = ChooseGenre(Tonic, FS)
+				(Mode, Number, StartTonic, Progression, Genre) = ChooseGenre(Tonic)
 				(ChordTones) = NumChordTones()
 				(UsedScale, Progression, Notes, Limit) = ScaleGen(Tonic, Mode, Number, FS, StartTonic, Random, Progression)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
@@ -73,7 +73,7 @@ def main():
 				(Number) = NumChords()
 				(ChordTones) = NumChordTones()
 				(StartTonic) = ProgressionStart()
-				unused,unused,unused,unused,Genre = ChooseGenre(Tonic,FS)
+				unused,unused,unused,unused,Genre = ChooseGenre(Tonic)
 				(UsedScale, Progression, Notes, Limit) =ScaleGen(Tonic, Mode, Number, FS, StartTonic, Random)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
@@ -186,7 +186,7 @@ def	ModeConfig(Tonic,FS):
 #Mode{String} returned to main() to be used in subsequent functions.
 
 #ChooseGenre(Tonic{String},FS{String})
-def ChooseGenre(Tonic,FS):
+def ChooseGenre(Tonic):
 	TempGenre = list(GenreList.keys())
 	#Temp var so list(GenreList.keys()) doesn't need called multiple times.
 
@@ -318,8 +318,9 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 
 				ChordInput = list(([str(TempInput[0].capitalize()),int(TempInput[1]),(TempInput[2]),list()]))
 				if (ChordInput[0].capitalize() in AllNotes) == False:
-					raise ValueError
-					#Check for if the ChordInput[0] is a Note.
+					if ChordInput[0].capitalize() != Rest:
+						raise ValueError
+					#Check for if the ChordInput[0] is a Note or specified rest.
 				if (ChordInput[1] in range(1,8)) == False:
 					raise ValueError
 					#Check if ChordInput[1] represents a valid number of chord tones.
@@ -995,23 +996,7 @@ def ExportMidi(GeneratedChords, MidiLengths, UsedScale, Genre, Tonic, Mode):
 					break
 
 				if Genre == None:
-					print("\nWhat genre of music would you like?\n")
-					TempGenre = list(GenreList.keys())
-					for i in range(len(TempGenre)):
-						print((str(i+1)+") " + str(TempGenre[i])))
-					print()
-					while True:
-						try:
-							Genre = int(input(">"))
-							if Genre in range(1,len(TempGenre)+1):
-								Genre = TempGenre[Genre-1]
-								break
-							else:
-								raise ValueError
-						except ValueError as error:
-							print("\nTry again!\n")
-							if Debug == True:
-								traceback.print_exc()
+					 unused,unused,unused,unused,Genre = ChooseGenre(Tonic)
 				else:
 					pass
 				cwd = os.getcwd()
