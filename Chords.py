@@ -51,12 +51,11 @@ def main():
 			elif OpMode == 3:
 				Random = False
 				(Mode) = ModeConfig(Tonic, FS)
-				unused,unused,unused,unused,Genre = ChooseGenre(Tonic)
 				(UsedScale, Progression, Notes, Limit)=ScaleGen(Tonic, Mode, 7, FS, "y", True)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(7, UsedScale, 4, Progression, Notes, Limit)
 				(Chords, GeneratedChords, MidiLengths, UsedScale, ScaleChords)=ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords, Notes)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
-				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords, MidiLengths, Genre)
+				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords, MidiLengths)
 				break
 			elif OpMode == 2:
 				Random = False
@@ -65,7 +64,7 @@ def main():
 				(UsedScale, Progression, Notes, Limit) = ScaleGen(Tonic, Mode, Number, FS, StartTonic, Random, Progression)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
-				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords,[], Genre)
+				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords,[],Genre)
 				break
 			elif OpMode ==1:
 				Random = True
@@ -73,11 +72,10 @@ def main():
 				(Number) = NumChords()
 				(ChordTones) = NumChordTones()
 				(StartTonic) = ProgressionStart()
-				unused,unused,unused,unused,Genre = ChooseGenre(Tonic)
 				(UsedScale, Progression, Notes, Limit) =ScaleGen(Tonic, Mode, Number, FS, StartTonic, Random)
 				(Chords, ScaleChords, GeneratedChords) = ChordGenPrep(Number, UsedScale, ChordTones, Progression, Notes, Limit)
 				Output(Tonic, Mode, UsedScale, ScaleChords, Chords)
-				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords,[], Genre)
+				Export(UsedScale, GeneratedChords, Chords, Tonic, Mode, ScaleChords,[])
 				break
 			else:
 				raise ValueError
@@ -259,14 +257,19 @@ def ChooseTimeSignature():
 	for i in range(len(TimeSignatures)):
 		print (str(i+1)+") "+TimeSignatures[i])
 	print(str(len(TimeSignatures)+1)+") "+"Random")
+	print()
 	while True:
 		try:
-			TimeSig = int(input("\n>"))
+			TimeSig = int(input(">"))
 			if TimeSig == len(TimeSignatures)+1:
 				TimeSig = random.randint(1,len(TimeSignatures))
-			if TimeSig in range(0,len(TimeSignatures)+1):
 				TimeSig = TimeSignatures[TimeSig - 1]
+			elif TimeSig in range(0,len(TimeSignatures)+1):
+				TimeSig = TimeSignatures[TimeSig - 1]
+			else:
+				raise ValueError
 			return TimeSig
+
 		except:
 			print("\nTry again!\n")
 			if Debug == True:
@@ -282,7 +285,8 @@ def ManualConfig(UsedScale, Tonic, Mode, FS, ScaleChords,Notes):
 	print ("\nScale Used:\n\n",Tonic,Mode,"\n\n",UsedScale,"\n")
 	print ("Chords Avaliable:\n\n",ScaleChords,"\n")
 	print ("Avaliable Modifiers:\n\n", Modifiers,"\n")
-	print ("Enter Chords 1 by 1 in this format:\n\nNote,ChordTones,Midi Length(r for random),Modifier(s),Alt Scale Tonic(Optional),Alt Scale Number(Optional)\n\nEx)>"+Tonic+",4,4,sus2,add13,"+Tonic+",1""\n\n"+Tonic+"sus2add13\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
+	print ("Enter Chords 1 by 1 in this format:\n\nNote,ChordTones,Midi Length(r for random),Modifier(s),Alt Scale Tonic(Optional),Alt Scale Number(Optional)\n")
+	print (" Ex>"+Tonic+",4,4,sus2,add13,"+Tonic+",1""\n\n "+Tonic+"sus2add13\n\nType 'r' to remove a chord, and 'q' to quit and lock in your progression.\n")
 
 	ChordInputList = []
 	#Used for containing the "config" of chords to be generated.
